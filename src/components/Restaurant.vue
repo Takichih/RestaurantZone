@@ -35,7 +35,7 @@
 
       <v-divider></v-divider>
 
-      <v-table>
+      <v-table density="compact">
         <thead>
           <tr>
             <th class="text-left">
