@@ -1,8 +1,13 @@
 <template>
-  <div id="app">
+  <v-layout>
     <nav-menu></nav-menu>
-    <router-view></router-view>
-  </div>
+
+    <v-main>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+  </v-layout>
 </template>
 
 <script>
