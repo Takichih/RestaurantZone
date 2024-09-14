@@ -56,10 +56,10 @@
         </tbody>
       </v-table>
     </v-card>
-  </span>
-  <v-btn color="primary">
+    <v-btn color="primary">
       <router-link to="/CarteGeographique" class="directions">Directions</router-link>
-  </v-btn>
+    </v-btn>
+  </span>
 </template>
 
 <script>
