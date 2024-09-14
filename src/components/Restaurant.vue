@@ -15,8 +15,10 @@
         <v-card-subtitle>
           {{ restaurant.address }}
         </v-card-subtitle>
+        <v-btn color="primary">
+          <router-link :to="{ path: '/CarteGeographique', query: { lat: restaurant.location.coordinates[1], lng: restaurant.location.coordinates[0] }}" class="directions">Directions</router-link>
+      </v-btn>
       </v-card-item>
-
       <v-card-text class="pb-2">
         <v-row class="mx-0 align-center">
           <v-rating :model-value="restaurant.rating" color="amber" density="compact" size="small" half-increments
@@ -56,9 +58,6 @@
         </tbody>
       </v-table>
     </v-card>
-    <v-btn color="primary">
-      <router-link to="/CarteGeographique" class="directions">Directions</router-link>
-    </v-btn>
   </span>
 </template>
 

@@ -20,26 +20,27 @@
 
 <script setup>
 import L from "leaflet";
+import { useRoute } from "vue-router";
+
 import "leaflet-routing-machine";
 import { ref, onMounted, watch } from "vue";
-
+const routes = useRoute();
 
 const Longitude = ref(-71.2715);
 const Latitude = ref(46.7747);
 
-const secondLatitude = ref(-60.561668)
-const secondLongitude = ref(45.508888)
+
+const restaurantLongitude = parseFloat(routes.query.lng);;
+const restaurantLatitude = parseFloat(routes.query.lat);;
 
 let map = null;
-let circle = null;
 let route = null;
 watch([Longitude, Latitude], ([newLongitude, newLatitude]) => {
-  if (map && circle) {
+  if (map) {
     newLongitude = eval(newLongitude);
     newLatitude = eval(newLatitude);
     if (typeof newLongitude === 'number' && typeof newLatitude === 'number') {
       map.setView([newLatitude, newLongitude], 13);
-      circle.setLatLng([newLatitude, newLongitude]);
     }
   }
 }, { immediate: true });
@@ -60,8 +61,8 @@ onMounted(() => {
 route = L.Routing.control({
   waypoints:[
     L.latLng(Latitude.value, Longitude.value),
-    L.latLng(secondLatitude.value, secondLongitude.value)
-  ]
+    L.latLng(restaurantLatitude, restaurantLongitude)
+  ],
 }).addTo(map);
 });
 
