@@ -1,9 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary">
-      <v-toolbar-title>UFood</v-toolbar-title>
-      <nav-menu></nav-menu>
-    </v-app-bar>
+    <!-- App Bar is handled by the Navigation component -->
+    <nav-menu></nav-menu>
 
     <v-main>
       <router-view></router-view>
