@@ -1,12 +1,13 @@
 <template>
-  <v-app>
-    <!-- App Bar is handled by the Navigation component -->
+  <v-layout>
     <nav-menu></nav-menu>
 
     <v-main>
-      <router-view></router-view>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
     </v-main>
-  </v-app>
+  </v-layout>
 </template>
 
 <script>
