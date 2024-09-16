@@ -113,6 +113,7 @@ export default {
       // Toggle drawer state manually
       this.drawer = !this.drawer;
     },
+
     login() {
       // Simulates global login
       this.isLogged = true;
