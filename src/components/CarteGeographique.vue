@@ -52,19 +52,10 @@ onMounted(() => {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
-route = L.Routing.control({
-  waypoints:[
-    L.latLng(Latitude.value, Longitude.value),
-    L.latLng(restaurantLatitude, restaurantLongitude)
-  ],
-}).addTo(map);
 L.control.locate().addTo(map);
 map.on('locationfound', function (e) {
     Longitude.value = e.latlng.lng;
     Latitude.value = e.latlng.lat;
-    if (route) {
-      map.removeControl(route);
-    }
     route = L.Routing.control({
       waypoints: [
         L.latLng(Latitude.value, Longitude.value),
