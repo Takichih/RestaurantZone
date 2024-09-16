@@ -1,8 +1,14 @@
 <template>
-  <div id="app">
-    <nav-menu></nav-menu>
-    <router-view></router-view>
-  </div>
+  <v-app>
+    <v-app-bar app color="primary">
+      <v-toolbar-title>UFood</v-toolbar-title>
+      <nav-menu></nav-menu>
+    </v-app-bar>
+
+    <v-main>
+      <router-view></router-view>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
