@@ -2,14 +2,6 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-card class="pa-4 mb-4">
-          <v-card-title>Map</v-card-title>
-          <v-text-field label="Longitude" v-model="Longitude" type="number"></v-text-field>
-          <v-text-field label="Latitude" v-model="Latitude" type="number"></v-text-field>
-        </v-card>
-      </v-col>
-
-      <v-col cols="12">
         <v-card class="pa-2">
           <div id="map" style="height: 500px; width: 100%;"></div>
         </v-card>
@@ -20,6 +12,8 @@
 
 <script setup>
 import L from "leaflet";
+import "leaflet.locatecontrol";
+import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
 import { useRoute } from "vue-router";
 
 import "leaflet-routing-machine";
@@ -64,6 +58,20 @@ route = L.Routing.control({
     L.latLng(restaurantLatitude, restaurantLongitude)
   ],
 }).addTo(map);
+L.control.locate().addTo(map);
+map.on('locationfound', function (e) {
+    Longitude.value = e.latlng.lng;
+    Latitude.value = e.latlng.lat;
+    if (route) {
+      map.removeControl(route);
+    }
+    route = L.Routing.control({
+      waypoints: [
+        L.latLng(Latitude.value, Longitude.value),
+        L.latLng(restaurantLatitude, restaurantLongitude)
+      ],
+    }).addTo(map);
+});
 });
 
 </script>
