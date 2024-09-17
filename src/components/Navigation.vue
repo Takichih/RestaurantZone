@@ -61,38 +61,28 @@
           <span class="mr-4">{{ username }}</span>
         </v-list-item>
         <v-list-item link to="/" exact>
-          <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
-          </v-list-item-icon>
           <v-list-item-title>Accueil</v-list-item-title>
         </v-list-item>
 
         <v-list-item link to="/restaurant">
-          <v-list-item-icon>
             <v-icon>mdi-silverware-fork-knife</v-icon>
-          </v-list-item-icon>
           <v-list-item-title>Restaurant</v-list-item-title>
         </v-list-item>
 
         <v-list-item v-if="isLogged" link to="/user">
-          <v-list-item-icon>
             <v-icon>mdi-account</v-icon>
-          </v-list-item-icon>
           <v-list-item-title>Profile</v-list-item-title>
         </v-list-item>
 
         <!-- Login/Logout in drawer -->
         <v-list-item @click="login" v-if="!isLogged">
-          <v-list-item-icon>
             <v-icon>mdi-login</v-icon>
-          </v-list-item-icon>
           <v-list-item-title>Connexion</v-list-item-title>
         </v-list-item>
 
         <v-list-item @click="logout" v-if="isLogged">
-          <v-list-item-icon>
             <v-icon>mdi-logout</v-icon>
-          </v-list-item-icon>
           <v-list-item-title>Déconnexion</v-list-item-title>
         </v-list-item>
       </v-list>
