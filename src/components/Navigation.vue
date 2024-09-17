@@ -57,6 +57,9 @@
       <!-- Drawer only visible on small screens -->
 
       <v-list>
+        <v-list-item v-if="isLogged" id="userNameDrawer">
+          <span class="mr-4">{{ username }}</span>
+        </v-list-item>
         <v-list-item link to="/" exact>
           <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
@@ -139,5 +142,13 @@ export default {
 </script>
 
 <style>
+#userNameDrawer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+  font-weight: bolder;
+  font-size: 1.2em;
+}
 
 </style>
