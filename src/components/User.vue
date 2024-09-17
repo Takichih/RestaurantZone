@@ -36,7 +36,9 @@
 
             <v-col cols="12" md="4" class="d-flex">
               <v-row class="full-height">
-                <v-btn class="bottom-left-btn" color="primary">Save</v-btn>
+                <v-btn size="x-large" class="bottom-left-btn" color="primary"
+                  >Save</v-btn
+                >
               </v-row>
             </v-col>
           </v-row>
@@ -80,89 +82,90 @@
           <h3 class="text-left">Recently Visited:</h3>
         </v-col>
       </v-row>
-
       <v-row>
-        <v-col cols="12" md="6">
-          <v-card>
-            <v-card-title>Queues de Castor</v-card-title>
-            <v-card-subtitle>Number of Visits: 1</v-card-subtitle>
-            <v-card-actions>
-              <v-btn color="orange-lighten-2" text="Reserve"></v-btn>
-              <v-spacer></v-spacer>
-              <v-btn>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-              <v-card-actions>
-                <v-btn>
-                  <v-icon>mdi-share</v-icon>
-                </v-btn>
-              </v-card-actions>
-            </v-card-actions>
-          </v-card>
-        </v-col>
+        <!-- Afficher un bouton pour revenir à la page d'accueil si aucun restaurant n'a été visité -->
+        <template v-if="visitedRestaurants.length === 0">
+          <v-col cols="12">
+            <v-btn @click="goToHomepage" color="primary">Go to Homepage</v-btn>
+          </v-col>
+        </template>
 
-        <v-col cols="12" md="6">
-          <v-card>
-            <v-card-title>Nomi</v-card-title>
-            <v-card-subtitle>Number of Visits: 2</v-card-subtitle>
-            <v-card-actions>
-              <v-btn color="orange-lighten-2" text="Reserve"></v-btn>
-              <v-spacer></v-spacer>
-              <v-btn>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
+        <!-- Afficher les cartes des restaurants visités s'il y en a -->
+        <template v-else>
+          <!-- Utiliser v-col avec une largeur de 6 colonnes pour chaque carte, ce qui donne deux cartes par ligne -->
+          <v-col
+            cols="12"
+            md="3"
+            v-for="(restaurant, index) in visitedRestaurants"
+            :key="restaurant.name"
+          >
+            <v-card>
+              <v-card-title>{{ restaurant.name }}</v-card-title>
+              <v-card-subtitle>
+                Rating: {{ restaurant.rating }}
+              </v-card-subtitle>
+              <v-card-text>
+                Number of Visits: {{ restaurant.visits }}
+              </v-card-text>
               <v-card-actions>
-                <v-btn>
-                  <v-icon>mdi-share</v-icon>
+                <v-btn id="heart" icon @click="AddToFavorites(index)">
+                  <v-icon>{{
+                    restaurant.isFavorite ? "mdi-heart" : "mdi-heart-outline"
+                  }}</v-icon>
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn @click="deleteRestaurant(restaurant.name)">
+                  <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </v-card-actions>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-
-        <v-col cols="12" md="6">
-          <v-card>
-            <v-card-title>Red Lobster</v-card-title>
-            <v-card-subtitle>Number of Visits: 10</v-card-subtitle>
-            <v-card-actions>
-              <v-btn color="orange-lighten-2" text="Reserve"></v-btn>
-              <v-spacer></v-spacer>
-              <v-btn>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-              <v-card-actions>
-                <v-btn>
-                  <v-icon>mdi-share</v-icon>
-                </v-btn>
-              </v-card-actions>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-
-        <v-col cols="12" md="6">
-          <v-card>
-            <v-card-title>Dominos</v-card-title>
-            <v-card-subtitle>Number of Visits: 5</v-card-subtitle>
-            <v-card-actions>
-              <v-btn color="orange-lighten-2" text="Reserve"></v-btn>
-              <v-spacer></v-spacer>
-              <v-btn>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-              <v-card-actions>
-                <v-btn>
-                  <v-icon>mdi-share</v-icon>
-                </v-btn>
-              </v-card-actions>
-            </v-card-actions>
-          </v-card>
-        </v-col>
+            </v-card>
+          </v-col>
+        </template>
       </v-row>
     </v-container>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      // Liste des restaurants disponible, filtré selon le nombre de visits
+      restaurants: [
+        { name: "Queues de Castor", rating: 4.5, visits: 6 },
+        { name: "Nomi", rating: 4.2, visits: 4 },
+        { name: "Red Lobster", rating: 3.8, visits: 2 },
+        { name: "Domino's Pizza", rating: 4.0, visits: 1 },
+      ],
+    };
+  },
+  computed: {
+    visitedRestaurants() {
+      return this.restaurants.filter((restaurant) => restaurant.visits > 0);
+    },
+  },
+  methods: {
+    // Fonction pour ajouter un restaurant déja visiter a la liste des favories
+    AddToFavorites(index) {
+      // Désactiver pour le livrable 1
+      //this.restaurants[index].isFavorite = !this.restaurants[index].isFavorite;
+    },
+    // fonction pour supprimer un restaurant de la liste déja visiter.
+    deleteRestaurant(name) {
+      // Désactiver pour le livrable 1
+      /*console.log(`Deleting ${name}`);
+      this.restaurants = this.restaurants.filter(
+        (restaurant) => restaurant.name !== name,
+      );*/
+    },
 
-<script></script>
+    // fonction pour retourner la page d'accueil
+    goToHomepage() {
+      // Désactiver pour le livrable 1
+      //console.log("Navigating to the homepage...");
+    },
+  },
+};
+</script>
 
 <style>
 .d-flex {
@@ -171,6 +174,10 @@
 }
 
 .bottom-left-btn {
-  margin: 22px;
+  margin: 15px;
+}
+
+#heart {
+  color: red;
 }
 </style>
