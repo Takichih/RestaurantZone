@@ -34,7 +34,7 @@
               ></v-text-field>
             </v-col>
 
-            <v-col cols="12" md="4" class="relative-position">
+            <v-col cols="12" md="4" class="d-flex">
               <v-row class="full-height">
                 <v-btn class="bottom-left-btn" color="primary">Save</v-btn>
               </v-row>
@@ -162,22 +162,15 @@
   </div>
 </template>
 
-
 <script></script>
 
 <style>
-.relative-position {
-  position: relative;
-}
-
-.full-height {
-  height: 100%;
+.d-flex {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .bottom-left-btn {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  margin: 12px;
+  margin: 22px;
 }
 </style>
