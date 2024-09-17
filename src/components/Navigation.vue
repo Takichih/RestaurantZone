@@ -61,12 +61,12 @@
           <span class="mr-4">{{ username }}</span>
         </v-list-item>
         <v-list-item link to="/" exact>
-            <v-icon>mdi-home</v-icon>
+          <v-icon>mdi-home</v-icon>
           <v-list-item-title>Accueil</v-list-item-title>
         </v-list-item>
 
         <v-list-item link to="/restaurant">
-            <v-icon>mdi-silverware-fork-knife</v-icon>
+          <v-icon>mdi-silverware-fork-knife</v-icon>
           <v-list-item-title>Restaurant</v-list-item-title>
         </v-list-item>
 
