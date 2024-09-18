@@ -3,9 +3,7 @@
     <!-- App Bar -->
     <v-app-bar app color="primary" dark>
       <!-- Drawer icon: mobile only -->
-      <v-app-bar-nav-icon
-        @click="toggleDrawer"
-        class="d-md-none">
+      <v-app-bar-nav-icon @click="toggleDrawer" class="d-md-none">
       </v-app-bar-nav-icon>
 
       <v-toolbar-title>UFood</v-toolbar-title>
@@ -16,11 +14,10 @@
       <div class="d-none d-md-flex">
         <v-btn text to="/" exact>
           <v-icon left>mdi-home</v-icon>
-          Accueil</v-btn>
-        <v-btn text to="/restaurant">
-          Restaurant</v-btn>
+          Accueil</v-btn
+        >
+        <v-btn text to="/restaurant"> Restaurant</v-btn>
         <v-btn v-if="isLogged" text to="/user">Profile</v-btn>
-
       </div>
 
       <!-- Search bar: always visible -->
@@ -38,22 +35,19 @@
         <span class="mr-4">{{ username }}</span>
         <v-btn text @click="logout">
           <v-icon left>mdi-logout</v-icon>
-          Déconnexion</v-btn>
+          Déconnexion</v-btn
+        >
       </div>
       <div v-else class="d-none d-md-flex align center">
         <v-btn text @click="login">
           <v-icon left>mdi-login</v-icon>
-          Connexion</v-btn>
+          Connexion</v-btn
+        >
       </div>
-
     </v-app-bar>
 
     <!-- Navigation Drawer for Mobile -->
-    <v-navigation-drawer
-      app
-      v-model="drawer"
-      temporary
-      class="d-md-none">
+    <v-navigation-drawer app v-model="drawer" temporary class="d-md-none">
       <!-- Drawer only visible on small screens -->
 
       <v-list>
@@ -71,18 +65,18 @@
         </v-list-item>
 
         <v-list-item v-if="isLogged" link to="/user">
-            <v-icon>mdi-account</v-icon>
+          <v-icon>mdi-account</v-icon>
           <v-list-item-title>Profile</v-list-item-title>
         </v-list-item>
 
         <!-- Login/Logout in drawer -->
         <v-list-item @click="login" v-if="!isLogged">
-            <v-icon>mdi-login</v-icon>
+          <v-icon>mdi-login</v-icon>
           <v-list-item-title>Connexion</v-list-item-title>
         </v-list-item>
 
         <v-list-item @click="logout" v-if="isLogged">
-            <v-icon>mdi-logout</v-icon>
+          <v-icon>mdi-logout</v-icon>
           <v-list-item-title>Déconnexion</v-list-item-title>
         </v-list-item>
       </v-list>
@@ -98,7 +92,7 @@ export default {
       drawer: false, // Drawer state for mobile menu
       searchQuery: "", //SearchQuery state for search bar
       username: "Gordon Ramsay", // Username state for user profile
-      isLogged: false // UserIsLogged state for user profile
+      isLogged: false, // UserIsLogged state for user profile
     };
   },
   methods: {
@@ -110,24 +104,24 @@ export default {
     login() {
       // Simulates global login
       this.isLogged = true;
-      localStorage.setItem('isLogged', true); // Saves login state in localStorage;
-      localStorage.setItem('username', this.username); // Saves username in localStorage;
+      localStorage.setItem("isLogged", true); // Saves login state in localStorage;
+      localStorage.setItem("username", this.username); // Saves username in localStorage;
     },
     logout() {
       // Simulates global logout
       this.isLogged = false;
-      localStorage.removeItem('isLogged'); // Remove login state from localStorage
-      localStorage.removeItem('username'); // Remove username from localStorage
-    }
+      localStorage.removeItem("isLogged"); // Remove login state from localStorage
+      localStorage.removeItem("username"); // Remove username from localStorage
+    },
   },
   mounted() {
     // Fetch login state from localStorage
-    const loggedIn = localStorage.getItem('isLogged');
+    const loggedIn = localStorage.getItem("isLogged");
     if (loggedIn) {
       this.isLogged = true; // Fetch login state from localStorage
-      this.username = localStorage.getItem('username'); // Fetch username from localStorage
+      this.username = localStorage.getItem("username"); // Fetch username from localStorage
     }
-  }
+  },
 };
 </script>
 
@@ -140,5 +134,4 @@ export default {
   font-weight: bolder;
   font-size: 1.2em;
 }
-
 </style>

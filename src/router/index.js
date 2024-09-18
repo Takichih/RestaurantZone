@@ -24,7 +24,7 @@ const routes = [
     path: "/CarteGeographique",
     name: "CarteGeographique",
     component: CarteGeographique,
-  }
+  },
 ];
 
 export const router = createRouter({
