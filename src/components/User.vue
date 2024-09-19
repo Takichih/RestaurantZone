@@ -3,13 +3,13 @@
     <v-container>
       <v-row>
         <v-col cols="12" md="4">
-          <h4 class="text-left">First Name:</h4>
+          <h4 class="text-left">Nom:</h4>
           <v-card>
             <h3 class="name">Gordon</h3>
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
-          <h4 class="text-left">Last Name:</h4>
+          <h4 class="text-left">Prénom:</h4>
           <v-card>
             <h3 class="name">Ramsay</h3>
           </v-card>
@@ -50,14 +50,14 @@
     <v-container>
       <v-row>
         <v-col cols="12" md="6">
-          <h3 class="text-left">Recently Visited:</h3>
+          <h3 class="text-left">Restaurants visités récemment:</h3>
         </v-col>
       </v-row>
       <v-row>
         <!-- Afficher un bouton pour revenir à la page d'accueil si aucun restaurant n'a été visité -->
         <template v-if="visitedRestaurants.length === 0">
           <v-col cols="12">
-            <v-btn color="primary" :to="{ path: '/' }"> Home </v-btn>
+            <v-btn color="primary" :to="{ path: '/' }"> Accueil </v-btn>
           </v-col>
         </template>
 
@@ -73,10 +73,10 @@
             <v-card>
               <v-card-title>{{ restaurant.name }}</v-card-title>
               <v-card-subtitle>
-                Rating: {{ restaurant.rating }}
+                Score: {{ restaurant.rating }}
               </v-card-subtitle>
               <v-card-text>
-                Number of Visits: {{ restaurant.visits }}
+                Nombre de visites: {{ restaurant.visits }}
               </v-card-text>
               <v-card-actions>
                 <v-btn id="heart" icon @click="AddToFavorites(index)">
