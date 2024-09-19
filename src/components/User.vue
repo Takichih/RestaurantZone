@@ -1,49 +1,20 @@
 <template>
-  <div class="userPage">
-    <h1>Profile</h1>
+  <div>
     <v-container>
       <v-row>
-        <v-col cols="12" md="6">
-          <h3 class="text-left">Name:</h3>
+        <v-col cols="12" md="4">
+          <h4 class="text-left">First Name:</h4>
+          <v-card>
+            <h3 class="name">Gordon</h3>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="4">
+          <h4 class="text-left">Last Name:</h4>
+          <v-card>
+            <h3 class="name">Ramsay</h3>
+          </v-card>
         </v-col>
       </v-row>
-      <v-form v-model="valid">
-        <v-container>
-          <v-row>
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model="firstname"
-                :counter="10"
-                :rules="nameRules"
-                label="First name"
-                model-value="Gordon"
-                hide-details
-                required
-              ></v-text-field>
-            </v-col>
-
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model="lastname"
-                :counter="10"
-                :rules="nameRules"
-                label="Last name"
-                model-value="Ramsay"
-                hide-details
-                required
-              ></v-text-field>
-            </v-col>
-
-            <v-col cols="12" md="4" class="d-flex">
-              <v-row class="full-height">
-                <v-btn size="x-large" class="bottom-left-btn" color="primary"
-                  >Save</v-btn
-                >
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-form>
     </v-container>
 
     <v-container>
@@ -65,14 +36,14 @@
           buffer-opacity="1"
           buffer-value="3"
           color="#4CAF50"
-          height="12"
-          max="9"
+          height="15"
+          max="4"
           min="0"
           model-value="2"
           rounded
         ></v-progress-linear>
 
-        <div class="ms-4 text-h6">47/100</div>
+        <div class="ms-4 text-h6">77/100</div>
       </v-sheet>
     </v-container>
 
@@ -86,7 +57,7 @@
         <!-- Afficher un bouton pour revenir à la page d'accueil si aucun restaurant n'a été visité -->
         <template v-if="visitedRestaurants.length === 0">
           <v-col cols="12">
-            <v-btn @click="goToHomepage" color="primary">Go to Homepage</v-btn>
+            <v-btn color="primary" :to="{ path: '/' }"> Home </v-btn>
           </v-col>
         </template>
 
@@ -126,15 +97,16 @@
   </div>
 </template>
 <script>
+import { useRouter } from "vue-router";
 export default {
   data() {
     return {
       // Liste des restaurants disponible, filtré selon le nombre de visits
       restaurants: [
-        { name: "Queues de Castor", rating: 4.5, visits: 6 },
-        { name: "Nomi", rating: 4.2, visits: 4 },
-        { name: "Red Lobster", rating: 3.8, visits: 2 },
-        { name: "Domino's Pizza", rating: 4.0, visits: 1 },
+        { name: "Chez Wong", rating: 4.5, visits: 4 },
+        { name: "Nina Pizza Napolitaine", rating: 4.2, visits: 2 },
+        { name: "L'Ostrea", rating: 3.8, visits: 6 },
+        { name: "Le Champlain", rating: 4.0, visits: 5 },
       ],
     };
   },
@@ -146,22 +118,15 @@ export default {
   methods: {
     // Fonction pour ajouter un restaurant déja visiter a la liste des favories
     AddToFavorites(index) {
-      // Désactiver pour le livrable 1
-      //this.restaurants[index].isFavorite = !this.restaurants[index].isFavorite;
-    },
-    // fonction pour supprimer un restaurant de la liste déja visiter.
-    deleteRestaurant(name) {
-      // Désactiver pour le livrable 1
-      /*console.log(`Deleting ${name}`);
-      this.restaurants = this.restaurants.filter(
-        (restaurant) => restaurant.name !== name,
-      );*/
+      this.restaurants[index].isFavorite = !this.restaurants[index].isFavorite;
     },
 
-    // fonction pour retourner la page d'accueil
-    goToHomepage() {
-      // Désactiver pour le livrable 1
-      //console.log("Navigating to the homepage...");
+    // fonction pour supprimer un restaurant de la liste déja visiter.
+    deleteRestaurant(name) {
+      console.log(`Deleting ${name}`);
+      this.restaurants = this.restaurants.filter(
+        (restaurant) => restaurant.name !== name,
+      );
     },
   },
 };
@@ -179,5 +144,13 @@ export default {
 
 #heart {
   color: red;
+}
+
+.text-left {
+  padding: 5px;
+}
+
+.name {
+  margin-left: 10px;
 }
 </style>
