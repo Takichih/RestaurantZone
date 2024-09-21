@@ -1,87 +1,99 @@
+<script setup>
+import CarteGeographique from "./CarteGeographique.vue";
+</script>
+
 <template>
   <span class="restaurant">
-    <v-card :restaurant="restaurant" class="mx-auto my-12" width="60vw">
-      <v-carousel :show-arrows="false" cycle hide-delimiters height="50vh">
-        <v-carousel-item
-          v-for="(restaurantPicture, index) in restaurant.pictures"
-          :key="index"
-          :src="restaurantPicture"
-          cover
-        ></v-carousel-item>
-      </v-carousel>
+    <v-row>
+      <v-col cols="12" md="6">
+        <v-card :restaurant="restaurant" class="mx-auto" height="100%">
+          <v-carousel :show-arrows="false" cycle hide-delimiters height="70vh">
+            <v-carousel-item
+              v-for="(restaurantPicture, index) in restaurant.pictures"
+              :key="index"
+              :src="restaurantPicture"
+              cover
+            ></v-carousel-item>
+          </v-carousel>
 
-      <v-card-item>
-        <v-card-title>{{ restaurant.name }}</v-card-title>
+          <v-card-item>
+            <v-card-title>{{ restaurant.name }}</v-card-title>
 
-        <v-card-subtitle>
-          <a :href="`tel:${cleanUpTelNumberForHref(restaurant.tel)}`">{{
-            restaurant.tel
-          }}</a>
-        </v-card-subtitle>
-        <v-card-subtitle>
-          {{ restaurant.address }}
-        </v-card-subtitle>
-        <v-btn color="primary">
-          <router-link
-            :to="{
-              path: '/CarteGeographique',
-              query: {
-                lat: restaurant.location.coordinates[1],
-                lng: restaurant.location.coordinates[0],
-              },
-            }"
-            class="directions"
-            >Directions</router-link
+            <v-card-subtitle>
+              <a :href="`tel:${cleanUpTelNumberForHref(restaurant.tel)}`">{{
+                restaurant.tel
+              }}</a>
+            </v-card-subtitle>
+            <v-card-subtitle>
+              {{ restaurant.address }}
+            </v-card-subtitle>
+          </v-card-item>
+          <v-card-text class="pb-2">
+            <v-row class="mx-0 align-center">
+              <v-rating
+                :model-value="restaurant.rating"
+                color="amber"
+                density="compact"
+                size="small"
+                half-increments
+                readonly
+              ></v-rating>
+
+              <div class="text-grey ms-2 mt-1">
+                {{ Math.round(restaurant.rating * 100) / 100 }}
+              </div>
+            </v-row>
+
+            <div class="mt-4 text-subtitle-1">
+              <p v-for="n in restaurant.price_range" :key="n">$</p>
+              •
+              <p v-for="(genre, index) in restaurant.genres" :key="index">
+                {{ genre }}
+              </p>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="6">
+        <v-row>
+          <v-col>
+            <v-card>
+              <v-card-title>Horaire hebdomadaire</v-card-title>
+
+              <v-table density="compact">
+                <thead>
+                  <tr>
+                    <th class="text-left">Jour</th>
+                    <th class="text-left">Heures</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(hours, day, index) in restaurant.opening_hours"
+                    :key="index"
+                  >
+                    <td>
+                      <p>{{ switchDaysToFrench(day) }}</p>
+                    </td>
+                    <td>{{ cleanUpBusinessHours(hours) }}</td>
+                  </tr>
+                </tbody>
+              </v-table>
+            </v-card></v-col
           >
-        </v-btn>
-      </v-card-item>
-      <v-card-text class="pb-2">
-        <v-row class="mx-0 align-center">
-          <v-rating
-            :model-value="restaurant.rating"
-            color="amber"
-            density="compact"
-            size="small"
-            half-increments
-            readonly
-          ></v-rating>
-
-          <div class="text-grey ms-2 mt-1">
-            {{ Math.round(restaurant.rating * 100) / 100 }}
-          </div>
         </v-row>
-
-        <div class="mt-4 text-subtitle-1">
-          <p v-for="n in restaurant.price_range" :key="n">$</p>
-          •
-          <p v-for="(genre, index) in restaurant.genres" :key="index">
-            {{ genre }}
-          </p>
-        </div>
-      </v-card-text>
-
-      <v-divider></v-divider>
-
-      <v-table density="compact">
-        <thead>
-          <tr>
-            <th class="text-left">Jour</th>
-            <th class="text-left">Heures</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(hours, day, index) in restaurant.opening_hours"
-            :key="index"
-          >
-            <td>
-              <p>{{ switchDaysToFrench(day) }}</p>
-            </td>
-            <td>{{ cleanUpBusinessHours(hours) }}</td>
-          </tr>
-        </tbody>
-      </v-table>
-    </v-card>
+        <v-row>
+          <v-col>
+            <v-card>
+              <CarteGeographique
+                :longitude="restaurant.location.coordinates[0]"
+                :latitude="restaurant.location.coordinates[1]"
+              />
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
   </span>
 </template>
 
@@ -197,6 +209,7 @@ export default {
     font-weight: bold !important;
   }
 }
+
 .directions {
   text-decoration: none;
 }
