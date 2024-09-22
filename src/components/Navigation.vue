@@ -20,8 +20,9 @@
         <v-btn v-if="isLogged" text to="/user">Profile</v-btn>
       </div>
 
-      <!-- Search bar: always visible -->
+      <!-- Search bar: always visible except on home page-->
       <v-text-field
+        v-if="showSearchBar"
         v-model="searchQuery"
         append-icon="mdi-magnify"
         label="Rechercher..."
@@ -120,6 +121,13 @@ export default {
     if (loggedIn) {
       this.isLogged = true; // Fetch login state from localStorage
       this.username = localStorage.getItem("username"); // Fetch username from localStorage
+    }
+  },
+  computed: {
+    // Computed property for showing search bar
+    showSearchBar() {
+      // Show search bar except on Home page
+      return this.$route.name !== 'Home';
     }
   },
 };
