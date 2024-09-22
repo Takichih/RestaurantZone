@@ -25,7 +25,7 @@
       </v-row>
       <v-sheet
         class="d-flex align-center px-4 py-8 mx-auto"
-        color="#FFFFF"
+        color="#FFFFFF"
         max-width=""
         rounded="lg"
       >

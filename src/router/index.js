@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "@/components/Home";
 import Restaurant from "@/components/Restaurant";
-import CarteGeographique from "@/components/CarteGeographique";
 import User from "@/components/User";
 
 const routes = [
@@ -19,11 +18,6 @@ const routes = [
     path: "/user",
     name: "User",
     component: User,
-  },
-  {
-    path: "/CarteGeographique",
-    name: "CarteGeographique",
-    component: CarteGeographique,
   },
 ];
 

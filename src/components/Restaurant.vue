@@ -1,5 +1,5 @@
 <script setup>
-import CarteGeographique from "./CarteGeographique.vue";
+import InteractiveMap from "./InteractiveMap.vue";
 </script>
 
 <template>
@@ -85,7 +85,7 @@ import CarteGeographique from "./CarteGeographique.vue";
         <v-row>
           <v-col>
             <v-card>
-              <CarteGeographique
+              <InteractiveMap
                 :longitude="restaurant.location.coordinates[0]"
                 :latitude="restaurant.location.coordinates[1]"
               />

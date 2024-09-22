@@ -2,17 +2,17 @@
   <div>
     <div class="text-h3 text-center my-5">Bienvenue sur UFood</div>
     <v-container fluid>
-      <v-row>
+      <v-row class="justify-center">
         <v-col cols="11">
           <v-card class="pa-5">
-            <v-row>
+            <v-row class="justify-center">
               <v-col cols="11">
                 <h1 class="text-center">Liste des Restaurants</h1>
               </v-col>
             </v-row>
 
-            <v-row class="mb-4">
-              <v-col cols="11" md="5">
+            <v-row class="mb-4 justify-center">
+              <v-col cols="11" md="6">
                 <v-text-field
                   v-model="search"
                   label="Rechercher un restaurant"
