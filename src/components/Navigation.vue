@@ -127,8 +127,8 @@ export default {
     // Computed property for showing search bar
     showSearchBar() {
       // Show search bar except on Home page
-      return this.$route.name !== 'Home';
-    }
+      return this.$route.name !== "Home";
+    },
   },
 };
 </script>
