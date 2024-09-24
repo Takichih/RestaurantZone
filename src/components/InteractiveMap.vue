@@ -1,9 +1,9 @@
 <template>
   <div>
     <div id="map"></div>
-    <v-btn @click="startItinerary" id="itinirary-btn" variant-tonal
-      >Itinéraire</v-btn
-    >
+    <v-btn @click="startItinerary" id="itinirary-btn" variant-tonal>
+      Itinéraire
+    </v-btn>
   </div>
 </template>
 
