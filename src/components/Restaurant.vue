@@ -84,7 +84,7 @@ import InteractiveMap from "./InteractiveMap.vue";
         </v-row>
         <v-row>
           <v-col>
-            <v-card>
+            <v-card width="100%">
               <InteractiveMap
                 :longitude="restaurant.location.coordinates[0]"
                 :latitude="restaurant.location.coordinates[1]"
