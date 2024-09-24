@@ -57,6 +57,9 @@ onMounted(() => {
   map.on("locationfound", function (e) {
     Longitude.value = e.latlng.lng;
     Latitude.value = e.latlng.lat;
+    if (route){
+      map.removeControl(route);
+    }
     route = L.Routing.control({
       waypoints: [
         L.latLng(Latitude.value, Longitude.value),
@@ -67,4 +70,15 @@ onMounted(() => {
 });
 </script>
 
-<style></style>
+<style>
+.leaflet-routing-container {
+  background-color: aliceblue;
+  border-radius: 8px;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-size: small;
+}
+
+</style>
