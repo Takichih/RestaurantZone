@@ -1,5 +1,5 @@
 <script setup>
-import InteractiveMap from "./InteractiveMap.vue";
+import InteractiveMap from "@/components/InteractiveMap";
 </script>
 
 <template>

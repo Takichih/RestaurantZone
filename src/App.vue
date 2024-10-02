@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <nav-menu></nav-menu>
+    <Navigation></Navigation>
 
     <v-main>
       <v-container fluid>
@@ -10,14 +10,6 @@
   </v-layout>
 </template>
 
-<script>
+<script setup>
 import Navigation from "@/components/Navigation";
-export default {
-  name: "app",
-  components: {
-    "nav-menu": Navigation,
-  },
-};
 </script>
-
-<style></style>
