@@ -1,5 +1,6 @@
 <script setup>
 import InteractiveMap from "@/components/InteractiveMap";
+import ModaleVisite from "@/components/ModaleVisite.vue";
 </script>
 
 <template>
@@ -90,6 +91,11 @@ import InteractiveMap from "@/components/InteractiveMap";
                 :latitude="restaurant.location.coordinates[1]"
               />
             </v-card>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <ModaleVisite :id="restaurant.id"/>
           </v-col>
         </v-row>
       </v-col>
