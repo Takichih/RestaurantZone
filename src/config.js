@@ -1,8 +1,8 @@
 export const config = {
-  apiUrl: 'https://ufoodapi.herokuapp.com',
-  apiKey: 'your_api_key_here',
+  apiUrl: "https://ufoodapi.herokuapp.com",
+  apiKey: "your_api_key_here",
   debugMode: true,
-  SSL: false
+  SSL: false,
 };
 
 // Importer le fichier de configuration - Exemple
