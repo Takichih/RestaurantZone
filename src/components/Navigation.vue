@@ -33,7 +33,7 @@
 
       <!-- Username and login/logout links -->
       <div v-if="isLogged" class="d-none d-md-flex align-center">
-        <span class="mr-4">{{ username }}</span>
+        <span class="mr-4">{{ userName }}</span>
         <v-btn text @click="logout">
           <v-icon left>mdi-logout</v-icon>
           Déconnexion</v-btn
@@ -86,13 +86,15 @@
 </template>
 
 <script>
+import * as userService from "@/api/UserService";
+
 export default {
   name: "Navigation",
   data() {
     return {
       drawer: false, // Drawer state for mobile menu
       searchQuery: "", //SearchQuery state for search bar
-      username: "Gordon Ramsay", // Username state for user profile
+      userName: "", // Username state for user profile
       isLogged: false, // UserIsLogged state for user profile
     };
   },
@@ -113,14 +115,23 @@ export default {
       this.isLogged = false;
       localStorage.removeItem("isLogged"); // Remove login state from localStorage
       localStorage.removeItem("username"); // Remove username from localStorage
+
+      // Rediriger vers la page d'accueil si sur la userPage'/'
+      if (this.$route.name === "User"){
+        this.$router.push('/');
+      }
+
     },
   },
-  mounted() {
-    // Fetch login state from localStorage
-    const loggedIn = localStorage.getItem("isLogged");
-    if (loggedIn) {
-      this.isLogged = true; // Fetch login state from localStorage
-      this.username = localStorage.getItem("username"); // Fetch username from localStorage
+
+  async created() {
+    try {
+      const user = await userService.getActiveUser();
+      this.userName = user.name;
+      console.log("User name: ", this.userName);
+    } catch (error) {
+      console.error("Error while fetching user: ", error);
+      alert("Error while fetching user:"  + error);
     }
   },
   computed: {

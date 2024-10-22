@@ -5,13 +5,13 @@
         <v-col cols="12" md="4">
           <h4 class="text-left">Nom:</h4>
           <v-card>
-            <h3 class="name">Gordon</h3>
+            <h3 class="name">{{userName}}</h3>
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
-          <h4 class="text-left">Prénom:</h4>
+          <h4 class="text-left">ID:</h4>
           <v-card>
-            <h3 class="name">Ramsay</h3>
+            <h3 class="name">{{userID}}</h3>
           </v-card>
         </v-col>
       </v-row>
@@ -43,7 +43,7 @@
           rounded
         ></v-progress-linear>
 
-        <div class="ms-4 text-h6">77/100</div>
+        <div class="ms-4 text-h6">{{userRating}}/100</div>
       </v-sheet>
     </v-container>
 
@@ -98,6 +98,9 @@
 </template>
 <script>
 import { useRouter } from "vue-router";
+
+import * as userService from "@/api/UserService";
+
 export default {
   data() {
     return {
@@ -108,14 +111,37 @@ export default {
         { name: "L'Ostrea", rating: 3.8, visits: 6 },
         { name: "Le Champlain", rating: 4.0, visits: 5 },
       ],
+      userName: null,
+      userID: null,
+      userEmail: null,
+      userRating: 0,
     };
   },
+
   computed: {
     visitedRestaurants() {
       return this.restaurants.filter((restaurant) => restaurant.visits > 0);
     },
   },
+  async created() {
+    console.log("Import User services : " + await userService.testUserService());
+    await userService.getUserList();
+    try {
+      const user = await userService.getActiveUser();
+      this.userName = user.name;
+      this.userID = user.id;
+      this.userEmail = user.email;
+      this.userRating = parseInt(user.rating);
+      console.log("User: ", user);
+      console.log("User name: ", this.userName);
+    } catch (error) {
+      console.error("Error while fetching user: ", error);
+      alert("Error while fetching user:"  + error);
+    }
+  },
   methods: {
+
+
     // Fonction pour ajouter un restaurant déja visiter a la liste des favories
     AddToFavorites(index) {
       this.restaurants[index].isFavorite = !this.restaurants[index].isFavorite;
