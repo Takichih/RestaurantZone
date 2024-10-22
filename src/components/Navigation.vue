@@ -117,10 +117,9 @@ export default {
       localStorage.removeItem("username"); // Remove username from localStorage
 
       // Rediriger vers la page d'accueil si sur la userPage'/'
-      if (this.$route.name === "User"){
-        this.$router.push('/');
+      if (this.$route.name === "User") {
+        this.$router.push("/");
       }
-
     },
   },
 
@@ -131,7 +130,7 @@ export default {
       console.log("User name: ", this.userName);
     } catch (error) {
       console.error("Error while fetching user: ", error);
-      alert("Error while fetching user:"  + error);
+      alert("Error while fetching user:" + error);
     }
   },
   computed: {

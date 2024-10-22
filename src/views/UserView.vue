@@ -5,13 +5,13 @@
         <v-col cols="12" md="4">
           <h4 class="text-left">Nom:</h4>
           <v-card>
-            <h3 class="name">{{userName}}</h3>
+            <h3 class="name">{{ userName }}</h3>
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
           <h4 class="text-left">ID:</h4>
           <v-card>
-            <h3 class="name">{{userID}}</h3>
+            <h3 class="name">{{ userID }}</h3>
           </v-card>
         </v-col>
       </v-row>
@@ -43,7 +43,7 @@
           rounded
         ></v-progress-linear>
 
-        <div class="ms-4 text-h6">{{userRating}}/100</div>
+        <div class="ms-4 text-h6">{{ userRating }}/100</div>
       </v-sheet>
     </v-container>
 
@@ -124,7 +124,9 @@ export default {
     },
   },
   async created() {
-    console.log("Import User services : " + await userService.testUserService());
+    console.log(
+      "Import User services : " + (await userService.testUserService()),
+    );
     await userService.getUserList();
     try {
       const user = await userService.getActiveUser();
@@ -136,12 +138,10 @@ export default {
       console.log("User name: ", this.userName);
     } catch (error) {
       console.error("Error while fetching user: ", error);
-      alert("Error while fetching user:"  + error);
+      alert("Error while fetching user:" + error);
     }
   },
   methods: {
-
-
     // Fonction pour ajouter un restaurant déja visiter a la liste des favories
     AddToFavorites(index) {
       this.restaurants[index].isFavorite = !this.restaurants[index].isFavorite;
