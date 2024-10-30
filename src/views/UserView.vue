@@ -93,12 +93,14 @@
         </template>
       </v-row>
     </v-container>
+    <Favorites />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import * as userService from "@/api/UserService";
+import Favorites from "@/components/Favorites.vue";
 
 // Define user data references
 const userName = ref(null);

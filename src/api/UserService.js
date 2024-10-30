@@ -30,7 +30,7 @@ export const getUser = async (id) => {
   console.log("URL : " + url);
   const response = await axios.get(url);
   const user = response;
-  console.log("From getUser : " + user.data.name);
+  console.log("From getUser : " + user.data.name + " " + user.data.email);
   return user.data;
 };
 
