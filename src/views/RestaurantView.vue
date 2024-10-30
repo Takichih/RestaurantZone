@@ -1,16 +1,43 @@
 <script setup>
+import axios from "axios";
+import {ref, onMounted} from "vue"
 import InteractiveMap from "@/components/InteractiveMap";
 import ModaleVisite from "@/components/ModaleVisite.vue";
+
+const restaurantId = ref("5f31fc7155d7790550c08b02");
+const restaurant = ref(null);
+
+async function fetchRestaurantDetails(){
+  try{
+    const response = await axios.get(
+      `https://ufoodapi.herokuapp.com/unsecure/restaurants/${restaurantId.value}`
+    );
+    restaurant.value = response.data;
+
+    console.log("Détails du restaurant :");
+    for (const key in restaurant.value) {
+      if (restaurant.value.hasOwnProperty(key)) {
+        console.log(`Attribut: ${key}, Valeur: ${restaurant.value[key]}, Type: ${typeof restaurant.value[key]}`);
+      }
+    }
+  } catch (error){
+    console.error("Erreur lors de la récupération des détails du restaurant:", error);
+  }
+}
+
+onMounted(() => {
+  fetchRestaurantDetails();
+});
 </script>
 
 <template>
   <span class="restaurant">
     <v-row>
       <v-col cols="12" md="6">
-        <v-card :restaurant="restaurant" class="mx-auto" height="100%">
+        <v-card class="mx-auto" height="100%">
           <v-carousel :show-arrows="false" cycle hide-delimiters height="70vh">
             <v-carousel-item
-              v-for="(restaurantPicture, index) in restaurant.pictures"
+              v-for="(restaurantPicture, index) in restaurant?.pictures"
               :key="index"
               :src="restaurantPicture"
               cover
@@ -18,21 +45,21 @@ import ModaleVisite from "@/components/ModaleVisite.vue";
           </v-carousel>
 
           <v-card-item>
-            <v-card-title>{{ restaurant.name }}</v-card-title>
+            <v-card-title>{{ restaurant?.name }}</v-card-title>
 
             <v-card-subtitle>
-              <a :href="`tel:${cleanUpTelNumberForHref(restaurant.tel)}`">{{
-                restaurant.tel
+              <a :href="`tel:${cleanUpTelNumberForHref(restaurant?.tel)}`">{{
+                restaurant?.tel
               }}</a>
             </v-card-subtitle>
             <v-card-subtitle>
-              {{ restaurant.address }}
+              {{ restaurant?.address }}
             </v-card-subtitle>
           </v-card-item>
           <v-card-text class="pb-2">
             <v-row class="mx-0 align-center">
               <v-rating
-                :model-value="restaurant.rating"
+                :model-value="restaurant?.rating"
                 color="amber"
                 density="compact"
                 size="small"
@@ -41,14 +68,14 @@ import ModaleVisite from "@/components/ModaleVisite.vue";
               ></v-rating>
 
               <div class="text-grey ms-2 mt-1">
-                {{ Math.round(restaurant.rating * 100) / 100 }}
+                {{ Math.round(restaurant?.rating * 100) / 100 }}
               </div>
             </v-row>
 
             <div class="mt-4 text-subtitle-1">
-              <p v-for="n in restaurant.price_range" :key="n">$</p>
+              <p v-for="n in restaurant?.price_range" :key="n">$</p>
               •
-              <p v-for="(genre, index) in restaurant.genres" :key="index">
+              <p v-for="(genre, index) in restaurant?.genres" :key="index">
                 {{ genre }}
               </p>
             </div>
@@ -70,7 +97,7 @@ import ModaleVisite from "@/components/ModaleVisite.vue";
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(hours, day, index) in restaurant.opening_hours"
+                    v-for="(hours, day, index) in restaurant?.opening_hours"
                     :key="index"
                   >
                     <td>
@@ -85,17 +112,17 @@ import ModaleVisite from "@/components/ModaleVisite.vue";
         </v-row>
         <v-row>
           <v-col>
-            <v-card width="100%">
+            <v-card width="100%" v-if="restaurant?.location.coordinates">
               <InteractiveMap
-                :longitude="restaurant.location.coordinates[0]"
-                :latitude="restaurant.location.coordinates[1]"
+                :longitude="restaurant?.location.coordinates[0]"
+                :latitude="restaurant?.location.coordinates[1]"
               />
             </v-card>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <ModaleVisite :id="restaurant.id"/>
+            <ModaleVisite :id="restaurant?.id"/>
           </v-col>
         </v-row>
       </v-col>
@@ -105,48 +132,10 @@ import ModaleVisite from "@/components/ModaleVisite.vue";
 
 <script>
 export default {
-  data() {
-    return {
-      restaurant: {
-        opening_hours: {
-          sunday: "11:00-21:00",
-          monday: "11:30-22:00",
-          tuesday: "11:30-22:00",
-          wednesday: "11:30-22:00",
-          thursday: "11:30-22:00",
-          friday: "11:30-22:00",
-          saturday: "11:00-22:00",
-        },
-        pictures: [
-          "https://ufood.s3-us-west-2.amazonaws.com/pictures/121ad2e3-dffb-4a7b-82ef-3eea9c337750.jpg",
-          "https://ufood.s3-us-west-2.amazonaws.com/pictures/5635dd10-ac44-4042-8a10-a551f716aff3.jpg",
-          "https://ufood.s3-us-west-2.amazonaws.com/pictures/d5ee5ec5-c82c-4e38-be50-129295f05499.jpg",
-          "https://ufood.s3-us-west-2.amazonaws.com/pictures/c7a8fea4-8b3c-42bd-bd66-5a8009233758.jpg",
-          "https://ufood.s3-us-west-2.amazonaws.com/pictures/8bf92b33-66ed-4b61-b1c8-cc7e30fee54b.jpg",
-          "https://ufood.s3-us-west-2.amazonaws.com/pictures/69cef28c-31d9-4e02-8295-86855cea5611.jpg",
-          "https://ufood.s3-us-west-2.amazonaws.com/pictures/485ed792-6358-4ffe-baf4-623772b4dcb0.jpg",
-          "https://ufood.s3-us-west-2.amazonaws.com/pictures/66cf7bd7-3aa8-4a86-bc14-ae2782879104.jpg",
-          "https://ufood.s3-us-west-2.amazonaws.com/pictures/36b736ba-b98b-4cd3-8c6e-8f47d3854d53.jpg",
-          "https://ufood.s3-us-west-2.amazonaws.com/pictures/3c207c0d-db68-4e24-a5f3-ed1fa919ccdd.jpg",
-        ],
-        name: "Queues de Castor",
-        place_id: "ChIJ-fDBsRWRuEwR04p9vegfIdo",
-        tel: "(418) 694-1444",
-        address: "28 Boulevard Champlain, Québec, QC G1K 4H7, Canada",
-        price_range: 1,
-        rating: 3.5808704801119697,
-        genres: ["desserts"],
-        location: {
-          coordinates: [-71.2034528, 46.8119889],
-          type: "Point",
-        },
-        id: "5f31fc6155d7790550c08afe",
-      },
-    };
-  },
 
   methods: {
     cleanUpTelNumberForHref(telNumber) {
+      if (!telNumber) return "";
       telNumber = telNumber.replace(")", "");
       telNumber = telNumber.replace("(", "");
       telNumber = telNumber.replace("-", "");
