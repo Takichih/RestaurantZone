@@ -1,14 +1,13 @@
 <template>
     <v-container>
         <v-card>
-            <v-text-field v-model="rating" label="rating" type="number"></v-text-field>
+            <v-text-field v-model="rating" label="rating" type="number" min="0" max="5"></v-text-field>
             <v-text-field v-model="comment" label="comment"></v-text-field>
             <v-menu
               v-model="showDatePicker"
               transition="scale-transition"
               min-width="auto"
-              down="50px"
-              left="100px"
+              :nudge-bottom="10"
               offset-y
             >
               <template v-slot:activator="{ on, attrs }">
@@ -33,7 +32,6 @@
            <v-btn @click="postData">submit</v-btn>
         </v-card>
     </v-container>
-    
 </template>
 <script setup>
 import {ref, computed} from "vue";
