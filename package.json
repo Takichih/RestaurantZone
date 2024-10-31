@@ -9,6 +9,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@mdi/font": "^7.4.47",
     "axios": "^1.7.7",
     "core-js": "^3.8.3",
     "leaflet": "^1.9.4",
@@ -21,7 +22,6 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.18.9",
-    "@mdi/font": "^7.4.47",
     "@vue/cli-plugin-babel": "~5.0.8",
     "@vue/cli-plugin-eslint": "^5.0.8",
     "@vue/cli-service": "~5.0.8",

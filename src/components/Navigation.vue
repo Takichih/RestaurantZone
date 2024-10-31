@@ -14,36 +14,25 @@
       <div class="d-none d-md-flex">
         <v-btn text to="/" exact>
           <v-icon left>mdi-home</v-icon>
-          Accueil</v-btn
-        >
-        <v-btn text to="/restaurant"> Restaurant</v-btn>
+          Accueil</v-btn>
         <v-btn v-if="isLogged" text to="/user">Profile</v-btn>
       </div>
 
       <!-- Search bar: always visible except on home page-->
-      <v-text-field
-        v-if="showSearchBar"
-        v-model="searchQuery"
-        append-icon="mdi-magnify"
-        label="Rechercher..."
-        solo-inverted
-        hide-details
-        class="mx-3"
-      ></v-text-field>
+      <v-text-field v-if="showSearchBar" v-model="searchQuery" append-icon="mdi-magnify" label="Rechercher..."
+        solo-inverted hide-details class="mx-3"></v-text-field>
 
       <!-- Username and login/logout links -->
       <div v-if="isLogged" class="d-none d-md-flex align-center">
         <span class="mr-4">{{ username }}</span>
         <v-btn text @click="logout">
           <v-icon left>mdi-logout</v-icon>
-          Déconnexion</v-btn
-        >
+          Déconnexion</v-btn>
       </div>
       <div v-else class="d-none d-md-flex align center">
         <v-btn text @click="login">
           <v-icon left>mdi-login</v-icon>
-          Connexion</v-btn
-        >
+          Connexion</v-btn>
       </div>
     </v-app-bar>
 
@@ -58,11 +47,6 @@
         <v-list-item link to="/" exact>
           <v-icon>mdi-home</v-icon>
           <v-list-item-title>Accueil</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item link to="/restaurant">
-          <v-icon>mdi-silverware-fork-knife</v-icon>
-          <v-list-item-title>Restaurant</v-list-item-title>
         </v-list-item>
 
         <v-list-item v-if="isLogged" link to="/user">

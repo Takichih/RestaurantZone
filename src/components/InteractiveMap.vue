@@ -1,25 +1,3 @@
-<template>
-  <div>
-    <div id="map"></div>
-    <v-btn @click="startItinerary" id="itinirary-btn" variant-tonal>
-      Itinéraire
-    </v-btn>
-  </div>
-</template>
-
-<style scoped>
-#map {
-  height: 500px;
-}
-
-#itinirary-btn {
-  position: absolute;
-  bottom: 15px;
-  z-index: 9999;
-  left: 15px;
-}
-</style>
-
 <script setup>
 import L from "leaflet";
 import "leaflet.locatecontrol";
@@ -92,3 +70,25 @@ function startItinerary() {
   });
 }
 </script>
+
+<template>
+  <div>
+    <div id="map"></div>
+    <v-btn @click="startItinerary" id="itinirary-btn" variant-tonal>
+      Itinéraire
+    </v-btn>
+  </div>
+</template>
+
+<style scoped>
+#map {
+  height: 500px;
+}
+
+#itinirary-btn {
+  position: absolute;
+  bottom: 15px;
+  z-index: 9999;
+  left: 15px;
+}
+</style>

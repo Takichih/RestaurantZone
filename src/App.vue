@@ -1,15 +1,26 @@
+<script setup>
+import FavoritesDialog from "./components/FavoritesDialog.vue";
+import Navigation from "@/components/Navigation";
+</script>
+
 <template>
   <v-layout>
-    <Navigation></Navigation>
+    <FavoritesDialog />
+    <Navigation />
 
     <v-main>
       <v-container fluid>
-        <router-view></router-view>
+        <Suspense>
+          <template #default>
+            <router-view></router-view>
+          </template>
+          <template #fallback>
+            <div class="text-center">
+              <v-progress-circular color="primary" indeterminate></v-progress-circular>
+            </div>
+          </template>
+        </Suspense>
       </v-container>
     </v-main>
   </v-layout>
 </template>
-
-<script setup>
-import Navigation from "@/components/Navigation";
-</script>
