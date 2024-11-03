@@ -5,13 +5,13 @@
         <v-col cols="12" md="4">
           <h4 class="text-left">Nom:</h4>
           <v-card>
-            <h3 class="name">Gordon</h3>
+            <h3 class="name">{{ userName }}</h3>
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
-          <h4 class="text-left">Prénom:</h4>
+          <h4 class="text-left">ID:</h4>
           <v-card>
-            <h3 class="name">Ramsay</h3>
+            <h3 class="name">{{ userID }}</h3>
           </v-card>
         </v-col>
       </v-row>
@@ -39,11 +39,11 @@
           height="15"
           max="4"
           min="0"
-          model-value="2"
+          :model-value="userRating"
           rounded
         ></v-progress-linear>
 
-        <div class="ms-4 text-h6">77/100</div>
+        <div class="ms-4 text-h6">{{ userRating }}/100</div>
       </v-sheet>
     </v-container>
 
@@ -54,16 +54,15 @@
         </v-col>
       </v-row>
       <v-row>
-        <!-- Afficher un bouton pour revenir à la page d'accueil si aucun restaurant n'a été visité -->
+        <!-- Show a button to return to the homepage if no restaurants were visited -->
         <template v-if="visitedRestaurants.length === 0">
           <v-col cols="12">
             <v-btn color="primary" :to="{ path: '/' }"> Accueil </v-btn>
           </v-col>
         </template>
-
-        <!-- Afficher les cartes des restaurants visités s'il y en a -->
+        <!-- Show cards for each visited restaurant if available -->
         <template v-else>
-          <!-- Utiliser v-col avec une largeur de 6 colonnes pour chaque carte, ce qui donne deux cartes par ligne -->
+          <!-- Use v-col with 6-column width per card, for two cards per row -->
           <v-col
             cols="12"
             md="3"
@@ -79,7 +78,7 @@
                 Nombre de visites: {{ restaurant.visits }}
               </v-card-text>
               <v-card-actions>
-                <v-btn id="heart" icon @click="AddToFavorites(index)">
+                <v-btn id="heart" icon @click="addToFavorites(index)">
                   <v-icon>{{
                     restaurant.isFavorite ? "mdi-heart" : "mdi-heart-outline"
                   }}</v-icon>
@@ -94,45 +93,69 @@
         </template>
       </v-row>
     </v-container>
+    <Favorites />
   </div>
 </template>
-<script>
-import { useRouter } from "vue-router";
-export default {
-  data() {
-    return {
-      // Liste des restaurants disponible, filtré selon le nombre de visits
-      restaurants: [
-        { name: "Chez Wong", rating: 4.5, visits: 4 },
-        { name: "Nina Pizza Napolitaine", rating: 4.2, visits: 2 },
-        { name: "L'Ostrea", rating: 3.8, visits: 6 },
-        { name: "Le Champlain", rating: 4.0, visits: 5 },
-      ],
-    };
-  },
-  computed: {
-    visitedRestaurants() {
-      return this.restaurants.filter((restaurant) => restaurant.visits > 0);
-    },
-  },
-  methods: {
-    // Fonction pour ajouter un restaurant déja visiter a la liste des favories
-    AddToFavorites(index) {
-      this.restaurants[index].isFavorite = !this.restaurants[index].isFavorite;
-    },
 
-    // fonction pour supprimer un restaurant de la liste déja visiter.
-    deleteRestaurant(name) {
-      console.log(`Deleting ${name}`);
-      this.restaurants = this.restaurants.filter(
-        (restaurant) => restaurant.name !== name,
-      );
-    },
-  },
-};
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import * as userService from "@/api/UserService";
+import Favorites from "@/components/Favorites.vue";
+
+// Define user data references
+const userName = ref(null);
+const userID = ref(null);
+const userEmail = ref(null);
+const userRating = ref(0);
+
+// List of restaurants visited
+const restaurants = ref([
+  { name: "Chez Wong", rating: 4.5, visits: 4 },
+  { name: "Nina Pizza Napolitaine", rating: 4.2, visits: 2 },
+  { name: "L'Ostrea", rating: 3.8, visits: 6 },
+  { name: "Le Champlain", rating: 4.0, visits: 5 },
+]);
+
+// Computed property to filter visited restaurants
+const visitedRestaurants = computed(() =>
+  restaurants.value.filter((restaurant) => restaurant.visits > 0),
+);
+
+// Function to add or remove a restaurant from favorites
+function addToFavorites(index) {
+  restaurants.value[index].isFavorite = !restaurants.value[index].isFavorite;
+}
+
+// Function to delete a restaurant from the visited list
+function deleteRestaurant(name) {
+  console.log(`Deleting ${name}`);
+  restaurants.value = restaurants.value.filter(
+    (restaurant) => restaurant.name !== name,
+  );
+}
+
+// Fetch user information when the component is mounted
+onMounted(async () => {
+  console.log(
+    "Import User services : " + (await userService.testUserService()),
+  );
+  await userService.getUserList();
+  try {
+    const user = await userService.getActiveUser();
+    userName.value = user.name;
+    userID.value = user.id;
+    userEmail.value = user.email;
+    userRating.value = parseInt(user.rating);
+    console.log("User: ", user);
+    console.log("User name: ", userName.value);
+  } catch (error) {
+    console.error("Error while fetching user: ", error);
+    alert("Error while fetching user: " + error);
+  }
+});
 </script>
 
-<style>
+<style scoped>
 .d-flex {
   display: flex;
   justify-content: flex-end;

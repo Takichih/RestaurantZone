@@ -14,8 +14,7 @@
       <div class="d-none d-md-flex">
         <v-btn text to="/" exact>
           <v-icon left>mdi-home</v-icon>
-          Accueil</v-btn
-        >
+          Accueil</v-btn>
         <v-btn text to="/restaurant"> Restaurant</v-btn>
         <v-btn v-if="isLogged" text to="/user">Profile</v-btn>
       </div>
