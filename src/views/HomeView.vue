@@ -92,9 +92,7 @@
                     <v-btn
                       icon
                       color="secondary"
-                      class="mx-2"
-                      @click="openModaleVisite"
-                    >
+                      class="mx-2">
                       <v-icon>mdi-message</v-icon>
                     </v-btn>
                   </v-card-actions>

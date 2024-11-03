@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-card>
-            <v-text-field v-model="rating" label="rating" type="number" min="0" max="5"></v-text-field>
+            <v-text-field v-model="rating" label="rating" type="number" min="0" max="5" placeholder="une note entre 0 et 5 s'il vous plait"></v-text-field>
             <v-text-field v-model="comment" label="comment"></v-text-field>
             <v-menu
               v-model="showDatePicker"
@@ -57,11 +57,15 @@ const showCalendar = () => {
 
 const postData = async() =>{
     try{
-      if(rating.value !== ""){
+      const rate = parseFloat(rating.value);
+      if (rate > 5 || rate <0){
+        alert("Entrez une note entre 0 et 5 s'il vous plait")
+      }
+      if(rating.value !== "" && rate <= 5 && rate >= 0 ){
         const dataSent = {
-            "restaurant_id":restaurantId.value,
+            "restaurant_id":restaurantId?.value,
             "comment":comment.value,
-            "rating":parseFloat(rating.value),
+            "rating":rate,
             "date":moment(selectedDate.value).tz('America/Toronto').format('YYYY-MM-DDTHH:mm:ssZ')
         }
         const response = await axios.post(`/${userId.value}/restaurants/visits`, dataSent);
