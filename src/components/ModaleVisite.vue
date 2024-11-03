@@ -43,7 +43,7 @@ const comment = ref("");
 const userId = ref("6569767db55a58e85c543213");
 const rating = ref("");
 const restaurantId = ref("");
-restaurantId.value = props.id;
+restaurantId.value = props?.id;
 const selectedDate = ref(new Date());
 axios.defaults.baseURL = "https://ufoodapi.herokuapp.com/unsecure/users";
 
