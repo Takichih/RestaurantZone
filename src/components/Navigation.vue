@@ -15,12 +15,14 @@
         <v-btn text to="/" exact>
           <v-icon left>mdi-home</v-icon>
           Accueil</v-btn>
+
+        <v-btn text to="/restaurant"> Restaurant</v-btn>
         <v-btn v-if="isLogged" text to="/user">Profile</v-btn>
       </div>
 
       <!-- Search bar: always visible except on home page-->
-      <v-text-field v-if="showSearchBar" v-model="searchQuery" append-icon="mdi-magnify" label="Rechercher..."
-        solo-inverted hide-details class="mx-3"></v-text-field>
+      <SearchBar v-model="searchQuery" />
+
 
       <!-- Username and login/logout links -->
       <div v-if="isLogged" class="d-none d-md-flex align-center">
@@ -37,84 +39,52 @@
     </v-app-bar>
 
     <!-- Navigation Drawer for Mobile -->
-    <v-navigation-drawer app v-model="drawer" temporary class="d-md-none">
-      <!-- Drawer only visible on small screens -->
-
-      <v-list>
-        <v-list-item v-if="isLogged" id="userNameDrawer">
-          <span class="mr-4">{{ username }}</span>
-        </v-list-item>
-        <v-list-item link to="/" exact>
-          <v-icon>mdi-home</v-icon>
-          <v-list-item-title>Accueil</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item v-if="isLogged" link to="/user">
-          <v-icon>mdi-account</v-icon>
-          <v-list-item-title>Profile</v-list-item-title>
-        </v-list-item>
-
-        <!-- Login/Logout in drawer -->
-        <v-list-item @click="login" v-if="!isLogged">
-          <v-icon>mdi-login</v-icon>
-          <v-list-item-title>Connexion</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item @click="logout" v-if="isLogged">
-          <v-icon>mdi-logout</v-icon>
-          <v-list-item-title>Déconnexion</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+    <NavigationDrawer
+      v-model="drawer"
+      :isLogged="isLogged"
+      :username="username"
+      @login="login"
+      @logout="logout"
+    />
   </div>
 </template>
 
-<script>
-export default {
-  name: "Navigation",
-  data() {
-    return {
-      drawer: false, // Drawer state for mobile menu
-      searchQuery: "", //SearchQuery state for search bar
-      username: "Gordon Ramsay", // Username state for user profile
-      isLogged: false, // UserIsLogged state for user profile
-    };
-  },
-  methods: {
-    toggleDrawer() {
-      // Toggle drawer state manually
-      this.drawer = !this.drawer;
-    },
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import SearchBar from "@/components/SearchBar.vue";
+import NavigationDrawer from "@/components/NavigationDrawer.vue";
 
-    login() {
-      // Simulates global login
-      this.isLogged = true;
-      localStorage.setItem("isLogged", true); // Saves login state in localStorage;
-      localStorage.setItem("username", this.username); // Saves username in localStorage;
-    },
-    logout() {
-      // Simulates global logout
-      this.isLogged = false;
-      localStorage.removeItem("isLogged"); // Remove login state from localStorage
-      localStorage.removeItem("username"); // Remove username from localStorage
-    },
-  },
-  mounted() {
-    // Fetch login state from localStorage
-    const loggedIn = localStorage.getItem("isLogged");
-    if (loggedIn) {
-      this.isLogged = true; // Fetch login state from localStorage
-      this.username = localStorage.getItem("username"); // Fetch username from localStorage
-    }
-  },
-  computed: {
-    // Computed property for showing search bar
-    showSearchBar() {
-      // Show search bar except on Home page
-      return this.$route.name !== "Home";
-    },
-  },
+
+const drawer = ref(false);
+const searchQuery = ref("");
+const username = ref("Gordon Ramsay");
+const isLogged = ref(false);
+const route = useRoute();
+
+const toggleDrawer = () => {
+  drawer.value = !drawer.value;
 };
+
+const login = () => {
+  isLogged.value = true;
+  localStorage.setItem("isLogged", true);
+  localStorage.setItem("username", username.value);
+};
+
+const logout = () => {
+  isLogged.value = false;
+  localStorage.removeItem("isLogged");
+  localStorage.removeItem("username");
+};
+
+onMounted(() => {
+  const loggedIn = localStorage.getItem("isLogged");
+  if (loggedIn) {
+    isLogged.value = true;
+    username.value = localStorage.getItem("username");
+  }
+});
 </script>
 
 <style>
