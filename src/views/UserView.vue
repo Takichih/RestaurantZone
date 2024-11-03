@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier/prettier -->
 <template>
   <div>
     <v-container>
@@ -57,7 +58,7 @@
         <!-- Show a button to return to the homepage if no restaurants were visited -->
         <template v-if="visitedRestaurants.length === 0">
           <v-col cols="12">
-            <v-btn color="primary" :to="{ path: '/' }"> Accueil </v-btn>
+            <v-btn color="primary" @click="goHome"> Accueil </v-btn>
           </v-col>
         </template>
         <!-- Show cards for each visited restaurant if available -->
@@ -101,6 +102,8 @@
 import { ref, computed, onMounted } from "vue";
 import * as userService from "@/api/UserService";
 import Favorites from "@/components/Favorites.vue";
+import { useRouter } from "vue-router";
+import FavoriteService from "@/api/FavoriteService";
 
 // Define user data references
 const userName = ref(null);
@@ -110,11 +113,17 @@ const userRating = ref(0);
 
 // List of restaurants visited
 const restaurants = ref([
-  { name: "Chez Wong", rating: 4.5, visits: 4 },
-  { name: "Nina Pizza Napolitaine", rating: 4.2, visits: 2 },
-  { name: "L'Ostrea", rating: 3.8, visits: 6 },
-  { name: "Le Champlain", rating: 4.0, visits: 5 },
+  { id: "1", name: "Chez Wong", rating: 4.5, visits: 4 },
+  { id: "2", name: "Nina Pizza Napolitaine", rating: 4.2, visits: 2 },
+  { id: "3", name: "L'Ostrea", rating: 3.8, visits: 6 },
+  { id: "4", name: "Le Champlain", rating: 4.0, visits: 5 },
 ]);
+
+const router = useRouter();
+//j'ajoute une fonction goHome
+function goHome() {
+  router.push("/");
+}
 
 // Computed property to filter visited restaurants
 const visitedRestaurants = computed(() =>
@@ -122,9 +131,32 @@ const visitedRestaurants = computed(() =>
 );
 
 // Function to add or remove a restaurant from favorites
-function addToFavorites(index) {
-  restaurants.value[index].isFavorite = !restaurants.value[index].isFavorite;
-}
+const addToFavorites = async (index) => {
+  const restaurant = restaurants.value[index];
+  const favoriteId = "672686c5242806c2468d2d94";
+
+  try {
+    if (restaurant.isFavorite) {
+      await FavoriteService.removeRestaurantFromFavoriteList(
+        favoriteId,
+        restaurant.id,
+      );
+      restaurant.isFavorite = false;
+
+      console.log(`Removed ${restaurant.name} from favorites`);
+    } else {
+      await FavoriteService.addRestaurantToFavoriteList(
+        favoriteId,
+        restaurant.id,
+      );
+      restaurant.isFavorite = true;
+      console.log(`Added ${restaurant.name} to favorites`);
+    }
+    await fetchUserFavorites();
+  } catch (error) {
+    console.error("Error adding restaurant to favorites:", error);
+  }
+};
 
 // Function to delete a restaurant from the visited list
 function deleteRestaurant(name) {
