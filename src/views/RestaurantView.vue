@@ -17,12 +17,12 @@ async function fetchRestaurantDetails(){
     );
     restaurant.value = response.data;
 
-    console.log("Détails du restaurant :");
-    for (const key in restaurant.value) {
-      if (restaurant.value.hasOwnProperty(key)) {
-        console.log(`Attribut: ${key}, Valeur: ${restaurant.value[key]}, Type: ${typeof restaurant.value[key]}`);
-      }
-    }
+    // console.log("Détails du restaurant :");
+    // for (const key in restaurant.value) {
+    //   if (restaurant.value.hasOwnProperty(key)) {
+    //     console.log(`Attribut: ${key}, Valeur: ${restaurant.value[key]}, Type: ${typeof restaurant.value[key]}`);
+    //   }
+    // }
   } catch (error){
     console.error("Erreur lors de la récupération des détails du restaurant:", error);
   }
@@ -44,7 +44,7 @@ const formatDate = (dateString) => {
 }
 
 const handleVisitSubmitted = (visitData) => {
-  console.log("Nouvelle visite reçue :", visitData); 
+  // console.log("Nouvelle visite reçue :", visitData); 
 
   visits.value.unshift(visitData);
 };

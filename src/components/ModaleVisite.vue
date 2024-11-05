@@ -42,9 +42,9 @@ import axios from "axios";
 const props = defineProps(["id"]);
 const emit = defineEmits(["visitSubmitted"]);
 const showDatePicker = ref(false);
-const comment = ref("");
+const comment = ref(null);
 const userId = ref("6569767db55a58e85c543213");
-const rating = ref("");
+const rating = ref(null);
 const restaurantId = ref("");
 restaurantId.value = props?.id;
 const selectedDate = ref(new Date());
@@ -67,21 +67,20 @@ const postData = async() =>{
       }
       if(rating.value !== "" && rate <= 5 && rate >= 0 ){
         const dataSent = {
-            "user_id": userId.value,
             "restaurant_id":props.id,
             "comment":comment.value,
             "rating":rate,
             "date":moment(selectedDate.value).tz('America/Toronto').format('YYYY-MM-DDTHH:mm:ssZ')
         }
-        console.log("Données envoyées :", dataSent);
+        // console.log("Données envoyées :", dataSent);
 
         const response = await axios.post(`/${userId.value}/restaurants/visits`, dataSent);
-        console.log("Reponse de l'API",response.data);
+        // console.log("Reponse de l'API",response.data);
 
         emit("visitSubmitted", { ...response.data, user_id: userId.value });
 
-        comment.value = "";
-        rating.value = 0;
+        comment.value = null;
+        rating.value = null;
       }
     }catch(error){
       console.log("Une erreur est survenue " + error.message);
