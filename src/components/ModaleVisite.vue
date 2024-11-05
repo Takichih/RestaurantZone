@@ -33,11 +33,14 @@
         </v-card>
     </v-container>
 </template>
+
 <script setup>
 import {ref, computed} from "vue";
 import moment from "moment-timezone";
 import axios from "axios";
+
 const props = defineProps(["id"]);
+const emit = defineEmits(["visitSubmitted"]);
 const showDatePicker = ref(false);
 const comment = ref("");
 const userId = ref("6569767db55a58e85c543213");
@@ -45,12 +48,13 @@ const rating = ref("");
 const restaurantId = ref("");
 restaurantId.value = props?.id;
 const selectedDate = ref(new Date());
-axios.defaults.baseURL = "https://ufoodapi.herokuapp.com/unsecure/users";
 
+axios.defaults.baseURL = "https://ufoodapi.herokuapp.com/unsecure/users";
 
 const formattedDate = computed(() => {
   return moment(selectedDate.value).tz('America/Toronto').format('YYYY-MM-DDTHH:mm:ssZ');
 });
+
 const showCalendar = () => {
   showDatePicker.value = true;
 };
@@ -63,18 +67,24 @@ const postData = async() =>{
       }
       if(rating.value !== "" && rate <= 5 && rate >= 0 ){
         const dataSent = {
-            "restaurant_id":restaurantId?.value,
+            "user_id": userId.value,
+            "restaurant_id":props.id,
             "comment":comment.value,
             "rating":rate,
             "date":moment(selectedDate.value).tz('America/Toronto').format('YYYY-MM-DDTHH:mm:ssZ')
         }
+        console.log("Données envoyées :", dataSent);
+
         const response = await axios.post(`/${userId.value}/restaurants/visits`, dataSent);
-        console.log(response.data);
+        console.log("Reponse de l'API",response.data);
+
+        emit("visitSubmitted", { ...response.data, user_id: userId.value });
+
         comment.value = "";
         rating.value = 0;
       }
     }catch(error){
-      console.log("Une erreur est survenue" + error.message);
+      console.log("Une erreur est survenue " + error.message);
     }
 
 }
