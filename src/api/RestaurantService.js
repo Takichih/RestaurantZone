@@ -49,8 +49,6 @@ export default {
     if (price_range) urlToCall += `&price_range=${price_range}`;
     if (lon && lat) urlToCall += `&lon=${lon}&lat=${lat}`;
 
-    console.log(urlToCall);
-
     try {
       const response = await apiClient.get(urlToCall);
 
