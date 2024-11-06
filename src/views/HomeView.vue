@@ -89,10 +89,7 @@
                     >
                       <v-icon icon="mdi-information-outline"></v-icon>
                     </v-btn>
-                    <v-btn
-                      icon
-                      color="secondary"
-                      class="mx-2">
+                    <v-btn icon color="secondary" class="mx-2">
                       <v-icon>mdi-message</v-icon>
                     </v-btn>
                   </v-card-actions>
@@ -106,12 +103,11 @@
   </div>
 </template>
 <script setup>
-import {ref} from "vue";
+import { ref } from "vue";
 const modaleViste = ref(false);
-const openModaleVisite = () =>{
+const openModaleVisite = () => {
   ModaleVisite.value = true;
-}
-
+};
 </script>
 <script>
 export default {
