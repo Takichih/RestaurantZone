@@ -167,8 +167,8 @@ const fetchUserFavorites = async () => {
     for (const list of lists) {
       list.restaurants = await Promise.all(
         list.restaurants.map(async (restaurant) => {
-          const detailsResponse = await RestaurantService.getRestaurantDetails(restaurant.id);
-          return detailsResponse.data;
+          const detailsResponse = await RestaurantService.getRestaurant(restaurant.id);
+          return detailsResponse;
         })
       );
     }
@@ -182,7 +182,7 @@ const fetchAllRestaurants = async () => {
   try {
     const response = await RestaurantService.getRestaurants();
     // Use a temporary variable to store filtered and mapped data
-    const filteredRestaurants = response.data.items
+    const filteredRestaurants = response
       .filter((restaurant) => restaurant.name && restaurant.id)
       .map((restaurant) => ({
         name: restaurant.name,

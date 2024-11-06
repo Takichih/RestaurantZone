@@ -1,3 +1,12 @@
+<script setup>
+import RestaurantService from '@/api/RestaurantService';
+
+const restaurants = await RestaurantService.getRestaurants();
+
+console.log(restaurants);
+
+</script>
+
 <template>
   <div>
     <div class="text-h3 text-center my-5">Bienvenue sur UFood</div>

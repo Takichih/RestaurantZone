@@ -14,12 +14,6 @@
         <v-list-item-title>Accueil</v-list-item-title>
       </v-list-item>
 
-      <!-- Restaurant link -->
-      <v-list-item link to="/restaurant">
-        <v-icon>mdi-silverware-fork-knife</v-icon>
-        <v-list-item-title>Restaurant</v-list-item-title>
-      </v-list-item>
-
       <!-- Profile link if logged-->
       <v-list-item v-if="isLogged" link to="/user">
         <v-icon>mdi-account</v-icon>

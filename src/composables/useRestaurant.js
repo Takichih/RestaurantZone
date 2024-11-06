@@ -1,11 +1,11 @@
 import { ref } from 'vue';
-import * as restaurants from "@/services/restaurants";
+import RestaurantService from "@/api/RestaurantService";
 
 export async function useRestaurant(restaurantId) {
   const restaurant = ref({});
 
   const getRestaurant = async () => {
-    const data = await restaurants.getRestaurant(restaurantId);
+    const data = await RestaurantService.getRestaurant(restaurantId);
     restaurant.value = data;
 
     cleanUpTelForHref();
