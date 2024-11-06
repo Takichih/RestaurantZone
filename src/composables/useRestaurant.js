@@ -3,6 +3,7 @@ import RestaurantService from "@/api/RestaurantService";
 
 export async function useRestaurant(restaurantId) {
   const restaurant = ref({});
+  const visits = ref([]);
 
   const getRestaurant = async () => {
     const data = await RestaurantService.getRestaurant(restaurantId);
@@ -10,6 +11,11 @@ export async function useRestaurant(restaurantId) {
 
     cleanUpTelForHref();
     cleanUpOpeningHours();
+  };
+
+  const getRestaurantVisits = async () => {
+    const data = await RestaurantService.getRestaurantVisits(restaurantId);
+    visits.value = data;
   };
 
   const cleanUpTelForHref = () => {
@@ -70,6 +76,7 @@ export async function useRestaurant(restaurantId) {
   };
 
   await getRestaurant();
+  await getRestaurantVisits();
 
-  return { restaurant };
+  return { restaurant, visits };
 }

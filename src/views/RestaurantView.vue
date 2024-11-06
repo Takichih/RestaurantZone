@@ -1,18 +1,25 @@
 <script setup>
 import { useRestaurant } from "@/composables/useRestaurant";
 import { useRoute } from "vue-router";
-import { store } from "@/store.js";
+import moment from "moment";
+import "moment/locale/fr";
 
 // Components
 import InteractiveMap from "@/components/InteractiveMap";
+import ModaleVisite from "@/components/ModaleVisite.vue";
 
 const route = useRoute();
 const currentRestaurantId = route.params.restaurantId;
-const { restaurant } = await useRestaurant(currentRestaurantId);
+const { restaurant, visits } = await useRestaurant(currentRestaurantId);
 
-const openFavoritesModal = () => {
-  store.setFavoritesModalOpen(true);
-  store.setRestaurantIdToAddToFavorites(currentRestaurantId);
+const formatDate = (dateString) => {
+  return moment(dateString).locale("fr").format("D MMMM YYYY, HH[h]mm");
+};
+
+const handleVisitSubmitted = (visitData) => {
+  // console.log("Nouvelle visite reçue :", visitData);
+
+  visits.value.unshift(visitData);
 };
 </script>
 
@@ -63,11 +70,51 @@ const openFavoritesModal = () => {
             </p>
           </div>
         </v-card-text>
-        <v-card-actions class="justify-center">
-          <v-btn icon color="primary" class="mx-2">
-            <v-icon icon="mdi-heart-outline" @click="openFavoritesModal" />
-          </v-btn>
-        </v-card-actions>
+        <div v-if="visits && visits.length" class="mt-4 text-subtitle-1">
+          <v-divider></v-divider>
+          <v-card-title class="mt-4">Avis des visiteurs</v-card-title>
+
+          <div v-for="visit in visits" :key="visit.id" class="visit-card mt-4">
+            <v-card-item>
+              <v-row class="d-flex align-center" justify="space-between">
+                <v-col class="text-start" cols="6">
+                  <p class="text-body-2">
+                    {{ visit.user_id }}
+                  </p>
+                </v-col>
+                <v-col class="text-end" cols="6">
+                  <p class="text-body-2 text-grey">
+                    {{ formatDate(visit.date) }}
+                  </p>
+                </v-col>
+              </v-row>
+            </v-card-item>
+
+            <v-card-text class="rating">
+              <v-row class="mx-0 align-center">
+                <v-rating
+                  :model-value="visit.rating"
+                  color="amber"
+                  density="compact"
+                  size="small"
+                  half-increments
+                  readonly
+                >
+                </v-rating>
+
+                <span class="text-grey ms-2 mt-1">
+                  {{ visit.rating }}
+                </span>
+              </v-row>
+
+              <div class="comment mt-4 text-subtitle-1">
+                <p>
+                  {{ visit.comment }}
+                </p>
+              </div>
+            </v-card-text>
+          </div>
+        </div>
       </v-card>
     </v-col>
     <v-col cols="12" md="6">
@@ -108,6 +155,14 @@ const openFavoritesModal = () => {
           </v-card>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col>
+          <ModaleVisite
+            :id="restaurant?.id"
+            @visitSubmitted="handleVisitSubmitted"
+          />
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
@@ -127,5 +182,15 @@ p::first-letter {
 
 th {
   font-weight: bold !important;
+}
+
+.visit-card {
+  background-color: #f0f0f5;
+  border-radius: 8px;
+  margin: 20px;
+}
+
+.directions {
+  text-decoration: none;
 }
 </style>
