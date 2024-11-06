@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref } from "vue";
 import RestaurantService from "@/api/RestaurantService";
 
 export async function useRestaurant(restaurantId) {
@@ -10,10 +10,10 @@ export async function useRestaurant(restaurantId) {
 
     cleanUpTelForHref();
     cleanUpOpeningHours();
-  }
+  };
 
   const cleanUpTelForHref = () => {
-    let newTel = restaurant.value.tel
+    let newTel = restaurant.value.tel;
     newTel = newTel.replace(")", "");
     newTel = newTel.replace("(", "");
     newTel = newTel.replace("-", "");
@@ -21,7 +21,7 @@ export async function useRestaurant(restaurantId) {
     newTel = "+1" + newTel;
 
     restaurant.value.cleanedTel = newTel;
-  }
+  };
 
   const cleanUpOpeningHours = () => {
     let frenchOpeningHours = {};
@@ -33,7 +33,7 @@ export async function useRestaurant(restaurantId) {
       if (openingHours[key]) {
         hours = openingHours[key].replace("-", " à ");
       } else {
-        hours = "Fermé"
+        hours = "Fermé";
       }
 
       switch (key) {
@@ -67,9 +67,9 @@ export async function useRestaurant(restaurantId) {
     }
 
     restaurant.value.opening_hours = frenchOpeningHours;
-  }
+  };
 
   await getRestaurant();
 
-  return { restaurant }
+  return { restaurant };
 }

@@ -14,11 +14,6 @@ import Navigation from "@/components/Navigation";
           <template #default>
             <router-view></router-view>
           </template>
-          <template #fallback>
-            <div class="text-center">
-              <v-progress-circular color="primary" indeterminate></v-progress-circular>
-            </div>
-          </template>
         </Suspense>
       </v-container>
     </v-main>

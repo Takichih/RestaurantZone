@@ -1,10 +1,9 @@
 <script setup>
-import RestaurantService from '@/api/RestaurantService';
+import RestaurantService from "@/api/RestaurantService";
 
 const restaurants = await RestaurantService.getRestaurants();
 
 console.log(restaurants);
-
 </script>
 
 <template>

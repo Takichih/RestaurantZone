@@ -34,15 +34,15 @@ export const getUser = async (id) => {
   return user.data;
 };
 //chercher la liste des ID de listes de favoris
-export const listeOfIDdesListesFavoris = async (id)=>{
-  try{
-      const response = await axios.get(`${config.apiUrl}/users/:id/favorites`);
-  }catch(error){
-        console.error(
-      `Erreur lors de la récupération des IDs : ${error.response.statusText}`
+export const listeOfIDdesListesFavoris = async (id) => {
+  try {
+    const response = await axios.get(`${config.apiUrl}/users/:id/favorites`);
+  } catch (error) {
+    console.error(
+      `Erreur lors de la récupération des IDs : ${error.response.statusText}`,
     );
   }
-}
+};
 export const getActiveUser = async () => {
   let userID = localStorage.getItem("userID");
   if (!userID) {
@@ -79,5 +79,4 @@ export const createUser = async (name, email, password) => {
     );
     throw error;
   }
-
 };

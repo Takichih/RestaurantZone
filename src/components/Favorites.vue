@@ -15,8 +15,13 @@
     <v-expansion-panels>
       <v-expansion-panel v-for="list in favoriteLists" :key="list.id">
         <v-expansion-panel-title>
-          <div class="d-flex align-center justify-space-between" style="width: 100%;">
-            <span v-if="!list.isEditing"><strong>{{ list.name }}</strong></span>
+          <div
+            class="d-flex align-center justify-space-between"
+            style="width: 100%"
+          >
+            <span v-if="!list.isEditing"
+              ><strong>{{ list.name }}</strong></span
+            >
             <v-text-field
               v-else
               v-model="list.newName"
@@ -26,7 +31,7 @@
               maxlength="50"
               required
               hide-details
-              style="max-width: 200px;"
+              style="max-width: 200px"
             ></v-text-field>
 
             <div class="d-flex align-center">
@@ -35,7 +40,7 @@
                   <v-icon :disabled="!list.newName.trim()">mdi-check</v-icon>
                 </v-btn>
                 <v-btn icon @click="cancelEdit(list)">
-                  <v-icon >mdi-close</v-icon>
+                  <v-icon>mdi-close</v-icon>
                 </v-btn>
               </template>
 
@@ -51,25 +56,47 @@
           </div>
         </v-expansion-panel-title>
 
-
         <v-expansion-panel-text>
           <v-list>
             <v-list-item
               v-for="restaurant in list.restaurants"
               :key="restaurant.id"
             >
-              <div class="d-flex justify-space-between align-center" style="width: 100%; padding: 8px; background-color: #f8f9fa; border-radius: 8px;">
+              <div
+                class="d-flex justify-space-between align-center"
+                style="
+                  width: 100%;
+                  padding: 8px;
+                  background-color: #f8f9fa;
+                  border-radius: 8px;
+                "
+              >
                 <div class="restaurant-info">
-                  <v-btn text @click="goHome" color="primary" class="restaurant-name">
+                  <v-btn
+                    text
+                    @click="goHome"
+                    color="primary"
+                    class="restaurant-name"
+                  >
                     {{ restaurant.name }}
                   </v-btn>
-                  <span class="ml-2 text-body-2" style="color: #616161;">Score: <strong>{{ restaurant.rating }}</strong></span>
+                  <span class="ml-2 text-body-2" style="color: #616161"
+                    >Score: <strong>{{ restaurant.rating }}</strong></span
+                  >
                 </div>
                 <div class="d-flex">
-                  <v-btn icon @click="viewRestaurantDetails(restaurant.id)" color="info">
+                  <v-btn
+                    icon
+                    @click="viewRestaurantDetails(restaurant.id)"
+                    color="info"
+                  >
                     <v-icon>mdi-eye</v-icon>
                   </v-btn>
-                  <v-btn icon @click="removeRestaurantFromList(list.id, restaurant.id)" color="error">
+                  <v-btn
+                    icon
+                    @click="removeRestaurantFromList(list.id, restaurant.id)"
+                    color="error"
+                  >
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </div>
@@ -107,7 +134,8 @@ const selectedRestaurant = ref(null);
 const userID = ref("");
 const userEmail = ref("");
 const form = ref(null);
-const nameRequiredRule = (value) => !!value || "Veuillez entrer un nom pour la liste";
+const nameRequiredRule = (value) =>
+  !!value || "Veuillez entrer un nom pour la liste";
 onMounted(async () => {
   await fetchActiveUser();
   await fetchUserFavorites();
@@ -121,7 +149,6 @@ const startEdit = (list) => {
   list.newName = list.name;
 };
 const saveListName = async (list) => {
-
   if (!list.newName.trim()) {
     list.isEditing = false;
     return;
@@ -129,12 +156,14 @@ const saveListName = async (list) => {
   const isDuplicate = favoriteLists.value.some(
     (favorite) =>
       favorite.name.toLowerCase() === list.newName.trim().toLowerCase() &&
-      favorite.id !== list.id
+      favorite.id !== list.id,
   );
 
   if (isDuplicate) {
     console.warn("Une liste avec ce nom existe déjà.");
-    alert("Une liste avec ce nom existe déjà. Veuillez choisir un nom différent.");
+    alert(
+      "Une liste avec ce nom existe déjà. Veuillez choisir un nom différent.",
+    );
     return;
   }
 
@@ -167,13 +196,18 @@ const fetchUserFavorites = async () => {
     for (const list of lists) {
       list.restaurants = await Promise.all(
         list.restaurants.map(async (restaurant) => {
-          const detailsResponse = await RestaurantService.getRestaurant(restaurant.id);
+          const detailsResponse = await RestaurantService.getRestaurant(
+            restaurant.id,
+          );
           return detailsResponse;
-        })
+        }),
       );
     }
     favoriteLists.value = lists;
-    console.log("Data in favoriteLists:", JSON.stringify(favoriteLists.value, null, 2));
+    console.log(
+      "Data in favoriteLists:",
+      JSON.stringify(favoriteLists.value, null, 2),
+    );
   } catch (error) {
     console.error("Error fetching favorite lists:", error);
   }
@@ -200,11 +234,14 @@ const createFavoriteList = async () => {
     return;
   }
   const isDuplicate = favoriteLists.value.some(
-    (list) => list.name.toLowerCase() === newListName.value.trim().toLowerCase()
+    (list) =>
+      list.name.toLowerCase() === newListName.value.trim().toLowerCase(),
   );
   if (isDuplicate) {
     console.error("Une liste avec ce nom existe déjà.");
-    alert("Veuillez choisir un nom différent. Une liste avec ce nom existe déjà.");
+    alert(
+      "Veuillez choisir un nom différent. Une liste avec ce nom existe déjà.",
+    );
     return;
   }
   const isValid = await form.value.validate();
@@ -230,13 +267,15 @@ const addSelectedRestaurantToList = async (favoriteId) => {
     console.error("Selection de liste ou restaurant manquante");
     return;
   }
-  const favoriteList = favoriteLists.value.find(list => list.id === favoriteId);
+  const favoriteList = favoriteLists.value.find(
+    (list) => list.id === favoriteId,
+  );
   if (!favoriteList) {
     console.error("Liste de favoris non trouvée");
     return;
   }
   const restaurantExists = favoriteList.restaurants.some(
-    (restaurant) => restaurant.id === selectedRestaurant.value
+    (restaurant) => restaurant.id === selectedRestaurant.value,
   );
 
   if (restaurantExists) {
@@ -245,7 +284,10 @@ const addSelectedRestaurantToList = async (favoriteId) => {
   }
 
   try {
-    await FavoriteService.addRestaurantToFavoriteList(favoriteId, selectedRestaurant.value);
+    await FavoriteService.addRestaurantToFavoriteList(
+      favoriteId,
+      selectedRestaurant.value,
+    );
     await fetchUserFavorites();
     selectedRestaurant.value = null;
     console.log("Restaurant ajouté à la liste des favoris avec succès.");
@@ -281,5 +323,4 @@ const viewRestaurantDetails = (restaurantId) => {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

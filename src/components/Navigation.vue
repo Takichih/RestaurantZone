@@ -14,7 +14,8 @@
       <div class="d-none d-md-flex">
         <v-btn text to="/" exact>
           <v-icon left>mdi-home</v-icon>
-          Accueil</v-btn>
+          Accueil</v-btn
+        >
 
         <v-btn v-if="isLogged" text to="/user">Profile</v-btn>
       </div>
@@ -22,18 +23,19 @@
       <!-- Search bar: always visible except on home page-->
       <SearchBar v-model="searchQuery" />
 
-
       <!-- Username and login/logout links -->
       <div v-if="isLogged" class="d-none d-md-flex align-center">
         <span class="mr-4">{{ username }}</span>
         <v-btn text @click="logout">
           <v-icon left>mdi-logout</v-icon>
-          Déconnexion</v-btn>
+          Déconnexion</v-btn
+        >
       </div>
       <div v-else class="d-none d-md-flex align center">
         <v-btn text @click="login">
           <v-icon left>mdi-login</v-icon>
-          Connexion</v-btn>
+          Connexion</v-btn
+        >
       </div>
     </v-app-bar>
 
@@ -53,7 +55,6 @@ import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import SearchBar from "@/components/SearchBar.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
-
 
 const drawer = ref(false);
 const searchQuery = ref("");

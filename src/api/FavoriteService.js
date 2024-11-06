@@ -46,19 +46,21 @@ export default {
   },
 
   addRestaurantToFavoriteList(favoriteId, restaurantId) {
-    try{
+    try {
       return apiClient.post(`/favorites/${favoriteId}/restaurants`, {
-      id: restaurantId,
-    });
-    }catch(error){
+        id: restaurantId,
+      });
+    } catch (error) {
       console.log("Something Wrong here", error);
     }
   },
   removeRestaurantFromFavoriteList(favoriteId, restaurantId) {
     try {
-        return apiClient.delete(`/favorites/${favoriteId}/restaurants/${restaurantId}`);
+      return apiClient.delete(
+        `/favorites/${favoriteId}/restaurants/${restaurantId}`,
+      );
     } catch (error) {
-        console.log("Something went wrong here", error);
+      console.log("Something went wrong here", error);
     }
-},
+  },
 };

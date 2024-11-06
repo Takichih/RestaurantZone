@@ -1,19 +1,19 @@
 <script setup>
 import { useRestaurant } from "@/composables/useRestaurant";
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router";
 import { store } from "@/store.js";
 
 // Components
 import InteractiveMap from "@/components/InteractiveMap";
 
-const route = useRoute()
-const currentRestaurantId = route.params.restaurantId
+const route = useRoute();
+const currentRestaurantId = route.params.restaurantId;
 const { restaurant } = await useRestaurant(currentRestaurantId);
 
 const openFavoritesModal = () => {
-  store.setFavoritesModalOpen(true)
+  store.setFavoritesModalOpen(true);
   store.setRestaurantIdToAddToFavorites(currentRestaurantId);
-}
+};
 </script>
 
 <template>
@@ -21,17 +21,19 @@ const openFavoritesModal = () => {
     <v-col cols="12" md="6">
       <v-card :restaurant="restaurant" class="mx-auto" height="100%">
         <v-carousel :show-arrows="false" cycle hide-delimiters height="70vh">
-          <v-carousel-item v-for="(restaurantPicture, index) in restaurant.pictures" :key="index"
-            :src="restaurantPicture" cover></v-carousel-item>
+          <v-carousel-item
+            v-for="(restaurantPicture, index) in restaurant.pictures"
+            :key="index"
+            :src="restaurantPicture"
+            cover
+          ></v-carousel-item>
         </v-carousel>
 
         <v-card-item>
           <v-card-title>{{ restaurant.name }}</v-card-title>
 
           <v-card-subtitle>
-            <a :href="`tel:${restaurant.cleanedTel}`">{{
-              restaurant.tel
-              }}</a>
+            <a :href="`tel:${restaurant.cleanedTel}`">{{ restaurant.tel }}</a>
           </v-card-subtitle>
           <v-card-subtitle>
             {{ restaurant.address }}
@@ -39,8 +41,14 @@ const openFavoritesModal = () => {
         </v-card-item>
         <v-card-text class="pb-2">
           <v-row class="mx-0 align-center">
-            <v-rating :model-value="restaurant.rating" color="amber" density="compact" size="small" half-increments
-              readonly></v-rating>
+            <v-rating
+              :model-value="restaurant.rating"
+              color="amber"
+              density="compact"
+              size="small"
+              half-increments
+              readonly
+            ></v-rating>
 
             <div class="text-grey ms-2 mt-1">
               {{ Math.round(restaurant.rating * 100) / 100 }}
@@ -76,7 +84,10 @@ const openFavoritesModal = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(hours, day, index) in restaurant.opening_hours" :key="index">
+                <tr
+                  v-for="(hours, day, index) in restaurant.opening_hours"
+                  :key="index"
+                >
                   <td>
                     <p>{{ day }}</p>
                   </td>
@@ -84,13 +95,16 @@ const openFavoritesModal = () => {
                 </tr>
               </tbody>
             </v-table>
-          </v-card></v-col>
+          </v-card></v-col
+        >
       </v-row>
       <v-row>
         <v-col>
           <v-card width="100%">
-            <InteractiveMap :longitude="restaurant.location.coordinates[0]"
-              :latitude="restaurant.location.coordinates[1]" />
+            <InteractiveMap
+              :longitude="restaurant.location.coordinates[0]"
+              :latitude="restaurant.location.coordinates[1]"
+            />
           </v-card>
         </v-col>
       </v-row>
