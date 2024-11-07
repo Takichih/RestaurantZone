@@ -12,7 +12,6 @@ const userRating = ref(0);
 
 const recentVisits = ref([]);
 
-// Fetch recent visits using VisitService
 const fetchRecentVisits = async () => {
   try {
     const visits = await VisitService.getRecentVisits(userID.value);
@@ -22,7 +21,6 @@ const fetchRecentVisits = async () => {
   }
 };
 
-// Toggle favorite status of a restaurant using restaurant_id
 function toggleFavorite(restaurant_id) {
   const restaurant = recentVisits.value.find(
     (r) => r.restaurant_id === restaurant_id,
@@ -32,19 +30,16 @@ function toggleFavorite(restaurant_id) {
   }
 }
 
-// Delete a restaurant from the recent visits list
 function deleteRestaurant(restaurant_id) {
   recentVisits.value = recentVisits.value.filter(
     (restaurant) => restaurant.restaurant_id !== restaurant_id,
   );
 }
 
-// Fetch user information and recent visits when the component is mounted
 onMounted(async () => {
   try {
     const user = await userService.getActiveUser();
 
-    // Set user properties from fetched data
     userName.value = user.name || "Nom non disponible";
     userID.value = user.id || "ID non disponible";
     userEmail.value = user.email || "Email non disponible";
@@ -65,14 +60,12 @@ onMounted(async () => {
           <h4 class="text-left">Nom:</h4>
           <v-card>
             <h3 class="name">{{ userName || "Nom non disponible" }}</h3>
-            <!-- Default text if missing -->
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
           <h4 class="text-left">ID:</h4>
           <v-card>
             <h3 class="name">{{ userID || "ID non disponible" }}</h3>
-            <!-- Default text if missing -->
           </v-card>
         </v-col>
       </v-row>
