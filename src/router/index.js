@@ -5,11 +5,6 @@ import UserView from "@/views/UserView";
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: HomeView,
-  },
-  {
     path: "/restaurant/:restaurantId",
     name: "Restaurant",
     component: RestaurantView,
@@ -18,6 +13,15 @@ const routes = [
     path: "/user",
     name: "User",
     component: UserView,
+  },
+  {
+    path: "/",
+    name: "Home",
+    component: HomeView,
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/",
   },
 ];
 
