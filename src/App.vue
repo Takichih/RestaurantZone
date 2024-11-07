@@ -1,9 +1,11 @@
 <script setup>
 import Navigation from "@/components/Navigation";
+import RestaurantVisitModal from "@/components/Modals/RestaurantVisitModal";
 </script>
 
 <template>
   <v-layout>
+    <RestaurantVisitModal />
     <Navigation />
 
     <v-main>

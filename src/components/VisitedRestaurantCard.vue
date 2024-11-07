@@ -57,12 +57,6 @@ function showVisitAlert(restaurantId) {
     <v-card-subtitle>Score: {{ rating }}</v-card-subtitle>
     <v-card-text>Nombre de visites: {{ visits }}</v-card-text>
     <v-card-actions>
-      <v-btn icon @click="toggleFavorite">
-        <v-icon color="red">
-          {{ isFavorite ? "mdi-heart" : "mdi-heart-outline" }}
-        </v-icon>
-      </v-btn>
-      <v-spacer></v-spacer>
       <v-btn icon @click="$emit('delete-restaurant', restaurant_id)">
         <v-icon>mdi-delete</v-icon>
       </v-btn>

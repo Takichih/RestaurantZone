@@ -1,36 +1,16 @@
-import axios from "axios";
-import { config } from "@/config.js";
-
-let baseURL = config.SSL ? config.apiUrl : `${config.apiUrl}/unsecure`;
-
-const apiClient = axios.create({
-  baseURL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("authToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+import apiClient from "@/utils/apiClient";
 
 export default {
   /**
-   * Returns a filtered list of restaurants
-   *
-   * @param limit the number of restaurants per page to return (default: 10).
-   * @param page the page id wanted to filter restaurants (default: 0).
-   * @param q the query parameter to filter on restaurant's name (default: undefined).
-   * @param genres the genres wanted to filter restaurants, seperated by commas (,) if multiple (default: undefined).
-   * @param price_range the price range wanted to filter restaurants, seperated by commas (,) if multiple (default: undefined).
-   * @param lon the user's current longitude, used to query nearby restaurants, lat is required with it (default: undefined).
-   * @param lat the user's current latitude, used to query nearby restaurants, lon is required with it (default: undefined).
-   *
-   * @returns A list of restaurants depending on filters
+   * Get a list of restaurants.
+   * @param {number} limit - The maximum number of results.
+   * @param {number} page - The page number.
+   * @param {string} q - The name query.
+   * @param {string} genres - The genres query, divided by commas (,).
+   * @param {number} price_range - The price range query, divided by commas (,).
+   * @param {float} lon - The user's current longitude, lat is required with it.
+   * @param {float} lat - The user's current latitude, lon is required with it.
+   * @returns {Array<Object>} A list of restaurants.
    */
   async getRestaurants(
     limit = 10,
@@ -64,11 +44,9 @@ export default {
     }
   },
   /**
-   * Returns the restaurant with the specified id.
-   *
-   * @param restaurantId the id of the desired restaurant (default: undefined).
-   *
-   * @returns
+   * Get the specified restaurant by id.
+   * @param {string} restaurantId - The restaurant id.
+   * @returns {Object} A restaurant object.
    */
   async getRestaurant(restaurantId) {
     let restaurant = {};
@@ -88,13 +66,11 @@ export default {
     }
   },
   /**
-   * Returns the visits of the restaurant with the specified id.
-   *
-   * @param restaurantId the id of the desired restaurant (default: undefined).
-   * @param limit the number of visits per page to return (default: 10).
-   * @param page the page id wanted to filter visits (default: 0).
-   *
-   * @returns
+   * Get the visits of the specified restaurant by id.
+   * @param {string} restaurantId - The restaurant id.
+   * @param {number} limit - The maximum number of results.
+   * @param {number} page - The page number.
+   * @returns {Array<Object>} A list of visits.
    */
   async getRestaurantVisits(restaurantId, limit = 10, page = 0) {
     let restaurantVisits = [];
