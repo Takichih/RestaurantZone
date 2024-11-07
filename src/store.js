@@ -52,6 +52,7 @@ export const store = reactive({
   visitModalOpen: false,
   currentAddingVisitRestaurantId: "",
   currentAddingVisitRestaurantVisits: [],
+  handleVisitSubmittedFunction: () => {},
   setCurrentUser(newUser) {
     this.currentUser = newUser;
   },
@@ -67,4 +68,7 @@ export const store = reactive({
   setCurrentAddingVisitRestaurantVisits(visits) {
     this.currentAddingVisitRestaurantVisits = visits;
   },
+  setHandleVisitSubmittedFunction(handleVisitSubmittedFunction){
+    this.handleVisitSubmittedFunction = handleVisitSubmittedFunction;
+  }
 });
