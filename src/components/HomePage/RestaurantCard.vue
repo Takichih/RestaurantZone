@@ -1,7 +1,33 @@
 <script setup>
-import { useRouter } from "vue-router";
+  import { ref } from "vue";
+  import { useRouter } from "vue-router";
+  import { defineProps, defineEmits } from "vue";
 
-const router = useRouter();
+  const router = useRouter();
+  const showCopiedMessage = ref(false);
+  
+  const props = defineProps({
+    restaurant: {
+      type: Object,
+      required: true,
+    },
+  });
+
+  const emit = defineEmits(["toggle-favorite"]);
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        showCopiedMessage.value = true;
+        setTimeout(() => {
+          showCopiedMessage.value = false;
+        }, 1000);
+      })
+      .catch((err) => {
+        console.error("Erreur lors de la copie dans le presse-papiers :", err);
+      });
+  };
 </script>
 
 <template>
@@ -29,9 +55,22 @@ const router = useRouter();
         >
         <br />
         <strong>Téléphone :</strong> {{ restaurant.tel }} <br />
-        <strong>Prix :</strong> {{ restaurant.price_range }} $ <br />
-        <strong>Note :</strong> {{ restaurant.rating }} <br />
-        <strong>Type :</strong> {{ restaurant.genres.join(", ") }}
+        <strong>Prix :</strong> {{ restaurant.price_range }} $$ <br />
+        <strong>Type :</strong> {{ restaurant.genres.join(", ") }} <br /><br />
+        <v-row class="mx-0 align-center">
+            <v-rating
+              :model-value="restaurant.rating"
+              color="amber"
+              density="compact"
+              size="medium"
+              half-increments
+              readonly
+            ></v-rating>
+
+            <div class="text-grey ms-2 mt-1">
+              {{ Math.round(restaurant.rating * 100) / 100 }}
+            </div>
+        </v-row>
       </v-card-text>
 
       <v-card-actions class="justify-center">
@@ -58,44 +97,6 @@ const router = useRouter();
   </v-col>
 </template>
 
-<script>
-import { ref } from "vue";
-
-export default {
-  name: "RestaurantCard",
-  props: {
-    restaurant: {
-      type: Object,
-      required: true,
-    },
-  },
-  setup() {
-    const showCopiedMessage = ref(false);
-
-    const copyToClipboard = (text) => {
-      navigator.clipboard
-        .writeText(text)
-        .then(() => {
-          showCopiedMessage.value = true;
-          setTimeout(() => {
-            showCopiedMessage.value = false;
-          }, 1000);
-        })
-        .catch((err) => {
-          console.error(
-            "Erreur lors de la copie dans le presse-papiers :",
-            err,
-          );
-        });
-    };
-
-    return {
-      showCopiedMessage,
-      copyToClipboard,
-    };
-  },
-};
-</script>
 
 <style scoped>
 .v-card {
