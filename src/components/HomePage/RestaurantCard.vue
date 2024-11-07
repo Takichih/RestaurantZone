@@ -1,0 +1,132 @@
+<script setup>
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+</script>
+
+<template>
+  <v-col cols="12" sm="6" md="4" lg="3">
+    <v-card>
+      <v-img
+        :src="restaurant.pictures[0]"
+        alt="Image du restaurant"
+        height="200"
+        cover
+      ></v-img>
+      <v-card-subtitle class="text-center mt-2">{{
+        restaurant.name
+      }}</v-card-subtitle>
+      <v-card-text>
+        <div
+          class="text-center address"
+          :title="restaurant.address"
+          @click="copyToClipboard(restaurant.address)"
+        >
+          {{ restaurant.address }}
+        </div>
+        <span v-if="showCopiedMessage" class="copied-message"
+          >Adresse copiée !</span
+        >
+        <br />
+        <strong>Téléphone :</strong> {{ restaurant.tel }} <br />
+        <strong>Prix :</strong> {{ restaurant.price_range }} $ <br />
+        <strong>Note :</strong> {{ restaurant.rating }} <br />
+        <strong>Type :</strong> {{ restaurant.genres.join(", ") }}
+      </v-card-text>
+
+      <v-card-actions class="justify-center">
+        <v-btn
+          icon
+          color="primary"
+          class="mx-2"
+          @click="$emit('toggle-favorite', restaurant)"
+        >
+          <v-icon
+            :icon="restaurant.isFavorite ? 'mdi-heart' : 'mdi-heart-outline'"
+          ></v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          color="secondary"
+          class="mx-2"
+          @click="router.push(`/restaurant/${restaurant.id}`)"
+        >
+          <v-icon icon="mdi-information-outline"></v-icon>
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-col>
+</template>
+
+<script>
+import { ref } from "vue";
+
+export default {
+  name: "RestaurantCard",
+  props: {
+    restaurant: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup() {
+    const showCopiedMessage = ref(false);
+
+    const copyToClipboard = (text) => {
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          showCopiedMessage.value = true;
+          setTimeout(() => {
+            showCopiedMessage.value = false;
+          }, 1000);
+        })
+        .catch((err) => {
+          console.error(
+            "Erreur lors de la copie dans le presse-papiers :",
+            err,
+          );
+        });
+    };
+
+    return {
+      showCopiedMessage,
+      copyToClipboard,
+    };
+  },
+};
+</script>
+
+<style scoped>
+.v-card {
+  max-width: 100%;
+}
+
+.v-img {
+  object-fit: cover;
+}
+
+.address {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  cursor: pointer;
+}
+
+.copied-message {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 3px;
+  font-size: 0.8rem;
+  color: #000000;
+  background-color: #e0e7ff;
+  border: 1px solid #606060;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+</style>

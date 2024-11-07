@@ -1,7 +1,7 @@
 import axios from "axios";
 // Importer le fichier de configuration - Exemple
 // main.js ou un autre fichier (avec CommonJS)
-import { config } from "@/config.js";
+import { config } from "../config.js";
 
 console.log(config.apiUrl); // Utilise l'URL de l'API
 let baseURL = config.SSL ? config.apiUrl : config.apiUrl + "/unsecure";

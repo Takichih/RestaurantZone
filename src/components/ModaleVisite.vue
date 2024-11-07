@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-dialog>
     <v-card>
       <v-text-field
         v-model="rating"
@@ -38,7 +38,7 @@
       </v-menu>
       <v-btn @click="postData">submit</v-btn>
     </v-card>
-  </v-container>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -46,6 +46,7 @@ import { ref, computed } from "vue";
 import moment from "moment-timezone";
 import axios from "axios";
 
+const dialog = true;
 const props = defineProps(["id"]);
 const emit = defineEmits(["visitSubmitted"]);
 const showDatePicker = ref(false);
