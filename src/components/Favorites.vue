@@ -71,8 +71,8 @@
                 "
               >
                 <div class="restaurant-info">
-                  <div style="display: flex; align-items: center;">
-                     <strong> {{ restaurant.name }} </strong>
+                  <div style="display: flex; align-items: center">
+                    <strong> {{ restaurant.name }} </strong>
                     <v-rating
                       half-increments
                       hover
@@ -82,7 +82,7 @@
                       :model-value="restaurant.rating"
                       active-color="primary"
                       color="grey-lighten-2"
-                      style="margin-left: 8px; vertical-align: middle;"
+                      style="margin-left: 8px; vertical-align: middle"
                     />
                   </div>
                 </div>
@@ -92,7 +92,9 @@
                     @click="viewRestaurantDetails(restaurant.id)"
                     color="info"
                   >
-                    <v-icon @click="router.push(`/restaurant/${restaurant.id}`)">mdi-eye</v-icon>
+                    <v-icon @click="router.push(`/restaurant/${restaurant.id}`)"
+                      >mdi-eye</v-icon
+                    >
                   </v-btn>
                   <v-btn
                     icon

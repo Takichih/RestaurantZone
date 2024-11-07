@@ -12,7 +12,6 @@ const userRating = ref(0);
 
 const recentVisits = ref([]);
 
-
 const fetchRecentVisits = async () => {
   try {
     const visits = await VisitService.getRecentVisits(userID.value);
@@ -21,7 +20,6 @@ const fetchRecentVisits = async () => {
     console.error("Error fetching recent visits:", error);
   }
 };
-
 
 function toggleFavorite(restaurant_id) {
   const restaurant = recentVisits.value.find(
@@ -32,13 +30,11 @@ function toggleFavorite(restaurant_id) {
   }
 }
 
-
 function deleteRestaurant(restaurant_id) {
   recentVisits.value = recentVisits.value.filter(
     (restaurant) => restaurant.restaurant_id !== restaurant_id,
   );
 }
-
 
 onMounted(async () => {
   try {
