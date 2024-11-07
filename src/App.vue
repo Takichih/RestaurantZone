@@ -1,11 +1,11 @@
 <script setup>
 import Navigation from "@/components/Navigation";
-import ModaleVisite from "@/components/Modals/RestaurantVisitModal.vue";
+import RestaurantVisitModal from "@/components/Modals/RestaurantVisitModal";
 </script>
 
 <template>
   <v-layout>
-    <ModaleVisite />
+    <RestaurantVisitModal />
     <Navigation />
 
     <v-main>
