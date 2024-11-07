@@ -1,11 +1,9 @@
 <script setup>
-import FavoritesDialog from "./components/FavoritesDialog.vue";
 import Navigation from "@/components/Navigation";
 </script>
 
 <template>
   <v-layout>
-    <FavoritesDialog />
     <Navigation />
 
     <v-main>

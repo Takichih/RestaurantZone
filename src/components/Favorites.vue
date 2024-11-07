@@ -1,124 +1,3 @@
-<template>
-  <div>
-    <h2>Mes listes de restaurants favoris</h2>
-    <v-form @submit.prevent="createFavoriteList" ref="form">
-      <v-text-field
-        v-model="newListName"
-        label="Nom de la nouvelle liste de favoris *"
-        :rules="[nameRequiredRule]"
-        maxlength="50"
-        required
-      ></v-text-field>
-      <v-btn color="primary" type="submit">Créer la liste</v-btn>
-    </v-form>
-    <v-divider class="my-4"></v-divider>
-    <v-expansion-panels>
-      <v-expansion-panel v-for="list in favoriteLists" :key="list.id">
-        <v-expansion-panel-title>
-          <div
-            class="d-flex align-center justify-space-between"
-            style="width: 100%"
-          >
-            <span v-if="!list.isEditing"
-              ><strong>{{ list.name }}</strong></span
-            >
-            <v-text-field
-              v-else
-              v-model="list.newName"
-              label="Renommer la liste"
-              dense
-              :rules="[nameRequiredRule]"
-              maxlength="50"
-              required
-              hide-details
-              style="max-width: 200px"
-            ></v-text-field>
-
-            <div class="d-flex align-center">
-              <template v-if="list.isEditing">
-                <v-btn icon @click="saveListName(list)">
-                  <v-icon :disabled="!list.newName.trim()">mdi-check</v-icon>
-                </v-btn>
-                <v-btn icon @click="cancelEdit(list)">
-                  <v-icon>mdi-close</v-icon>
-                </v-btn>
-              </template>
-
-              <template v-else>
-                <v-btn icon @click="startEdit(list)" color="white">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn icon @click="deleteFavoriteList(list.id)" color="black">
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </template>
-            </div>
-          </div>
-        </v-expansion-panel-title>
-
-        <v-expansion-panel-text>
-          <v-list>
-            <v-list-item
-              v-for="restaurant in list.restaurants"
-              :key="restaurant.id"
-            >
-              <div
-                class="d-flex justify-space-between align-center"
-                style="
-                  width: 100%;
-                  padding: 8px;
-                  background-color: #f8f9fa;
-                  border-radius: 8px;
-                "
-              >
-                <div class="restaurant-info">
-                  <v-btn
-                    text
-                    @click="goHome"
-                    color="primary"
-                    class="restaurant-name"
-                  >
-                    {{ restaurant.name }}
-                  </v-btn>
-                  <span class="ml-2 text-body-2" style="color: #616161"
-                    >Score: <strong>{{ restaurant.rating }}</strong></span
-                  >
-                </div>
-                <div class="d-flex">
-                  <v-btn
-                    icon
-                    @click="viewRestaurantDetails(restaurant.id)"
-                    color="info"
-                  >
-                    <v-icon>mdi-eye</v-icon>
-                  </v-btn>
-                  <v-btn
-                    icon
-                    @click="removeRestaurantFromList(list.id, restaurant.id)"
-                    color="error"
-                  >
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </div>
-              </div>
-            </v-list-item>
-          </v-list>
-          <v-select
-            v-model="selectedRestaurant"
-            :items="allRestaurants"
-            item-title="name"
-            item-value="id"
-            label="Select"
-          ></v-select>
-          <v-btn color="primary" @click="addSelectedRestaurantToList(list.id)">
-            <v-icon>mdi-plus</v-icon> Ajouter
-          </v-btn>
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
-  </div>
-</template>
-
 <script setup>
 import { ref, onMounted } from "vue";
 import FavoriteService from "@/api/FavoriteService";
@@ -323,4 +202,123 @@ const viewRestaurantDetails = (restaurantId) => {
 };
 </script>
 
-<style scoped></style>
+<template>
+  <div>
+    <h2>Mes listes de restaurants favoris</h2>
+    <v-form @submit.prevent="createFavoriteList" ref="form">
+      <v-text-field
+        v-model="newListName"
+        label="Nom de la nouvelle liste de favoris *"
+        :rules="[nameRequiredRule]"
+        maxlength="50"
+        required
+      ></v-text-field>
+      <v-btn color="primary" type="submit">Créer la liste</v-btn>
+    </v-form>
+    <v-divider class="my-4"></v-divider>
+    <v-expansion-panels>
+      <v-expansion-panel v-for="list in favoriteLists" :key="list.id">
+        <v-expansion-panel-title>
+          <div
+            class="d-flex align-center justify-space-between"
+            style="width: 100%"
+          >
+            <span v-if="!list.isEditing"
+              ><strong>{{ list.name }}</strong></span
+            >
+            <v-text-field
+              v-else
+              v-model="list.newName"
+              label="Renommer la liste"
+              dense
+              :rules="[nameRequiredRule]"
+              maxlength="50"
+              required
+              hide-details
+              style="max-width: 200px"
+            ></v-text-field>
+
+            <div class="d-flex align-center">
+              <template v-if="list.isEditing">
+                <v-btn icon @click="saveListName(list)">
+                  <v-icon :disabled="!list.newName.trim()">mdi-check</v-icon>
+                </v-btn>
+                <v-btn icon @click="cancelEdit(list)">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </template>
+
+              <template v-else>
+                <v-btn icon @click="startEdit(list)" color="white">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn icon @click="deleteFavoriteList(list.id)" color="black">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </template>
+            </div>
+          </div>
+        </v-expansion-panel-title>
+
+        <v-expansion-panel-text>
+          <v-list>
+            <v-list-item
+              v-for="restaurant in list.restaurants"
+              :key="restaurant.id"
+            >
+              <div
+                class="d-flex justify-space-between align-center"
+                style="
+                  width: 100%;
+                  padding: 8px;
+                  background-color: #f8f9fa;
+                  border-radius: 8px;
+                "
+              >
+                <div class="restaurant-info">
+                  <v-btn
+                    text
+                    @click="goHome"
+                    color="primary"
+                    class="restaurant-name"
+                  >
+                    {{ restaurant.name }}
+                  </v-btn>
+                  <span class="ml-2 text-body-2" style="color: #616161"
+                    >Score: <strong>{{ restaurant.rating }}</strong></span
+                  >
+                </div>
+                <div class="d-flex">
+                  <v-btn
+                    icon
+                    @click="viewRestaurantDetails(restaurant.id)"
+                    color="info"
+                  >
+                    <v-icon>mdi-eye</v-icon>
+                  </v-btn>
+                  <v-btn
+                    icon
+                    @click="removeRestaurantFromList(list.id, restaurant.id)"
+                    color="error"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </div>
+              </div>
+            </v-list-item>
+          </v-list>
+          <v-select
+            v-model="selectedRestaurant"
+            :items="allRestaurants"
+            item-title="name"
+            item-value="id"
+            label="Select"
+          ></v-select>
+          <v-btn color="primary" @click="addSelectedRestaurantToList(list.id)">
+            <v-icon>mdi-plus</v-icon> Ajouter
+          </v-btn>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
+  </div>
+</template>
