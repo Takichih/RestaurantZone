@@ -4,9 +4,3 @@ export const config = {
   debugMode: true,
   SSL: false,
 };
-
-// Importer le fichier de configuration - Exemple
-// import { config } from './config.js';
-//
-// console.log(config.apiUrl); // Utilise l'URL de l'API
-//

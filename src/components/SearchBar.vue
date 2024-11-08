@@ -22,12 +22,10 @@ const emit = defineEmits(["update:modelValue"]);
 
 const searchQuery = ref(props.modelValue);
 
-// Watch for changes in searchQuery and emit updates
 watch(searchQuery, (newValue) => {
   emit("update:modelValue", newValue);
 });
 
-// Use Vue Router to determine if we are on the home page
 const route = useRoute();
 const showSearchBar = computed(() => route.name !== "Home");
 </script>
