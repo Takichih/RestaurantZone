@@ -12,13 +12,17 @@ const selectedDate = ref(new Date());
 
 // Rules
 const ratingRules = [
-  v => !!v || 'Une note doit être donnée.',
-  v => (v <= 5 || v >= 0) || 'La note ne peut pas être plus basse que 0 ou plus haute que 5.'
-]
+  (v) => !!v || "Une note doit être donnée.",
+  (v) =>
+    v <= 5 ||
+    v >= 0 ||
+    "La note ne peut pas être plus basse que 0 ou plus haute que 5.",
+];
 
 const postVisit = async () => {
-  const isFormValid = await visitForm.value.validate()
-    .then((formValidity) => { return formValidity.valid });
+  const isFormValid = await visitForm.value.validate().then((formValidity) => {
+    return formValidity.valid;
+  });
 
   if (isFormValid) {
     const visitData = {
@@ -28,13 +32,12 @@ const postVisit = async () => {
       date: momentUtils.formatDateForAPIPost(selectedDate.value),
     };
 
-    await VisitService.createVisit(store.currentUser.id, visitData)
-      .then(() => {
-        store.handleVisitSubmittedFunction(visitData);
-        closeVisitModal();
-      });
+    await VisitService.createVisit(store.currentUser.id, visitData).then(() => {
+      store.handleVisitSubmittedFunction(visitData);
+      closeVisitModal();
+    });
   }
-}
+};
 
 const closeVisitModal = () => {
   comment.value = "";
@@ -48,7 +51,11 @@ const closeVisitModal = () => {
 </script>
 
 <template>
-  <v-dialog v-model="store.visitModalOpen" max-width="500" @click:outside="closeVisitModal">
+  <v-dialog
+    v-model="store.visitModalOpen"
+    max-width="500"
+    @click:outside="closeVisitModal"
+  >
     <v-card>
       <v-form ref="visitForm" @submit.prevent="postVisit">
         <v-card-title>Votre visite</v-card-title>
@@ -57,13 +64,24 @@ const closeVisitModal = () => {
           <v-row class="d-flex align-center justify-center flex-column">
             Note donnée
             <v-input v-model="rating" :rules="ratingRules">
-              <v-rating half-increments hover :length="5" :size="30" v-model="rating" active-color="warning" />
+              <v-rating
+                half-increments
+                hover
+                :length="5"
+                :size="30"
+                v-model="rating"
+                active-color="warning"
+              />
             </v-input>
           </v-row>
           <v-row dense>
             <v-col class="mt-4">
-              <v-date-input v-model="selectedDate" prepend-icon="" prepend-inner-icon="$calendar"
-                label=" Date de la visite"></v-date-input>
+              <v-date-input
+                v-model="selectedDate"
+                prepend-icon=""
+                prepend-inner-icon="$calendar"
+                label=" Date de la visite"
+              ></v-date-input>
             </v-col>
           </v-row>
           <v-row dense>

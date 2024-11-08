@@ -68,7 +68,7 @@ export const store = reactive({
   setCurrentAddingVisitRestaurantVisits(visits) {
     this.currentAddingVisitRestaurantVisits = visits;
   },
-  setHandleVisitSubmittedFunction(handleVisitSubmittedFunction){
+  setHandleVisitSubmittedFunction(handleVisitSubmittedFunction) {
     this.handleVisitSubmittedFunction = handleVisitSubmittedFunction;
-  }
+  },
 });
