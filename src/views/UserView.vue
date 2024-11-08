@@ -2,8 +2,8 @@
 import { ref, onMounted } from "vue";
 import * as userService from "@/api/UserService";
 import VisitService from "@/api/VisitService";
-import Favorites from "@/components/Favorites.vue";
-import VisitedRestaurantCard from "@/components/VisitedRestaurantCard.vue";
+import Favorites from "@/components/UserPage/Favorites.vue";
+import VisitedRestaurantCard from "@/components/UserPage/VisitedRestaurantCard.vue";
 
 const userName = ref(null);
 const userID = ref(null);

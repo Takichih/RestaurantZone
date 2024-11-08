@@ -1,5 +1,5 @@
 <script setup>
-import Navigation from "@/components/Navigation";
+import Navigation from "@/components/NavBar/Navigation.vue";
 import RestaurantVisitModal from "@/components/Modals/RestaurantVisitModal";
 </script>
 

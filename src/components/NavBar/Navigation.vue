@@ -52,8 +52,8 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import SearchBar from "@/components/SearchBar.vue";
-import NavigationDrawer from "@/components/NavigationDrawer.vue";
+import SearchBar from "@/components/NavBar/SearchBar.vue";
+import NavigationDrawer from "@/components/NavBar/NavigationDrawer.vue";
 
 const drawer = ref(false);
 const searchQuery = ref("");
