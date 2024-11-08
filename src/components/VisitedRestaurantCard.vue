@@ -16,12 +16,10 @@ const emit = defineEmits(["toggle-favorite", "delete-restaurant"]);
 const showVisitDetails = ref(false);
 const visitDetails = ref([]);
 
-// Function to toggle favorite status
 function toggleFavorite() {
   emit("toggle-favorite", props.restaurant_id);
 }
 
-// Function to fetch visit details for the restaurant
 const fetchVisitDetails = async () => {
   try {
     const userId = localStorage.getItem("userID");
@@ -35,7 +33,6 @@ const fetchVisitDetails = async () => {
   }
 };
 
-// Function to toggle visibility of visit details and fetch if not already fetched
 function toggleVisitDetails() {
   showVisitDetails.value = !showVisitDetails.value;
   if (showVisitDetails.value && visitDetails.value.length === 0) {
@@ -43,7 +40,6 @@ function toggleVisitDetails() {
   }
 }
 
-// Show an alert when a visit is clicked
 function showVisitAlert(restaurantId) {
   alert(
     `Ouverture de la modale pour restaurant : ${props.name}, Id : ${restaurantId}`,

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- App Bar -->
     <v-app-bar app color="primary" dark>
       <!-- Drawer icon: mobile only -->
       <v-app-bar-nav-icon @click="toggleDrawer" class="d-md-none">

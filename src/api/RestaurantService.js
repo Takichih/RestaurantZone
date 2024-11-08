@@ -1,17 +1,6 @@
 import apiClient from "@/utils/apiClient";
 
 export default {
-  /**
-   * Get a list of restaurants.
-   * @param {number} limit - The maximum number of results.
-   * @param {number} page - The page number.
-   * @param {string} q - The name query.
-   * @param {string} genres - The genres query, divided by commas (,).
-   * @param {number} price_range - The price range query, divided by commas (,).
-   * @param {float} lon - The user's current longitude, lat is required with it.
-   * @param {float} lat - The user's current latitude, lon is required with it.
-   * @returns {Array<Object>} A list of restaurants.
-   */
   async getRestaurants(
     limit = 10,
     page = 0,
@@ -43,11 +32,7 @@ export default {
       return restaurants;
     }
   },
-  /**
-   * Get the specified restaurant by id.
-   * @param {string} restaurantId - The restaurant id.
-   * @returns {Object} A restaurant object.
-   */
+
   async getRestaurant(restaurantId) {
     let restaurant = {};
 
@@ -65,13 +50,7 @@ export default {
       return restaurant;
     }
   },
-  /**
-   * Get the visits of the specified restaurant by id.
-   * @param {string} restaurantId - The restaurant id.
-   * @param {number} limit - The maximum number of results.
-   * @param {number} page - The page number.
-   * @returns {Array<Object>} A list of visits.
-   */
+
   async getRestaurantVisits(restaurantId, limit = 10, page = 0) {
     let restaurantVisits = [];
 

@@ -3,18 +3,15 @@
     <!-- Drawer visible only on small screen -->
 
     <v-list>
-      <!-- Username if logged -->
       <v-list-item v-if="isLogged" id="userNameDrawer">
         <span class="mr-4">{{ username }}</span>
       </v-list-item>
 
-      <!-- Home link -->
       <v-list-item link to="/" exact>
         <v-icon>mdi-home</v-icon>
         <v-list-item-title>Accueil</v-list-item-title>
       </v-list-item>
 
-      <!-- Profile link if logged-->
       <v-list-item v-if="isLogged" link to="/user">
         <v-icon>mdi-account</v-icon>
         <v-list-item-title>Profil</v-list-item-title>
@@ -45,10 +42,8 @@ const props = defineProps({
 
 const emit = defineEmits(["update:drawer", "login", "logout"]);
 
-// Variable locale pour gérer l'état du drawer sans modifier la prop
 const localDrawer = ref(props.drawer);
 
-// Synchroniser localDrawer avec la prop drawer
 watch(
   () => props.drawer,
   (newVal) => {
@@ -56,12 +51,10 @@ watch(
   },
 );
 
-// Émettre la mise à jour de l'état du drawer
 watch(localDrawer, (newVal) => {
   emit("update:drawer", newVal);
 });
 
-// Méthodes pour émettre les événements
 function handleLogin() {
   emit("login");
 }
@@ -72,7 +65,6 @@ function handleLogout() {
 </script>
 
 <style scoped>
-/* Styles spécifiques au drawer */
 #userNameDrawer {
   font-weight: bold;
 }

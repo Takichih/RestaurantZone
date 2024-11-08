@@ -1,6 +1,5 @@
 import axios from "axios";
-// Importer le fichier de configuration - Exemple
-// main.js ou un autre fichier (avec CommonJS)
+
 import { config } from "../config.js";
 
 console.log(config.apiUrl); // Utilise l'URL de l'API
@@ -55,7 +54,6 @@ export const getActiveUser = async () => {
     console.error(
       `Erreur lors de la récupération de l'utilisateur : ${error.response.statusText}`,
     );
-    // throw error;
   }
 };
 
