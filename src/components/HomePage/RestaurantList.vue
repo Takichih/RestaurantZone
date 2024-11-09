@@ -81,8 +81,14 @@ export default {
     RestaurantCard,
     RestaurantFilters,
   },
-  setup() {
-    const search = ref("");
+  props: {
+    initialSearch: {
+      type: String,
+      default: "",
+    },
+  },
+  setup(props) {
+    const search = ref(props.initialSearch);
     const selectedPrice = ref(null);
     const selectedSpeciality = ref(null);
     const restaurants = ref([]);
@@ -152,9 +158,9 @@ export default {
         const matchesSpeciality =
           selectedSpeciality.value && selectedSpeciality.value.length > 0
             ? selectedSpeciality.value.some(
-                (speciality) =>
-                  restaurant.genres && restaurant.genres.includes(speciality),
-              )
+              (speciality) =>
+                restaurant.genres && restaurant.genres.includes(speciality),
+            )
             : true;
 
         return matchesSearch && matchesPrice && matchesSpeciality;
@@ -197,7 +203,7 @@ export default {
 </script>
 
 <style scoped>
-  .text-h3 {
-    font-size: 1.75rem;
-  }
+.text-h3 {
+  font-size: 1.75rem;
+}
 </style>
