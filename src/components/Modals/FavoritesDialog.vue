@@ -1,8 +1,28 @@
 <script setup>
 import { store } from "@/store";
+import { watch } from "vue";
+
+const props = defineProps({
+  isOpen: Boolean,
+  favoriteLists: Array,
+  restaurantId: String,
+});
+
+const emit = defineEmits(["close", "add-to-favorites"]);
+
+watch(
+  () => props.isOpen,
+  (newVal) => {
+    store.setFavoritesModalOpen(newVal);
+  },
+);
 
 const addRestaurantToList = (favoritesListId) => {
-  console.log(favoritesListId);
+  emit("add-to-favorites", {
+    restaurantId: props.restaurantId,
+    listId: favoritesListId,
+  });
+  emit("close");
 };
 </script>
 
@@ -13,16 +33,16 @@ const addRestaurantToList = (favoritesListId) => {
 
       <v-list>
         <v-list-item
-          v-for="(item, i) in store.currentUserFavorites.items"
+          v-for="(item, i) in props.favoriteLists"
           :key="i"
+          @click="addRestaurantToList(item.id)"
         >
           <template v-slot:prepend>
             <v-list-item-action start>
               <v-checkbox-btn
                 :model-value="
-                  item.restaurants.find(
-                    (x) => x.id === store.restaurantIdToAddToFavorites,
-                  )
+                  item.restaurants &&
+                  item.restaurants.find((x) => x.id === props.restaurantId)
                 "
               ></v-checkbox-btn>
             </v-list-item-action>
@@ -33,11 +53,7 @@ const addRestaurantToList = (favoritesListId) => {
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn
-          variant="outlined"
-          color="primary"
-          @click="store.setFavoritesModalOpen(false)"
-        >
+        <v-btn variant="outlined" color="primary" @click="emit('close')">
           <v-icon icon="mdi-close" />
         </v-btn>
       </v-card-actions>

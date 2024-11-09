@@ -1,15 +1,28 @@
 <script setup>
 import { useRestaurant } from "@/composables/useRestaurant";
 import { useRoute } from "vue-router";
+import { ref } from "vue";
 import { store } from "@/store";
 
 // Components
 import InteractiveMap from "@/components/RestaurantPage/InteractiveMap";
 import RestaurantVisits from "@/components/RestaurantPage/RestaurantVisits.vue";
+import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
 
 const route = useRoute();
 const currentRestaurantId = route.params.restaurantId;
 const { restaurant, visits } = await useRestaurant(currentRestaurantId);
+
+const isFavoriteDialogOpen = ref(false);
+const favoriteLists = ref([
+  { id: 1, name: "Favorites" },
+  { id: 2, name: "Wishlist" },
+  // Add more lists as needed
+]);
+
+const openFavoriteDialog = () => {
+  isFavoriteDialogOpen.value = true;
+};
 
 const openVisitModal = () => {
   store.setCurrentAddingVisitRestaurantId(restaurant.value.id);
@@ -19,6 +32,11 @@ const openVisitModal = () => {
 
 const handleVisitSubmitted = (visitData) => {
   visits.value.unshift(visitData);
+};
+
+const handleAddToFavorites = ({ restaurantId, listId }) => {
+  // Handle adding the restaurant to the selected favorite list
+  console.log(`Restaurant ${restaurantId} added to list ${listId}`);
 };
 
 store.handleVisitSubmittedFunction = handleVisitSubmitted;
@@ -73,8 +91,11 @@ store.handleVisitSubmittedFunction = handleVisitSubmitted;
             </div>
 
             <v-card-actions class="justify-center">
-              <v-btn icon color="primary" class="mx-2" @click="openVisitModal">
-                <v-icon icon="mdi-heart-outline"></v-icon>
+              <v-btn color="primary" class="mx-2" @click="openFavoriteDialog">
+                Ajouter aux favoris
+              </v-btn>
+              <v-btn color="primary" class="mx-2" @click="openVisitModal">
+                Ajouter une visite
               </v-btn>
             </v-card-actions>
           </v-card-text>
@@ -105,8 +126,8 @@ store.handleVisitSubmittedFunction = handleVisitSubmitted;
                   </tr>
                 </tbody>
               </v-table>
-            </v-card></v-col
-          >
+            </v-card>
+          </v-col>
         </v-row>
         <v-row>
           <v-col>
@@ -125,6 +146,13 @@ store.handleVisitSubmittedFunction = handleVisitSubmitted;
         <RestaurantVisits :visits="visits" />
       </v-col>
     </v-row>
+    <FavoritesDialog
+      :isOpen="isFavoriteDialogOpen"
+      :favoriteLists="favoriteLists"
+      :restaurantId="restaurant.id"
+      @close="isFavoriteDialogOpen = false"
+      @add-to-favorites="handleAddToFavorites"
+    />
   </v-col>
 </template>
 

@@ -50,6 +50,10 @@ export const store = reactive({
     },
   ],
   visitModalOpen: false,
+  favoritesModalOpen: false,
+  setFavoritesModalOpen(value) {
+    this.favoritesModalOpen = value;
+  },
   currentAddingVisitRestaurantId: "",
   currentAddingVisitRestaurantVisits: [],
   handleVisitSubmittedFunction: () => {},

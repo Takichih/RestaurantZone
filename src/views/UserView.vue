@@ -62,20 +62,10 @@ onMounted(async () => {
             <h3 class="name">{{ userName || "Nom non disponible" }}</h3>
           </v-card>
         </v-col>
-        <v-col cols="12" md="4">
-          <h4 class="text-left">ID:</h4>
-          <v-card>
-            <h3 class="name">{{ userID || "ID non disponible" }}</h3>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-
-    <v-container>
-      <v-row>
         <v-col cols="12" md="6">
+          <h4 class="text-left">Score:</h4>
           <h3 class="text-left">
-            Score : {{ userRating }}
+            {{ userRating }}
             <v-icon color="amber" class="ms-2">mdi-star-shooting</v-icon>
           </h3>
         </v-col>

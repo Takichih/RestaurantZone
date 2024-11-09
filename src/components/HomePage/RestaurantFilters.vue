@@ -1,3 +1,57 @@
+<script setup>
+import { ref, watch } from "vue";
+
+const props = defineProps({
+  priceRanges: {
+    type: Array,
+    required: true,
+  },
+  specialities: {
+    type: Array,
+    required: true,
+  },
+  search: String,
+  selectedPrice: Object,
+  selectedSpeciality: Array,
+});
+
+const emit = defineEmits([
+  "update:search",
+  "update:selectedPrice",
+  "update:selectedSpeciality",
+]);
+
+const localSearch = ref(props.search);
+const localSelectedPrice = ref(props.selectedPrice);
+const localSelectedSpeciality = ref(
+  Array.isArray(props.selectedSpeciality) ? props.selectedSpeciality : [],
+);
+
+watch(localSearch, (newSearch) => {
+  emit("update:search", newSearch);
+});
+
+watch(localSelectedPrice, (newPrice) => {
+  emitSelectedPrice(newPrice);
+});
+
+watch(localSelectedSpeciality, (newSpeciality) => {
+  emitSelectedSpeciality(newSpeciality);
+});
+
+const clearSearch = () => {
+  localSearch.value = "";
+};
+
+const emitSelectedPrice = (price) => {
+  emit("update:selectedPrice", price);
+};
+
+const emitSelectedSpeciality = (speciality) => {
+  emit("update:selectedSpeciality", speciality);
+};
+</script>
+
 <template>
   <v-row class="mb-4 justify-center">
     <v-col cols="11" md="6">
@@ -55,66 +109,5 @@
     </v-col>
   </v-row>
 </template>
-
-<script>
-import { ref, watch } from "vue";
-
-export default {
-  name: "RestaurantFilters",
-  props: {
-    priceRanges: {
-      type: Array,
-      required: true,
-    },
-    specialities: {
-      type: Array,
-      required: true,
-    },
-    search: String,
-    selectedPrice: Object,
-    selectedSpeciality: Array,
-  },
-  setup(props, { emit }) {
-    const localSearch = ref(props.search);
-    const localSelectedPrice = ref(props.selectedPrice);
-    const localSelectedSpeciality = ref(
-      Array.isArray(props.selectedSpeciality) ? props.selectedSpeciality : [],
-    );
-
-    watch(localSearch, (newSearch) => {
-      emit("update:search", newSearch);
-    });
-
-    watch(localSelectedPrice, (newPrice) => {
-      emitSelectedPrice(newPrice);
-    });
-
-    watch(localSelectedSpeciality, (newSpeciality) => {
-      emitSelectedSpeciality(newSpeciality);
-    });
-
-    const clearSearch = () => {
-      localSearch.value = "";
-    };
-
-    const emitSelectedPrice = (price) => {
-      emit("update:selectedPrice", price);
-    };
-
-    const emitSelectedSpeciality = (speciality) => {
-      emit("update:selectedSpeciality", speciality);
-    };
-
-    return {
-      localSearch,
-      localSelectedPrice,
-      localSelectedSpeciality,
-      clearSearch,
-      emitSelectedPrice,
-      emitSelectedSpeciality,
-    };
-  },
-};
-</script>
 
 <style scoped></style>
