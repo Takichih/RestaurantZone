@@ -1,33 +1,37 @@
 <script setup>
-  import { ref } from "vue";
-  import { useRouter } from "vue-router";
-  import { defineProps, defineEmits } from "vue";
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+import { defineProps, defineEmits } from "vue";
 
-  const router = useRouter();
-  const showCopiedMessage = ref(false);
-  
-  const props = defineProps({
-    restaurant: {
-      type: Object,
-      required: true,
-    },
-  });
+const router = useRouter();
+const showCopiedMessage = ref(false);
 
-  const emit = defineEmits(["toggle-favorite"]);
+const props = defineProps({
+  restaurant: {
+    type: Object,
+    required: true,
+  },
+});
 
-  const copyToClipboard = (text) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        showCopiedMessage.value = true;
-        setTimeout(() => {
-          showCopiedMessage.value = false;
-        }, 1000);
-      })
-      .catch((err) => {
-        console.error("Erreur lors de la copie dans le presse-papiers :", err);
-      });
-  };
+const emit = defineEmits(["toggle-favorite"]);
+
+const copyToClipboard = (text) => {
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      showCopiedMessage.value = true;
+      setTimeout(() => {
+        showCopiedMessage.value = false;
+      }, 1000);
+    })
+    .catch((err) => {
+      console.error("Erreur lors de la copie dans le presse-papiers :", err);
+    });
+};
+
+const priceSymbols = computed(() => {
+  return "$".repeat(props.restaurant.price_range);
+});
 </script>
 
 <template>
@@ -40,8 +44,8 @@
         cover
       ></v-img>
       <v-card-subtitle class="text-center mt-2">{{
-        restaurant.name
-      }}</v-card-subtitle>
+          restaurant.name
+        }}</v-card-subtitle>
       <v-card-text>
         <div
           class="text-center address"
@@ -51,25 +55,25 @@
           {{ restaurant.address }}
         </div>
         <span v-if="showCopiedMessage" class="copied-message"
-          >Adresse copiée !</span
+        >Adresse copiée !</span
         >
         <br />
         <strong>Téléphone :</strong> {{ restaurant.tel }} <br />
-        <strong>Prix :</strong> {{ restaurant.price_range }} $$ <br />
+        <strong>Prix :</strong> {{ priceSymbols }} <br />
         <strong>Type :</strong> {{ restaurant.genres.join(", ") }} <br /><br />
         <v-row class="mx-0 align-center">
-            <v-rating
-              :model-value="restaurant.rating"
-              color="amber"
-              density="compact"
-              size="medium"
-              half-increments
-              readonly
-            ></v-rating>
+          <v-rating
+            :model-value="restaurant.rating"
+            color="amber"
+            density="compact"
+            size="medium"
+            half-increments
+            readonly
+          ></v-rating>
 
-            <div class="text-grey ms-2 mt-1">
-              {{ Math.round(restaurant.rating * 100) / 100 }}
-            </div>
+          <div class="text-grey ms-2 mt-1">
+            {{ Math.round(restaurant.rating * 100) / 100 }}
+          </div>
         </v-row>
       </v-card-text>
 
@@ -96,7 +100,6 @@
     </v-card>
   </v-col>
 </template>
-
 
 <style scoped>
 .v-card {

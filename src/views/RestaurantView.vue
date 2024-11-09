@@ -73,8 +73,8 @@ store.handleVisitSubmittedFunction = handleVisitSubmitted;
             </div>
 
             <v-card-actions class="justify-center">
-              <v-btn icon color="primary" class="mx-2" @click="openVisitModal">
-                <v-icon icon="mdi-heart-outline"></v-icon>
+              <v-btn color="primary" class="mx-2" @click="openVisitModal">
+                Ajouter une visite
               </v-btn>
             </v-card-actions>
           </v-card-text>
