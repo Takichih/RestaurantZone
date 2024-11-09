@@ -61,8 +61,8 @@ const priceSymbols = computed(() => {
         cover
       ></v-img>
       <v-card-subtitle class="text-center mt-2">{{
-          props.restaurant.name
-        }}</v-card-subtitle>
+        props.restaurant.name
+      }}</v-card-subtitle>
       <v-card-text>
         <div
           class="text-center address"
@@ -72,12 +72,13 @@ const priceSymbols = computed(() => {
           {{ props.restaurant.address }}
         </div>
         <span v-if="showCopiedMessage" class="copied-message"
-        >Adresse copiée !</span
+          >Adresse copiée !</span
         >
         <br />
         <strong>Téléphone :</strong> {{ props.restaurant.tel }} <br />
         <strong>Prix :</strong> {{ priceSymbols }} <br />
-        <strong>Type :</strong> {{ props.restaurant.genres.join(", ") }} <br /><br />
+        <strong>Type :</strong> {{ props.restaurant.genres.join(", ") }}
+        <br /><br />
         <v-row class="mx-0 align-center">
           <v-rating
             :model-value="props.restaurant.rating"
@@ -103,7 +104,9 @@ const priceSymbols = computed(() => {
           @click="$emit('toggle-favorite', props.restaurant)"
         >
           <v-icon
-            :icon="props.restaurant.isFavorite ? 'mdi-heart' : 'mdi-heart-outline'"
+            :icon="
+              props.restaurant.isFavorite ? 'mdi-heart' : 'mdi-heart-outline'
+            "
           ></v-icon>
         </v-btn>
         <v-btn color="primary" @click="openVisitModal">
