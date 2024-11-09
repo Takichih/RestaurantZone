@@ -17,6 +17,10 @@ const toggleDrawer = () => {
 const login = () => {
   isLogged.value = true;
   localStorage.setItem("isLogged", true);
+  localStorage.setItem("username", username.value);
+};
+
+const logout = () => {
   isLogged.value = false;
   localStorage.removeItem("isLogged");
   localStorage.removeItem("username");
