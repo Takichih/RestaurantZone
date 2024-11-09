@@ -36,9 +36,9 @@
 
             <!-- Liste de restaurants filtrée -->
             <v-row v-else>
-              <template v-if="filteredRestaurants.length > 0">
+              <template v-if="paginatedRestaurants.length > 0">
                 <RestaurantCard
-                  v-for="restaurant in filteredRestaurants"
+                  v-for="restaurant in paginatedRestaurants"
                   :key="restaurant.place_id"
                   :restaurant="restaurant"
                   @toggle-favorite="toggleFavorite"
@@ -48,13 +48,20 @@
               <template v-else>
                 <v-col cols="12" class="text-center">
                   <v-alert type="info" color="red" outlined>
-                    Aucun restaurant trouvé correspondant à la recherche "{{
-                      search
-                    }}"
+                    Aucun restaurant trouvé correspondant à la recherche "{{ search }}"
                   </v-alert>
                 </v-col>
               </template>
             </v-row>
+
+            <v-pagination
+              v-if="totalPages > 1"
+              v-model="currentPage"
+              :length="totalPages"
+              :total-visible="7"
+              class="mt-4"
+              @input="updatePaginatedRestaurants"
+            ></v-pagination>
           </v-card>
         </v-col>
       </v-row>
@@ -63,7 +70,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import RestaurantCard from "./RestaurantCard.vue";
 import RestaurantFilters from "./RestaurantFilters.vue";
 import RestaurantService from "@/api/RestaurantService";
@@ -80,14 +87,17 @@ export default {
     const selectedSpeciality = ref(null);
     const restaurants = ref([]);
     const filteredRestaurants = ref([]);
+    const paginatedRestaurants = ref([]);
     const loading = ref(true);
+    const currentPage = ref(1);
+    const itemsPerPage = ref(12);
 
     const priceRanges = ref([]);
     const specialities = ref([]);
 
     onMounted(async () => {
       try {
-        const response = await RestaurantService.getRestaurants();
+        const response = await RestaurantService.getRestaurants(150);
         restaurants.value = response.map((item) => ({
           ...item,
           isFavorite: false,
@@ -116,7 +126,18 @@ export default {
       }
     });
 
-    watchEffect(() => {
+    const totalPages = computed(() => {
+      return Math.ceil(filteredRestaurants.value.length / itemsPerPage.value);
+    });
+
+    const updatePaginatedRestaurants = () => {
+      const start = (currentPage.value - 1) * itemsPerPage.value;
+      const end = start + itemsPerPage.value;
+      paginatedRestaurants.value = filteredRestaurants.value.slice(start, end);
+    };
+
+    // Mettre à jour `filteredRestaurants` lorsque les critères de recherche ou de filtre changent
+    watch([search, selectedPrice, selectedSpeciality, restaurants], () => {
       const searchTerm = (search.value || "").toLowerCase();
       filteredRestaurants.value = restaurants.value.filter((restaurant) => {
         const matchesSearch = searchTerm
@@ -138,7 +159,14 @@ export default {
 
         return matchesSearch && matchesPrice && matchesSpeciality;
       });
+
+      // Réinitialiser à la première page lors d'une nouvelle recherche ou d'un changement de filtre
+      currentPage.value = 1;
+      updatePaginatedRestaurants();
     });
+
+    // Observer les changements de `currentPage` pour mettre à jour `paginatedRestaurants`
+    watch(currentPage, updatePaginatedRestaurants);
 
     const toggleFavorite = (restaurant) => {
       restaurant.isFavorite = !restaurant.isFavorite;
@@ -155,16 +183,21 @@ export default {
       priceRanges,
       specialities,
       filteredRestaurants,
+      paginatedRestaurants,
       toggleFavorite,
       viewDetails,
       loading,
+      currentPage,
+      itemsPerPage,
+      totalPages,
+      updatePaginatedRestaurants,
     };
   },
 };
 </script>
 
 <style scoped>
-.text-h3 {
-  font-size: 1.75rem;
-}
+  .text-h3 {
+    font-size: 1.75rem;
+  }
 </style>
