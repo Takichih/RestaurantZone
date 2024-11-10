@@ -11,7 +11,7 @@ import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
 
 const route = useRoute();
 const currentRestaurantId = route.params.restaurantId;
-const { restaurant, visits } = await useRestaurant(currentRestaurantId);
+const { restaurant, visits, fetchMoreVisits, hasMoreVisits } = await useRestaurant(currentRestaurantId);
 
 const isFavoriteDialogOpen = ref(false);
 const favoriteLists = ref([
@@ -129,6 +129,7 @@ store.handleVisitSubmittedFunction = handleVisitSubmitted;
             </v-card>
           </v-col>
         </v-row>
+
         <v-row>
           <v-col>
             <v-card width="100%">
@@ -143,7 +144,7 @@ store.handleVisitSubmittedFunction = handleVisitSubmitted;
     </v-row>
     <v-row>
       <v-col>
-        <RestaurantVisits :visits="visits" />
+        <RestaurantVisits :visits="visits" :hasMoreVisits="hasMoreVisits" @loadMoreVisits="fetchMoreVisits" />
       </v-col>
     </v-row>
     <FavoritesDialog

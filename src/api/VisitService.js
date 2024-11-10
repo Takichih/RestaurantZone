@@ -41,7 +41,12 @@ export default {
   },
 
   createVisit(userId, visitData) {
-    return apiClient.post(`/users/${userId}/restaurants/visits`, visitData);
+    try {
+      return apiClient.post(`/users/${userId}/restaurants/visits`, visitData);
+    } catch (error) {
+      console.error("Erreur lors de la création de la visite :", error);
+      throw error;
+    }  
   },
 
   getVisitsForRestaurant(userId, restaurantId, limit = 10, page = 0) {

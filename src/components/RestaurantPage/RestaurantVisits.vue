@@ -1,7 +1,8 @@
 <script setup>
 import * as momentUtils from "@/utils/momentUtils";
 
-const props = defineProps(["visits"]);
+const props = defineProps(["visits", "hasMoreVisits"]);
+const emit = defineEmits(["loadMoreVisits"]);
 </script>
 
 <template>
@@ -51,6 +52,11 @@ const props = defineProps(["visits"]);
         </div>
       </v-card-text>
     </v-card-item>
+    <v-card-actions v-if="hasMoreVisits" class="justify-center">
+      <v-btn variant="outlined" color="primary" @click="emit('loadMoreVisits')">
+        Charger plus d'avis
+      </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 

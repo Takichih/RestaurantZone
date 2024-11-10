@@ -20,7 +20,8 @@ const ratingRules = [
 ];
 
 const postVisit = async () => {
-  const isFormValid = await visitForm.value.validate().then((formValidity) => {
+  try{
+      const isFormValid = await visitForm.value.validate().then((formValidity) => {
     return formValidity.valid;
   });
 
@@ -32,11 +33,32 @@ const postVisit = async () => {
       date: momentUtils.formatDateForAPIPost(selectedDate.value),
     };
 
+    //supprimer
+    console.log("Données envoyées :", visitData);
+    //supprimer
+
+    const response = await VisitService.createVisit(
+        store.currentUser.id,
+        visitData
+    );
+
+    //supprimer
+    console.log("Réponse de l'API :", response.data);
+    //supprimer
+
+
     await VisitService.createVisit(store.currentUser.id, visitData).then(() => {
-      store.handleVisitSubmittedFunction(visitData);
+      store.handleVisitSubmittedFunction({...visitData,
+        id: response.data.id,
+        user_id: store.currentUser.id,});
       closeVisitModal();
     });
   }
+  }
+  catch (error){
+    console.error("Erreur lors de l'enregistrement de la visite :", error);
+  }
+
 };
 
 const closeVisitModal = () => {

@@ -4,6 +4,8 @@ import RestaurantService from "@/api/RestaurantService";
 export async function useRestaurant(restaurantId) {
   const restaurant = ref({});
   const visits = ref([]);
+  const currentPage = ref(0);
+  const hasMoreVisits = ref(true);
 
   const getRestaurant = async () => {
     const data = await RestaurantService.getRestaurant(restaurantId);
@@ -13,9 +15,20 @@ export async function useRestaurant(restaurantId) {
     cleanUpOpeningHours();
   };
 
-  const getRestaurantVisits = async () => {
-    const data = await RestaurantService.getRestaurantVisits(restaurantId);
-    visits.value = data;
+  const getRestaurantVisits = async (page = 0) => {
+    const data = await RestaurantService.getRestaurantVisits(restaurantId, 10, page);
+    if (data.length === 0) {
+      hasMoreVisits.value = false;
+    } else {
+      visits.value.push(...data);
+    }
+  };
+
+  const fetchMoreVisits = async () => {
+    if (hasMoreVisits.value) {
+      currentPage.value++;
+      await getRestaurantVisits(currentPage.value);
+    }
   };
 
   const cleanUpTelForHref = () => {
@@ -78,5 +91,5 @@ export async function useRestaurant(restaurantId) {
   await getRestaurant();
   await getRestaurantVisits();
 
-  return { restaurant, visits };
+  return { restaurant, visits, fetchMoreVisits, hasMoreVisits };
 }
