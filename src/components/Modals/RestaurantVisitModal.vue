@@ -20,42 +20,27 @@ const ratingRules = [
 ];
 
 const postVisit = async () => {
-  try{
-      const isFormValid = await visitForm.value.validate().then((formValidity) => {
-    return formValidity.valid;
-  });
-
-  if (isFormValid) {
-    const visitData = {
-      restaurant_id: store.currentAddingVisitRestaurantId,
-      comment: comment.value,
-      rating: rating.value,
-      date: momentUtils.formatDateForAPIPost(selectedDate.value),
-    };
-
-    //supprimer
-    console.log("Données envoyées :", visitData);
-    //supprimer
-
-    const response = await VisitService.createVisit(
-        store.currentUser.id,
-        visitData
-    );
-
-    //supprimer
-    console.log("Réponse de l'API :", response.data);
-    //supprimer
-
-
-    await VisitService.createVisit(store.currentUser.id, visitData).then(() => {
-      store.handleVisitSubmittedFunction({...visitData,
-        id: response.data.id,
-        user_id: store.currentUser.id,});
-      closeVisitModal();
+  try {
+    const isFormValid = await visitForm.value.validate().then((formValidity) => {
+      return formValidity.valid;
     });
+
+    if (isFormValid) {
+      const visitData = {
+        restaurant_id: store.currentAddingVisitRestaurantId,
+        comment: comment.value,
+        rating: rating.value,
+        date: momentUtils.formatDateForAPIPost(selectedDate.value),
+      };
+
+      await VisitService.createVisit(store.currentUser.id, visitData)
+        .then((response) => {
+          store.handleVisitSubmittedFunction(response.data);
+          closeVisitModal();
+        });
+    }
   }
-  }
-  catch (error){
+  catch (error) {
     console.error("Erreur lors de l'enregistrement de la visite :", error);
   }
 
@@ -73,11 +58,7 @@ const closeVisitModal = () => {
 </script>
 
 <template>
-  <v-dialog
-    v-model="store.visitModalOpen"
-    max-width="500"
-    @click:outside="closeVisitModal"
-  >
+  <v-dialog v-model="store.visitModalOpen" max-width="500" @click:outside="closeVisitModal">
     <v-card>
       <v-form ref="visitForm" @submit.prevent="postVisit">
         <v-card-title>Votre visite</v-card-title>
@@ -86,24 +67,13 @@ const closeVisitModal = () => {
           <v-row class="d-flex align-center justify-center flex-column">
             Note donnée
             <v-input v-model="rating" :rules="ratingRules">
-              <v-rating
-                half-increments
-                hover
-                :length="5"
-                :size="30"
-                v-model="rating"
-                active-color="warning"
-              />
+              <v-rating half-increments hover :length="5" :size="30" v-model="rating" active-color="warning" />
             </v-input>
           </v-row>
           <v-row dense>
             <v-col class="mt-4">
-              <v-date-input
-                v-model="selectedDate"
-                prepend-icon=""
-                prepend-inner-icon="$calendar"
-                label=" Date de la visite"
-              ></v-date-input>
+              <v-date-input v-model="selectedDate" prepend-icon="" prepend-inner-icon="$calendar"
+                label=" Date de la visite"></v-date-input>
             </v-col>
           </v-row>
           <v-row dense>

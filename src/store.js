@@ -51,12 +51,9 @@ export const store = reactive({
   ],
   visitModalOpen: false,
   favoritesModalOpen: false,
-  setFavoritesModalOpen(value) {
-    this.favoritesModalOpen = value;
-  },
   currentAddingVisitRestaurantId: "",
   currentAddingVisitRestaurantVisits: [],
-  handleVisitSubmittedFunction: () => {},
+  handleVisitSubmittedFunction: () => { },
   setCurrentUser(newUser) {
     this.currentUser = newUser;
   },
@@ -65,6 +62,9 @@ export const store = reactive({
   },
   setVisitModalOpen(value) {
     this.visitModalOpen = value;
+  },
+  setFavoritesModalOpen(value) {
+    this.favoritesModalOpen = value;
   },
   setCurrentAddingVisitRestaurantId(restaurantId) {
     this.currentAddingVisitRestaurantId = restaurantId;
