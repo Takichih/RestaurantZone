@@ -51,7 +51,7 @@ export default {
     }
   },
 
-  async getRestaurantVisits(restaurantId, limit = 10, page = 0) {
+  async getRestaurantVisits(restaurantId, limit = 5000, page = 0) {
     let restaurantVisits = [];
 
     try {
@@ -63,7 +63,12 @@ export default {
         throw new Error("Restaurant visits were not found, please try again.");
       }
 
-      restaurantVisits = response.data.items;
+      let orderedList = response.data.items;
+      orderedList
+        .sort((a, b) => {
+          return new Date(b.date) - new Date(a.date)
+        });
+      restaurantVisits = orderedList;
     } catch (error) {
       console.error(error);
     } finally {
