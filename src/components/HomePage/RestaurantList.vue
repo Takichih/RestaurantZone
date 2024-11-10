@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, watch, computed } from "vue";
 import { useRestaurants } from "@/composables/useRestaurants";
+
+// Components
 import RestaurantCard from "./RestaurantCard.vue";
 import RestaurantFilters from "./RestaurantFilters.vue";
-import RestaurantService from "@/api/RestaurantService";
 
 const props = defineProps({
   initialSearch: {
@@ -58,6 +59,7 @@ const updatePaginatedRestaurants = () => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
   paginatedRestaurants.value = filteredRestaurants.value.slice(start, end);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const toggleFavorite = (restaurant) => {
@@ -68,12 +70,12 @@ const viewDetails = (restaurant) => {
   alert(`Détails du restaurant : ${restaurant.name}`);
 };
 
-updateFilteredRestaurants();
-
 // Mettre à jour `filteredRestaurants` lorsque les critères de recherche ou de filtre changent
 watch([search, selectedPrice, selectedSpeciality, restaurants], updateFilteredRestaurants);
 // Observer les changements de `currentPage` pour mettre à jour `paginatedRestaurants`
 watch(currentPage, updatePaginatedRestaurants);
+
+updateFilteredRestaurants();
 </script>
 
 <template>
@@ -94,15 +96,8 @@ watch(currentPage, updatePaginatedRestaurants);
               @update:search="search = $event" :selectedPrice="selectedPrice" :selectedSpeciality="selectedSpeciality"
               @update:selectedPrice="selectedPrice = $event" @update:selectedSpeciality="selectedSpeciality = $event" />
 
-            <!-- Spinner de chargement -->
-            <v-row v-if="loading" class="justify-center">
-              <v-col cols="12" class="text-center">
-                <v-progress-circular indeterminate color="primary"></v-progress-circular>
-              </v-col>
-            </v-row>
-
             <!-- Liste de restaurants filtrée -->
-            <v-row v-else>
+            <v-row>
               <template v-if="paginatedRestaurants.length > 0">
                 <RestaurantCard v-for="restaurant in paginatedRestaurants" :key="restaurant.place_id"
                   :restaurant="restaurant" @toggle-favorite="toggleFavorite" @view-details="viewDetails" />

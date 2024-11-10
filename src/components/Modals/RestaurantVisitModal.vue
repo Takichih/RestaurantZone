@@ -2,13 +2,13 @@
 import { ref } from "vue";
 import { store } from "@/store";
 import * as momentUtils from "@/utils/momentUtils";
-import VisitService from "@/api/VisitService";
+import VisitService from "@/api/visitService";
 
 // Values
 const visitForm = ref();
-const comment = ref("");
-const rating = ref(0);
-const selectedDate = ref(new Date());
+const comment = store.visitModalContent?.comment ? ref(store.visitModalContent.comment) : ref("");
+const rating = store.visitModalContent?.rating ? ref(store.visitModalContent.rating) : ref(0);
+const selectedDate = store.visitModalContent?.date ? ref(new Date(store.visitModalContent.date)) : ref(new Date());
 
 // Rules
 const ratingRules = [
@@ -53,6 +53,8 @@ const closeVisitModal = () => {
 
   store.setCurrentAddingVisitRestaurantId("");
   store.setCurrentAddingVisitRestaurantVisits([]);
+  store.setReadOnlyVisitModal(false);
+  store.setVisitModalContent(null);
   store.setVisitModalOpen(false);
 };
 </script>
@@ -66,27 +68,32 @@ const closeVisitModal = () => {
         <v-card-text class="mt-4">
           <v-row class="d-flex align-center justify-center flex-column">
             Note donnée
-            <v-input v-model="rating" :rules="ratingRules">
+            <v-input :disabled="store.readOnlyVisitModal" v-model="rating" :rules="ratingRules">
               <v-rating half-increments hover :length="5" :size="30" v-model="rating" active-color="warning" />
             </v-input>
           </v-row>
           <v-row dense>
             <v-col class="mt-4">
-              <v-date-input v-model="selectedDate" prepend-icon="" prepend-inner-icon="$calendar"
-                label=" Date de la visite"></v-date-input>
+              <v-date-input :disabled="store.readOnlyVisitModal" v-model="selectedDate" prepend-icon=""
+                prepend-inner-icon="$calendar" label=" Date de la visite"></v-date-input>
             </v-col>
           </v-row>
           <v-row dense>
             <v-col>
-              <v-textarea v-model="comment" label="Commentaire"></v-textarea>
+              <v-textarea :disabled="store.readOnlyVisitModal" v-model="comment" label="Commentaire"></v-textarea>
             </v-col>
           </v-row>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn variant="text" @click="closeVisitModal">Annuler</v-btn>
-          <v-btn type="submit" variant="tonal">Soumettre</v-btn>
+          <template v-if="!store.readOnlyVisitModal">
+            <v-btn variant="text" @click="closeVisitModal">Annuler</v-btn>
+            <v-btn type="submit" variant="tonal">Soumettre</v-btn>
+          </template>
+          <template v-else>
+            <v-btn variant="text" @click="closeVisitModal">Fermer</v-btn>
+          </template>
         </v-card-actions>
       </v-form>
     </v-card>

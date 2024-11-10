@@ -11,15 +11,18 @@ export default {
     lat = null,
   ) {
     let restaurants = [];
-    let urlToCall = `/restaurants?limit=${limit}&page=${page}`;
+    let queryParams = { limit, page };
 
-    if (q) urlToCall += `&q=${q}`;
-    if (genres) urlToCall += `&genres=${genres}`;
-    if (price_range) urlToCall += `&price_range=${price_range}`;
-    if (lon && lat) urlToCall += `&lon=${lon}&lat=${lat}`;
+    if (q) queryParams.q = q;
+    if (genres) queryParams.genres = genres;
+    if (price_range) queryParams.price_range = price_range;
+    if (lon && lat) {
+      queryParams.lon = lon;
+      queryParams.lat = lat;
+    }
 
     try {
-      const response = await apiClient.get(urlToCall);
+      const response = await apiClient.get("/restaurants", { params: queryParams });
 
       if (response.status !== 200) {
         throw new Error("Restaurants were not found, please try again.");
@@ -56,7 +59,7 @@ export default {
 
     try {
       const response = await apiClient.get(
-        `/restaurants/${restaurantId}/visits?limit=${limit}&page=${page}`,
+        `/restaurants/${restaurantId}/visits`, { params: { limit, page } }
       );
 
       if (response.status !== 200) {

@@ -81,12 +81,14 @@ store.setHandleVisitSubmittedFunction(handleVisitSubmitted);
             </div>
 
             <v-card-actions class="justify-center">
-              <v-btn color="primary" class="mx-2" @click="openFavoriteDialog">
-                Ajouter aux favoris
-              </v-btn>
-              <v-btn color="primary" class="mx-2" @click="openVisitModal">
-                Ajouter une visite
-              </v-btn>
+              <span v-if="store.currentUser">
+                <v-btn icon color="error" class="mx-2" @click="openFavoriteDialog">
+                  <v-icon icon="mdi-heart-outline"></v-icon>
+                </v-btn>
+                <v-btn icon color="primary" class="mx-2" @click="openVisitModal">
+                  <v-icon icon="mdi-plus-circle-outline"></v-icon>
+                </v-btn>
+              </span>
             </v-card-actions>
           </v-card-text>
         </v-card>

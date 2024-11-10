@@ -1,33 +1,26 @@
 <script setup>
 import { ref } from "vue";
 import { defineProps, defineEmits } from "vue";
-import VisitService from "@/api/VisitService";
+import visitService from "@/api/visitService";
+import { store } from "@/store";
 
 const props = defineProps({
   name: String,
   rating: Number,
   visits: Number,
-  isFavorite: Boolean,
   restaurant_id: String,
 });
-
-const emit = defineEmits(["toggle-favorite", "delete-restaurant"]);
 
 const showVisitDetails = ref(false);
 const visitDetails = ref([]);
 
-function toggleFavorite() {
-  emit("toggle-favorite", props.restaurant_id);
-}
-
 const fetchVisitDetails = async () => {
   try {
-    const userId = localStorage.getItem("userID");
-    const response = await VisitService.getVisitsForRestaurant(
-      userId,
+    const response = await visitService.getVisitsForRestaurant(
+      store.currentUser.id,
       props.restaurant_id,
     );
-    visitDetails.value = response.data.items;
+    visitDetails.value = response;
   } catch (error) {
     console.error("Error fetching visit details:", error);
   }
@@ -40,10 +33,10 @@ function toggleVisitDetails() {
   }
 }
 
-function showVisitAlert(restaurantId) {
-  alert(
-    `Ouverture de la modale pour restaurant : ${props.name}, Id : ${restaurantId}`,
-  );
+function openReadOnlyVisitModal(visitData) {
+  store.setVisitModalOpen(true);
+  store.setReadOnlyVisitModal(true);
+  store.setVisitModalContent(visitData);
 }
 </script>
 
@@ -53,10 +46,6 @@ function showVisitAlert(restaurantId) {
     <v-card-subtitle>Score: {{ rating }}</v-card-subtitle>
     <v-card-text>Nombre de visites: {{ visits }}</v-card-text>
     <v-card-actions>
-      <v-btn icon @click="$emit('delete-restaurant', restaurant_id)">
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-      <v-spacer></v-spacer>
       <v-btn icon @click="toggleVisitDetails">
         <v-icon>{{
           showVisitDetails ? "mdi-chevron-up" : "mdi-chevron-down"
@@ -68,19 +57,11 @@ function showVisitAlert(restaurantId) {
     <v-expand-transition>
       <div v-if="showVisitDetails" class="visit-details">
         <v-list>
-          <v-list-item
-            v-for="(visit, index) in visitDetails"
-            :key="index"
-            @click="showVisitAlert(visit.restaurant_id)"
-          >
+          <v-list-item v-for="(visit, index) in visitDetails" :key="index" @click="openReadOnlyVisitModal(visit)">
             <v-list-item-content>
               <v-list-item-title>Date: {{ visit.date }}</v-list-item-title>
-              <v-list-item-subtitle
-                >Comment: {{ visit.comment }}</v-list-item-subtitle
-              >
-              <v-list-item-subtitle
-                >Rating: {{ visit.rating }}</v-list-item-subtitle
-              >
+              <v-list-item-subtitle>Comment: {{ visit.comment }}</v-list-item-subtitle>
+              <v-list-item-subtitle>Rating: {{ visit.rating }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list>

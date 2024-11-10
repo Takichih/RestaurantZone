@@ -13,7 +13,6 @@ const props = defineProps({
 
 const router = useRouter();
 const showCopiedMessage = ref(false);
-const showFavorite = ref(false);
 
 const openVisitModal = () => {
   store.setCurrentAddingVisitRestaurantId(props.restaurant.id);
@@ -39,6 +38,10 @@ const copyToClipboard = (text) => {
 const priceSymbols = computed(() => {
   return "$".repeat(props.restaurant.price_range);
 });
+
+const goToRestaurant = () => {
+  router.push(`/restaurant/${props.restaurant.id}`);
+}
 </script>
 
 <template>
@@ -70,15 +73,15 @@ const priceSymbols = computed(() => {
       </v-card-text>
 
       <v-card-actions class="justify-center">
-        <v-btn v-if="showFavorite" icon color="primary" class="mx-2"
-          @click="$emit('toggle-favorite', props.restaurant)">
-          <v-icon :icon="props.restaurant.isFavorite ? 'mdi-heart' : 'mdi-heart-outline'
-            "></v-icon>
-        </v-btn>
-        <v-btn color="primary" @click="openVisitModal">
-          <v-icon>mdi-plus-box-outline</v-icon>
-        </v-btn>
-        <v-btn icon color="secondary" class="mx-2" @click="router.push(`/restaurant/${props.restaurant.id}`)">
+        <span v-if="store.currentUser">
+          <v-btn icon color="error" class="mx-2" @click="$emit('toggle-favorite', props.restaurant)">
+            <v-icon icon="mdi-heart-outline"></v-icon>
+          </v-btn>
+          <v-btn icon color="primary" class="mx-2" @click="openVisitModal">
+            <v-icon icon="mdi-plus-circle-outline"></v-icon>
+          </v-btn>
+        </span>
+        <v-btn icon color="secondary" class="mx-2" @click="goToRestaurant">
           <v-icon icon="mdi-information-outline"></v-icon>
         </v-btn>
       </v-card-actions>

@@ -34,6 +34,7 @@ const showSearchBar = computed(() => route.name !== "Home");
     @click:append="emitSearch"
     @keyup.enter="emitSearch"
     clearable
+    density="compact"
   ></v-text-field>
 </template>
 

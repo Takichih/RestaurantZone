@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import RestaurantService from "@/api/RestaurantService";
+import restaurantService from "@/api/restaurantService";
 
 export async function useRestaurant(restaurantId) {
   const restaurant = ref({});
@@ -8,7 +8,7 @@ export async function useRestaurant(restaurantId) {
   const hasMoreVisits = ref(true);
 
   const getRestaurant = async () => {
-    const data = await RestaurantService.getRestaurant(restaurantId);
+    const data = await restaurantService.getRestaurant(restaurantId);
     restaurant.value = data;
 
     cleanUpTelForHref();
@@ -16,7 +16,7 @@ export async function useRestaurant(restaurantId) {
   };
 
   const getRestaurantVisits = async (page = 0) => {
-    const data = await RestaurantService.getRestaurantVisits(restaurantId, 10, page);
+    const data = await restaurantService.getRestaurantVisits(restaurantId, 10, page);
     if (data.length === 0) {
       hasMoreVisits.value = false;
     } else {
