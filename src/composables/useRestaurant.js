@@ -3,9 +3,7 @@ import restaurantService from "@/api/restaurantService";
 
 export async function useRestaurant(restaurantId) {
   const restaurant = ref({});
-  const visits = ref([]);
-  const currentPage = ref(0);
-  const hasMoreVisits = ref(true);
+  const numberOfPages = ref(0);
 
   const getRestaurant = async () => {
     const data = await restaurantService.getRestaurant(restaurantId);
@@ -15,20 +13,9 @@ export async function useRestaurant(restaurantId) {
     cleanUpOpeningHours();
   };
 
-  const getRestaurantVisits = async (page = 0) => {
-    const data = await restaurantService.getRestaurantVisits(restaurantId, 10, page);
-    if (data.length === 0) {
-      hasMoreVisits.value = false;
-    } else {
-      visits.value.push(...data);
-    }
-  };
-
-  const fetchMoreVisits = async () => {
-    if (hasMoreVisits.value) {
-      currentPage.value++;
-      await getRestaurantVisits(currentPage.value);
-    }
+  const getRestaurantVisitsNumberOfPages = async () => {
+    const data = await restaurantService.getRestaurantVisits(restaurantId, 1);
+    numberOfPages.value = Math.ceil(data.total / 10) - 1;
   };
 
   const cleanUpTelForHref = () => {
@@ -89,7 +76,7 @@ export async function useRestaurant(restaurantId) {
   };
 
   await getRestaurant();
-  await getRestaurantVisits();
+  await getRestaurantVisitsNumberOfPages();
 
-  return { restaurant, visits, fetchMoreVisits, hasMoreVisits };
+  return { restaurant, numberOfPages };
 }
