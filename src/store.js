@@ -5,7 +5,11 @@ export const store = reactive({
   currentUserFavorites: null,
   visitModalOpen: false,
   readOnlyVisitModal: false,
-  visitModalContent: null,
+  visitModalContent: {
+    comment: "",
+    rating: 0,
+    selectedDate: new Date()
+  },
   favoritesModalOpen: false,
   currentAddingVisitRestaurantId: "",
   currentAddingVisitRestaurantVisits: [],

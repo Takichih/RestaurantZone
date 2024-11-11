@@ -6,9 +6,6 @@ import VisitService from "@/api/visitService";
 
 // Values
 const visitForm = ref();
-const comment = store.visitModalContent?.comment ? ref(store.visitModalContent.comment) : ref("");
-const rating = store.visitModalContent?.rating ? ref(store.visitModalContent.rating) : ref(0);
-const selectedDate = store.visitModalContent?.date ? ref(new Date(store.visitModalContent.date)) : ref(new Date());
 
 // Rules
 const ratingRules = [
@@ -28,9 +25,9 @@ const postVisit = async () => {
     if (isFormValid) {
       const visitData = {
         restaurant_id: store.currentAddingVisitRestaurantId,
-        comment: comment.value,
-        rating: rating.value,
-        date: momentUtils.formatDateForAPIPost(selectedDate.value),
+        comment: store.visitModalContent.comment,
+        rating: store.visitModalContent.rating,
+        date: momentUtils.formatDateForAPIPost(store.visitModalContent.selectedDate),
       };
 
       await VisitService.createVisit(store.currentUser.id, visitData)
@@ -47,14 +44,14 @@ const postVisit = async () => {
 };
 
 const closeVisitModal = () => {
-  comment.value = "";
-  rating.value = "";
-  selectedDate.value = new Date();
-
   store.setCurrentAddingVisitRestaurantId("");
   store.setCurrentAddingVisitRestaurantVisits([]);
   store.setReadOnlyVisitModal(false);
-  store.setVisitModalContent(null);
+  store.setVisitModalContent({
+    comment: "",
+    rating: 0,
+    selectedDate: new Date()
+  });
   store.setVisitModalOpen(false);
 };
 </script>
@@ -68,19 +65,21 @@ const closeVisitModal = () => {
         <v-card-text class="mt-4">
           <v-row class="d-flex align-center justify-center flex-column">
             Note donnée
-            <v-input :disabled="store.readOnlyVisitModal" v-model="rating" :rules="ratingRules">
-              <v-rating half-increments hover :length="5" :size="30" v-model="rating" active-color="warning" />
+            <v-input :disabled="store.readOnlyVisitModal" v-model="store.visitModalContent.rating" :rules="ratingRules">
+              <v-rating half-increments hover :length="5" :size="30" v-model="store.visitModalContent.rating"
+                active-color="warning" />
             </v-input>
           </v-row>
           <v-row dense>
             <v-col class="mt-4">
-              <v-date-input :disabled="store.readOnlyVisitModal" v-model="selectedDate" prepend-icon=""
-                prepend-inner-icon="$calendar" label=" Date de la visite"></v-date-input>
+              <v-date-input :disabled="store.readOnlyVisitModal" v-model="store.visitModalContent.selectedDate"
+                prepend-icon="" prepend-inner-icon="$calendar" label=" Date de la visite"></v-date-input>
             </v-col>
           </v-row>
           <v-row dense>
             <v-col>
-              <v-textarea :disabled="store.readOnlyVisitModal" v-model="comment" label="Commentaire"></v-textarea>
+              <v-textarea :disabled="store.readOnlyVisitModal" v-model="store.visitModalContent.comment"
+                label="Commentaire"></v-textarea>
             </v-col>
           </v-row>
         </v-card-text>

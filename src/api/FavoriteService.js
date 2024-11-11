@@ -1,4 +1,5 @@
 import apiClient from "@/utils/apiClient";
+import restaurantService from "@/api/restaurantService";
 
 export default {
   async getUserFavorites(userId, limit = 100, page = 0) {
@@ -45,9 +46,11 @@ export default {
       data.name = listName;
       if (listOwner) data.owner = listOwner;
 
+      console.log(data);
+
       const response = await apiClient.post("/favorites", data);
 
-      if (response.status !== 200) {
+      if (response.status !== 201) {
         throw new Error("Favorite list was not created, please try again.");
       }
 
@@ -72,7 +75,7 @@ export default {
         throw new Error("Favorite list was not updated, please try again.");
       }
 
-      restaurants = response.data.items;
+      updatedList = response.data.items;
     } catch (e) {
       console.error(e);
     } finally {
@@ -97,7 +100,7 @@ export default {
     }
   },
   async addRestaurantToFavoriteList(listId, restaurantId) {
-    let responseStatus;
+    let updatedFavoriteList = [];
 
     try {
       const response = await apiClient.post(`/favorites/${listId}/restaurants`, { id: restaurantId });
@@ -106,15 +109,22 @@ export default {
         throw new Error("Restaurant was not added to favorite list, please try again.");
       }
 
-      responseStatus = response.status;
+      updatedFavoriteList = response.data;
+
+      updatedFavoriteList.restaurants = await Promise.all(
+        updatedFavoriteList.restaurants.map(async (restaurant) => {
+          const detailsResponse = await restaurantService.getRestaurant(restaurant.id);
+          return detailsResponse;
+        }),
+      );
     } catch (e) {
       console.error(e);
     } finally {
-      return responseStatus;
+      return updatedFavoriteList;
     }
   },
   async removeRestaurantFromFavoriteList(listId, restaurantId) {
-    let responseStatus;
+    let updatedFavoriteList;
 
     try {
       const response = await apiClient.delete(`/favorites/${listId}/restaurants/${restaurantId}`);
@@ -123,11 +133,18 @@ export default {
         throw new Error("Restaurant was not removed from favorite list, please try again.");
       }
 
-      responseStatus = response.status;
+      updatedFavoriteList = response.data;
+
+      updatedFavoriteList.restaurants = await Promise.all(
+        updatedFavoriteList.restaurants.map(async (restaurant) => {
+          const detailsResponse = await restaurantService.getRestaurant(restaurant.id);
+          return detailsResponse;
+        }),
+      );
     } catch (e) {
       console.error(e);
     } finally {
-      return responseStatus;
+      return updatedFavoriteList;
     }
   },
 };

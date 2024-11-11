@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount } from "vue";
+import { onBeforeMount, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { store } from "@/store";
 import { useProfile } from "@/composables/useProfile";
@@ -19,7 +19,7 @@ onBeforeMount(() => {
   }
 })
 
-const { userRecentVisits, userFavoriteLists } = await useProfile();
+const { userRecentVisits, allRestaurantNames } = await useProfile();
 </script>
 
 <template>
@@ -64,7 +64,7 @@ const { userRecentVisits, userFavoriteLists } = await useProfile();
       </v-row>
     </v-container>
 
-    <FavoriteLists :userFavoriteLists="userFavoriteLists" />
+    <FavoriteLists :allRestaurantNames="allRestaurantNames" />
   </div>
 </template>
 

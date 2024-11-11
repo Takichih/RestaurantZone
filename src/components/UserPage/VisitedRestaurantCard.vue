@@ -36,7 +36,11 @@ function toggleVisitDetails() {
 function openReadOnlyVisitModal(visitData) {
   store.setVisitModalOpen(true);
   store.setReadOnlyVisitModal(true);
-  store.setVisitModalContent(visitData);
+  store.setVisitModalContent({
+    comment: visitData.comment,
+    rating: visitData.rating,
+    selectedDate: new Date(visitData.date)
+  });
 }
 </script>
 
