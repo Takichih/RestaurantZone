@@ -41,7 +41,7 @@ const handleSearch = (searchTerm) => {
 
 <template>
   <span>
-    <v-app-bar color="primary" prominent>
+    <v-app-bar color="primary" temporary>
       <!-- Navigation Drawer button for Mobile -->
       <v-app-bar-nav-icon class="d-md-none" @click.stop="toggleDrawer"></v-app-bar-nav-icon>
 
@@ -49,12 +49,12 @@ const handleSearch = (searchTerm) => {
 
       <v-spacer></v-spacer>
 
+      <v-btn v-if="$vuetify.display.mdAndUp" icon="mdi-home" variant="text" to="/" exact :active="false"></v-btn>
+
+      <!-- Search bar: always visible except on home page-->
+      <SearchBar v-model="searchQuery" @search="handleSearch" />
+
       <template v-if="$vuetify.display.mdAndUp">
-        <v-btn icon="mdi-home" variant="text" to="/" exact :active="false"></v-btn>
-
-        <!-- Search bar: always visible except on home page-->
-        <SearchBar v-model="searchQuery" @search="handleSearch" />
-
         <template v-if="store.currentUser">
           <v-btn icon="mdi-account" variant="text" @click="goToUserPage"></v-btn>
           <v-btn icon="mdi-logout" variant="text" @click="logout"></v-btn>

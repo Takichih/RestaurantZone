@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, onMounted } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { store } from "@/store";
 import { useProfile } from "@/composables/useProfile";

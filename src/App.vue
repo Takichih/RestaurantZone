@@ -9,7 +9,7 @@ import SuspenseSpinner from "./components/SuspenseSpinner.vue";
 
 onBeforeMount(() => {
   const user = JSON.parse(localStorage.getItem("user"));
-
+  
   if (user) store.setCurrentUser(user);
 })
 </script>
