@@ -1,26 +1,53 @@
 <script setup>
 import { useRestaurant } from "@/composables/useRestaurant";
 import { useRoute } from "vue-router";
-import moment from "moment";
-import "moment/locale/fr";
+import { ref } from "vue";
+import { store } from "@/store";
 
 // Components
 import InteractiveMap from "@/components/RestaurantPage/InteractiveMap";
-import ModaleVisite from "@/components/ModaleVisite.vue";
+import RestaurantVisits from "@/components/RestaurantPage/RestaurantVisits.vue";
+import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
+import restaurantService from "@/api/restaurantService";
 
 const route = useRoute();
 const currentRestaurantId = route.params.restaurantId;
-const { restaurant, visits } = await useRestaurant(currentRestaurantId);
+const { restaurant, numberOfPages } = await useRestaurant(currentRestaurantId);
+const visits = ref(await restaurantService.getRestaurantVisits(restaurant.value.id, 10, numberOfPages.value));
+const emits = defineEmits(["changePage"])
 
-const formatDate = (dateString) => {
-  return moment(dateString).locale("fr").format("D MMMM YYYY, HH[h]mm");
+const isFavoriteDialogOpen = ref(false);
+const favoriteLists = ref([
+  { id: 1, name: "Favorites" },
+  { id: 2, name: "Wishlist" },
+  // Add more lists as needed
+]);
+
+const openFavoriteDialog = () => {
+  isFavoriteDialogOpen.value = true;
+};
+
+const openVisitModal = () => {
+  store.setCurrentAddingVisitRestaurantId(restaurant.value.id);
+  store.setCurrentAddingVisitRestaurantVisits(visits.value);
+  store.setVisitModalOpen(true);
 };
 
 const handleVisitSubmitted = (visitData) => {
-  // console.log("Nouvelle visite reçue :", visitData);
-
-  visits.value.unshift(visitData);
+  visitData.user_id = store.currentUser.id;
+  visits.value.items.unshift(visitData);
 };
+
+const handleAddToFavorites = ({ restaurantId, listId }) => {
+  // Handle adding the restaurant to the selected favorite list
+  console.log(`Restaurant ${restaurantId} added to list ${listId}`);
+};
+
+store.setHandleVisitSubmittedFunction(handleVisitSubmitted);
+
+const handleChangePage = async (pageId) => {
+  visits.value = await restaurantService.getRestaurantVisits(restaurant.value.id, 10, pageId);
+}
 </script>
 
 <template>
@@ -29,12 +56,8 @@ const handleVisitSubmitted = (visitData) => {
       <v-col cols="12" md="6">
         <v-card :restaurant="restaurant" class="mx-auto" height="100%">
           <v-carousel :show-arrows="false" cycle hide-delimiters height="70vh">
-            <v-carousel-item
-              v-for="(restaurantPicture, index) in restaurant.pictures"
-              :key="index"
-              :src="restaurantPicture"
-              cover
-            ></v-carousel-item>
+            <v-carousel-item v-for="(restaurantPicture, index) in restaurant.pictures" :key="index"
+              :src="restaurantPicture" cover></v-carousel-item>
           </v-carousel>
 
           <v-card-item>
@@ -49,14 +72,8 @@ const handleVisitSubmitted = (visitData) => {
           </v-card-item>
           <v-card-text class="pb-2">
             <v-row class="mx-0 align-center">
-              <v-rating
-                :model-value="restaurant.rating"
-                color="amber"
-                density="compact"
-                size="small"
-                half-increments
-                readonly
-              ></v-rating>
+              <v-rating :model-value="restaurant.rating" color="amber" density="compact" size="small" half-increments
+                readonly></v-rating>
 
               <div class="text-grey ms-2 mt-1">
                 {{ Math.round(restaurant.rating * 100) / 100 }}
@@ -72,18 +89,14 @@ const handleVisitSubmitted = (visitData) => {
             </div>
 
             <v-card-actions class="justify-center">
-              <v-btn
-                icon
-                color="primary"
-                class="mx-2"
-                @click="$emit('toggle-favorite', restaurant)"
-              >
-                <v-icon
-                  :icon="
-                    restaurant.isFavorite ? 'mdi-heart' : 'mdi-heart-outline'
-                  "
-                ></v-icon>
-              </v-btn>
+              <span v-if="store.currentUser">
+                <v-btn icon color="error" class="mx-2" @click="openFavoriteDialog">
+                  <v-icon icon="mdi-heart-outline"></v-icon>
+                </v-btn>
+                <v-btn icon color="primary" class="mx-2" @click="openVisitModal">
+                  <v-icon icon="mdi-plus-circle-outline"></v-icon>
+                </v-btn>
+              </span>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -102,10 +115,7 @@ const handleVisitSubmitted = (visitData) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr
-                    v-for="(hours, day, index) in restaurant.opening_hours"
-                    :key="index"
-                  >
+                  <tr v-for="(hours, day, index) in restaurant.opening_hours" :key="index">
                     <td>
                       <p>{{ day }}</p>
                     </td>
@@ -113,80 +123,28 @@ const handleVisitSubmitted = (visitData) => {
                   </tr>
                 </tbody>
               </v-table>
-            </v-card></v-col
-          >
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-card width="100%">
-              <InteractiveMap
-                :longitude="restaurant.location.coordinates[0]"
-                :latitude="restaurant.location.coordinates[1]"
-              />
             </v-card>
           </v-col>
         </v-row>
+
         <v-row>
           <v-col>
-            <ModaleVisite
-              :id="restaurant?.id"
-              @visitSubmitted="handleVisitSubmitted"
-            />
+            <v-card width="100%">
+              <InteractiveMap :longitude="restaurant.location.coordinates[0]"
+                :latitude="restaurant.location.coordinates[1]" />
+            </v-card>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
-    <v-row>
+
+    <v-row v-if="visits.items.length > 0">
       <v-col>
-        <v-card v-if="visits && visits.length" class="mt-4 text-subtitle-1">
-          <v-card-title class="mt-4">Avis des visiteurs</v-card-title>
-          <v-divider></v-divider>
-
-          <v-card-item
-            v-for="visit in visits"
-            :key="visit.id"
-            class="visit-card mt-4"
-          >
-            <v-row class="d-flex align-center" justify="space-between">
-              <v-col class="text-start" cols="6">
-                <p class="text-body-2">
-                  {{ visit.user_id }}
-                </p>
-              </v-col>
-              <v-col class="text-end" cols="6">
-                <p class="text-body-2 text-grey">
-                  {{ formatDate(visit.date) }}
-                </p>
-              </v-col>
-            </v-row>
-
-            <v-card-text class="rating">
-              <v-row class="mx-0 align-center">
-                <v-rating
-                  :model-value="visit.rating"
-                  color="amber"
-                  density="compact"
-                  size="small"
-                  half-increments
-                  readonly
-                >
-                </v-rating>
-
-                <span class="text-grey ms-2 mt-1">
-                  {{ visit.rating }}
-                </span>
-              </v-row>
-
-              <div class="comment mt-4 text-subtitle-1">
-                <p>
-                  {{ visit.comment }}
-                </p>
-              </div>
-            </v-card-text>
-          </v-card-item>
-        </v-card>
+        <RestaurantVisits :visits="visits.items" @change-page="handleChangePage" :numberOfPages="numberOfPages" />
       </v-col>
     </v-row>
+    <FavoritesDialog :isOpen="isFavoriteDialogOpen" :favoriteLists="favoriteLists" :restaurantId="restaurant.id"
+      @close="isFavoriteDialogOpen = false" @add-to-favorites="handleAddToFavorites" />
   </v-col>
 </template>
 
@@ -205,12 +163,6 @@ p::first-letter {
 
 th {
   font-weight: bold !important;
-}
-
-.visit-card {
-  background-color: #f0f0f5;
-  border-radius: 8px;
-  margin: 20px;
 }
 
 .directions {

@@ -1,21 +1,21 @@
 import { ref } from "vue";
-import RestaurantService from "@/api/RestaurantService";
+import restaurantService from "@/api/restaurantService";
 
 export async function useRestaurant(restaurantId) {
   const restaurant = ref({});
-  const visits = ref([]);
+  const numberOfPages = ref(0);
 
   const getRestaurant = async () => {
-    const data = await RestaurantService.getRestaurant(restaurantId);
+    const data = await restaurantService.getRestaurant(restaurantId);
     restaurant.value = data;
 
     cleanUpTelForHref();
     cleanUpOpeningHours();
   };
 
-  const getRestaurantVisits = async () => {
-    const data = await RestaurantService.getRestaurantVisits(restaurantId);
-    visits.value = data;
+  const getRestaurantVisitsNumberOfPages = async () => {
+    const data = await restaurantService.getRestaurantVisits(restaurantId, 1);
+    numberOfPages.value = Math.ceil(data.total / 10) - 1;
   };
 
   const cleanUpTelForHref = () => {
@@ -76,7 +76,7 @@ export async function useRestaurant(restaurantId) {
   };
 
   await getRestaurant();
-  await getRestaurantVisits();
+  await getRestaurantVisitsNumberOfPages();
 
-  return { restaurant, visits };
+  return { restaurant, numberOfPages };
 }
