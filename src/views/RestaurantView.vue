@@ -8,10 +8,13 @@ import { store } from "@/store";
 import InteractiveMap from "@/components/RestaurantPage/InteractiveMap";
 import RestaurantVisits from "@/components/RestaurantPage/RestaurantVisits.vue";
 import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
+import restaurantService from "@/api/restaurantService";
 
 const route = useRoute();
 const currentRestaurantId = route.params.restaurantId;
-const { restaurant, visits, fetchMoreVisits, hasMoreVisits } = await useRestaurant(currentRestaurantId);
+const { restaurant, numberOfPages } = await useRestaurant(currentRestaurantId);
+const visits = ref(await restaurantService.getRestaurantVisits(restaurant.value.id, 10, numberOfPages.value));
+const emits = defineEmits(["changePage"])
 
 const isFavoriteDialogOpen = ref(false);
 const favoriteLists = ref([
@@ -31,7 +34,8 @@ const openVisitModal = () => {
 };
 
 const handleVisitSubmitted = (visitData) => {
-  visits.value.unshift(visitData);
+  visitData.user_id = store.currentUser.id;
+  visits.value.items.unshift(visitData);
 };
 
 const handleAddToFavorites = ({ restaurantId, listId }) => {
@@ -40,6 +44,10 @@ const handleAddToFavorites = ({ restaurantId, listId }) => {
 };
 
 store.setHandleVisitSubmittedFunction(handleVisitSubmitted);
+
+const handleChangePage = async (pageId) => {
+  visits.value = await restaurantService.getRestaurantVisits(restaurant.value.id, 10, pageId);
+}
 </script>
 
 <template>
@@ -81,12 +89,14 @@ store.setHandleVisitSubmittedFunction(handleVisitSubmitted);
             </div>
 
             <v-card-actions class="justify-center">
-              <v-btn color="primary" class="mx-2" @click="openFavoriteDialog">
-                Ajouter aux favoris
-              </v-btn>
-              <v-btn color="primary" class="mx-2" @click="openVisitModal">
-                Ajouter une visite
-              </v-btn>
+              <span v-if="store.currentUser">
+                <v-btn icon color="error" class="mx-2" @click="openFavoriteDialog">
+                  <v-icon icon="mdi-heart-outline"></v-icon>
+                </v-btn>
+                <v-btn icon color="primary" class="mx-2" @click="openVisitModal">
+                  <v-icon icon="mdi-plus-circle-outline"></v-icon>
+                </v-btn>
+              </span>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -127,9 +137,10 @@ store.setHandleVisitSubmittedFunction(handleVisitSubmitted);
         </v-row>
       </v-col>
     </v-row>
-    <v-row>
+
+    <v-row v-if="visits.items.length > 0">
       <v-col>
-        <RestaurantVisits :visits="visits" :hasMoreVisits="hasMoreVisits" @loadMoreVisits="fetchMoreVisits" />
+        <RestaurantVisits :visits="visits.items" @change-page="handleChangePage" :numberOfPages="numberOfPages" />
       </v-col>
     </v-row>
     <FavoritesDialog :isOpen="isFavoriteDialogOpen" :favoriteLists="favoriteLists" :restaurantId="restaurant.id"

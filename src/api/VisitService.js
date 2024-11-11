@@ -1,5 +1,5 @@
 import apiClient from "@/utils/apiClient";
-import RestaurantService from "@/api/RestaurantService";
+import restaurantService from "@/api/restaurantService";
 
 export default {
   async getRecentVisits(userId, limit = 10, page = 0) {
@@ -17,7 +17,7 @@ export default {
 
         if (!restaurantVisits[restaurantId]) {
           const restaurantDetails =
-            await RestaurantService.getRestaurant(restaurantId);
+            await restaurantService.getRestaurant(restaurantId);
           restaurantVisits[restaurantId] = {
             restaurant_id: restaurantId, // Include the restaurant_id
             name: restaurantDetails.name,
@@ -46,15 +46,23 @@ export default {
     } catch (error) {
       console.error("Erreur lors de la création de la visite :", error);
       throw error;
-    }  
+    }
   },
+  async getVisitsForRestaurant(userId, restaurantId, limit = 10, page = 0) {
+    let restaurantVisitsOfUser = [];
 
-  getVisitsForRestaurant(userId, restaurantId, limit = 10, page = 0) {
-    return apiClient.get(
-      `/users/${userId}/restaurants/${restaurantId}/visits`,
-      {
-        params: { limit, page },
-      },
-    );
+    try {
+      const response = await apiClient.get(`/users/${userId}/restaurants/${restaurantId}/visits`, { params: { limit, page } });
+
+      if (response.status !== 200) {
+        throw new Error("Restaurant visits for specified user were not found, please try again.");
+      }
+
+      restaurantVisitsOfUser = response.data.items;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      return restaurantVisitsOfUser;
+    }
   },
 };

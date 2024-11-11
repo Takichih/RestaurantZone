@@ -1,80 +1,89 @@
-import axios from "axios";
+import apiClient from "@/utils/apiClient";
 
-import { config } from "../config.js";
+export default {
+  async getUsers(limit = 10, page = 0) {
+    let users = [];
 
-console.log(config.apiUrl); // Utilise l'URL de l'API
-let baseURL = config.SSL ? config.apiUrl : config.apiUrl + "/unsecure";
-
-export const testUserService = async () => {
-  console.log("From UserService.js : Test UserService import");
-  console.log("apiURL : " + config.apiUrl);
-  if (config.debugMode) {
-    console.log("Debug mode is on");
     try {
-      const user = await getUser("6716e7304bffd95d58ab6b40"); // Gordon Ramsay
-      console.log(user);
-      localStorage.setItem("userID", user.id);
-    } catch (error) {
-      console.error(
-        `Erreur lors de la récupération de l'utilisateur : ${error.response.statusText}`,
-      );
+      const response = await apiClient.get("/users", { params: { limit, page } });
+
+      if (response.status !== 200) {
+        throw new Error("Users were not found, please try again.");
+      }
+
+      users = response.data.items;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      return users;
     }
-  }
-  return "Test UserService : OK";
-};
+  },
+  async getUser(userId) {
+    let user = {};
 
-export const getUser = async (id) => {
-  console.log("User ID : " + id);
-  const url = `${baseURL}/users/${id}`;
-  console.log("URL : " + url);
-  const response = await axios.get(url);
-  const user = response;
-  console.log("From getUser : " + user.data.name + " " + user.data.email);
-  return user.data;
-};
-//chercher la liste des ID de listes de favoris
-export const listeOfIDdesListesFavoris = async (id) => {
-  try {
-    const response = await axios.get(`${config.apiUrl}/users/:id/favorites`);
-  } catch (error) {
-    console.error(
-      `Erreur lors de la récupération des IDs : ${error.response.statusText}`,
-    );
-  }
-};
-export const getActiveUser = async () => {
-  let userID = localStorage.getItem("userID");
-  if (!userID) {
-    userID = "6716e7304bffd95d58ab6b40"; // Gordon Ramsay
-  }
-  try {
-    const user = await getUser(userID);
-    return user;
-  } catch (error) {
-    console.error(
-      `Erreur lors de la récupération de l'utilisateur : ${error.response.statusText}`,
-    );
-  }
-};
+    try {
+      const response = await apiClient.get(`/users/${userId}`);
 
-export const getUserList = async () => {
-  const response = await axios.get(`${baseURL}/users`);
-  console.log(response.data);
-  return response.data;
-};
+      if (response.status !== 200) {
+        throw new Error("User was not found, please try again.");
+      }
 
-export const createUser = async (name, email, password) => {
-  try {
-    const response = await axios.post(`${config.apiUrl}/signup`, {
-      name,
-      email,
-      password,
-    });
-    return response.data;
-  } catch (error) {
-    console.error(
-      `Erreur lors de la création de l'utilisateur : ${error.response.statusText}`,
-    );
-    throw error;
+      user = response.data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      return user;
+    }
+  },
+  async getUserFavoriteLists(userId, limit = 10, page = 0) {
+    let userFavoriteLists = [];
+
+    try {
+      const response = await apiClient.get(`/users/${userId}/favorites`, { params: { limit, page } });
+
+      if (response.status !== 200) {
+        throw new Error("Favorite lists of specified user were not found, please try again.");
+      }
+
+      userFavoriteLists = response.data.items;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      return userFavoriteLists;
+    }
+  },
+  async followUser(userId) {
+    let responseStatus;
+
+    try {
+      const response = await apiClient.post("/follow", { params: { id: userId } });
+
+      if (response.status !== 200) {
+        throw new Error("User follow failed, please try again.");
+      }
+
+      responseStatus = response.status;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      return responseStatus;
+    }
+  },
+  async removeFollow(userId) {
+    let responseStatus;
+
+    try {
+      const response = await apiClient.post(`/follow/${userId}`);
+
+      if (response.status !== 200) {
+        throw new Error("User unfollow failed, please try again.");
+      }
+
+      responseStatus = response.status;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      return responseStatus;
+    }
   }
 };

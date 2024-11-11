@@ -1,13 +1,13 @@
 import { ref } from "vue";
-import RestaurantService from "@/api/RestaurantService";
+import restaurantService from "@/api/restaurantService";
 
-export async function useRestaurants(isLoading) {
+export async function useRestaurants(loading) {
   const restaurants = ref([]);
   const specialities = ref([]);
   const priceRanges = ref([]);
 
   const getRestaurants = async () => {
-    const response = await RestaurantService.getRestaurants(150);
+    const response = await restaurantService.getRestaurants(150);
     restaurants.value = response.map((item) => ({
       ...item,
       isFavorite: false,
@@ -26,7 +26,7 @@ export async function useRestaurants(isLoading) {
         value: range,
       }));
     priceRanges.value = uniquePriceRanges;
-    isLoading.value = false;
+    loading.value = false;
   }
 
   await getRestaurants();
