@@ -1,6 +1,8 @@
 <script setup>
 import { store } from "@/store";
-import { ref, defineProps, defineEmits, watch, onMounted } from "vue";
+import { ref, defineProps, defineEmits, watch, onMounted} from "vue";
+import {router} from "@/router";
+import gravatarService from "@/api/gravatarService";
 
 const props = defineProps({
   drawerToggle: Boolean,
@@ -30,12 +32,22 @@ onMounted(() => {
     emit("login");
   }
 });
+const goToUserPage = () => {
+  router.push({ name: "Profile" });
+}
+const getGravatarUrl = (email) => {
+  return gravatarService.getGravatarUrl(email);
+};
 </script>
 
 <template>
   <v-navigation-drawer v-model="localDrawer" class="d-md-none">
     <v-list>
+
       <v-list-item v-if="store.currentUser" id="userNameDrawer">
+        <v-avatar class="user-avatar">
+          <img :src="getGravatarUrl(store.currentUser.email)" alt="User Avatar">
+        </v-avatar>
         <span class="mr-4">{{ store.currentUser.name }}</span>
       </v-list-item>
 
@@ -73,4 +85,9 @@ onMounted(() => {
   font-weight: bold;
   font-size: 1.2em;
 }
+
+.user-avatar {
+  margin-right: 8px;
+}
+
 </style>
