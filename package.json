@@ -15,6 +15,7 @@
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
     "leaflet.locatecontrol": "^0.81.1",
+    "md5": "^2.3.0",
     "moment-timezone": "^0.5.46",
     "vue": "^3.2.13",
     "vue-router": "^4.1.3",

@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router';
 // Components
 import SearchBar from "@/components/NavBar/SearchBar.vue";
 import NavigationDrawer from '@/components/NavBar/NavigationDrawer.vue';
+import gravatarService from '@/api/gravatarService';
 
 const drawerToggle = ref(false);
 const searchQuery = ref("");
@@ -37,6 +38,11 @@ const goToUserPage = () => {
 const handleSearch = (searchTerm) => {
   router.push({ name: "Home", query: { search: searchTerm } });
 };
+
+const getGravatarUrl = (email) => {
+  return gravatarService.getGravatarUrl(email);
+};
+
 </script>
 
 <template>
@@ -57,6 +63,13 @@ const handleSearch = (searchTerm) => {
       <template v-if="$vuetify.display.mdAndUp">
         <template v-if="store.currentUser">
           <v-btn icon="mdi-account" variant="text" @click="goToUserPage"></v-btn>
+
+            <v-btn class="v-btn--icon v-btn--text" @click="goToUserPage">
+              <v-avatar class="small-avatar">
+                <img :src="getGravatarUrl(store.currentUser.email)" alt="User Avatar">
+              </v-avatar>
+            </v-btn>
+
           <v-btn icon="mdi-logout" variant="text" @click="logout"></v-btn>
         </template>
         <template v-else>
@@ -69,3 +82,9 @@ const handleSearch = (searchTerm) => {
     <NavigationDrawer v-model="drawerToggle" @login="login" @logout="logout" />
   </span>
 </template>
+
+<style scoped>
+.small-avatar {
+
+}
+</style>
