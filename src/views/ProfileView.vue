@@ -1,41 +1,27 @@
 <script setup>
-import { onBeforeMount, ref } from "vue";
-import { useRouter } from "vue-router";
-import { store } from "@/store";
 import { useProfile } from "@/composables/useProfile";
 
 // Components
 import FavoriteLists from "@/components/UserPage/FavoriteLists.vue";
 import VisitedRestaurantCard from "@/components/UserPage/VisitedRestaurantCard.vue";
 
-onBeforeMount(() => {
-  const router = useRouter();
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  if (!user) {
-    router.push({ name: "Home" })
-  } else {
-    store.setCurrentUser(user);
-  }
-})
-
-const { userRecentVisits, allRestaurantNames } = await useProfile();
+const { currentUser, userRecentVisits, allRestaurantNames } = await useProfile();
 </script>
 
 <template>
-  <div v-if="store.currentUser">
+  <div v-if="currentUser">
     <v-container>
       <v-row>
         <v-col cols="12" md="4">
           <h4 class="text-left">Nom:</h4>
           <v-card>
-            <h3 class="name">{{ store.currentUser.name }}</h3>
+            <h3 class="name">{{ currentUser.name }}</h3>
           </v-card>
         </v-col>
         <v-col cols="12" md="6">
           <h4 class="text-left">Score:</h4>
           <h3 class="text-left">
-            {{ store.currentUser.rating }}
+            {{ currentUser.rating }}
             <v-icon color="amber" class="ms-2">mdi-star-shooting</v-icon>
           </h3>
         </v-col>
