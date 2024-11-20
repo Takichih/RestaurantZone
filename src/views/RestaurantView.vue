@@ -1,8 +1,9 @@
 <script setup>
 import { useRestaurant } from "@/composables/useRestaurant";
 import { useRoute } from "vue-router";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { store } from "@/store";
+import { useStore } from "vuex";
 
 // Components
 import InteractiveMap from "@/components/RestaurantPage/InteractiveMap";
@@ -10,6 +11,9 @@ import RestaurantVisits from "@/components/RestaurantPage/RestaurantVisits.vue";
 import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
 import restaurantService from "@/api/restaurantService";
 
+const vuexStore = useStore();
+const isLoggedIn = computed(() => vuexStore.getters.isAuthenticated);
+const currentUser = computed(() => vuexStore.getters.getCurrentUser);
 const route = useRoute();
 const currentRestaurantId = route.params.restaurantId;
 const { restaurant, numberOfPages } = await useRestaurant(currentRestaurantId);
@@ -34,7 +38,7 @@ const openVisitModal = () => {
 };
 
 const handleVisitSubmitted = (visitData) => {
-  visitData.user_id = store.currentUser.id;
+  visitData.user_id = currentUser.value.id;
   visits.value.items.unshift(visitData);
 };
 
@@ -89,7 +93,7 @@ const handleChangePage = async (pageId) => {
             </div>
 
             <v-card-actions class="justify-center">
-              <span v-if="store.currentUser">
+              <span v-if="isLoggedIn">
                 <v-btn icon color="error" class="mx-2" @click="openFavoriteDialog">
                   <v-icon icon="mdi-heart-outline"></v-icon>
                 </v-btn>

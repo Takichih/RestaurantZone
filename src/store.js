@@ -1,7 +1,6 @@
 import { reactive } from "vue";
 
 export const store = reactive({
-  currentUser: null,
   currentUserFavorites: null,
   visitModalOpen: false,
   readOnlyVisitModal: false,
@@ -14,9 +13,6 @@ export const store = reactive({
   currentAddingVisitRestaurantId: "",
   currentAddingVisitRestaurantVisits: [],
   handleVisitSubmittedFunction: () => { },
-  setCurrentUser(newUser) {
-    this.currentUser = newUser;
-  },
   setCurrentUserFavorites(newFavorites) {
     this.currentUserFavorites = newFavorites;
   },

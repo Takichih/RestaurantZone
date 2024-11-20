@@ -1,4 +1,30 @@
-//TODO Login
+import { config } from "@/config";
+import apiClient from "@/utils/apiClient";
+
+export default {
+  async login(formData) {
+    let user = {};
+
+    try {
+      apiClient.defaults.baseURL = config.apiUrl;
+      const response = await apiClient.post(`/login`, formData, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      });
+
+      if (response.status !== 200) {
+        throw new Error("Failed to login, please try again.");
+      }
+
+      user = response.data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      return user;
+    }
+  }
+}
 
 //TODO Logout
 

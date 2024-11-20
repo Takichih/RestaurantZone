@@ -1,35 +1,24 @@
 <script setup>
-import { useUserService } from '@/composables/useUserService';
-import { store } from '@/store';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthService } from '@/composables/useAuthService';
 
 // Components
 import SearchBar from "@/components/NavBar/SearchBar.vue";
 import NavigationDrawer from '@/components/NavBar/NavigationDrawer.vue';
 import gravatarService from '@/api/gravatarService';
+import { useStore } from 'vuex';
 
+const store = useStore();
 const drawerToggle = ref(false);
 const searchQuery = ref("");
-
 const router = useRouter();
-const { loginUser } = useUserService();
+const isLoggedIn = computed(() => store.getters.isAuthenticated);
+const currentUser = computed(() => store.getters.getCurrentUser);
 
 const toggleDrawer = () => {
   drawerToggle.value = !drawerToggle.value;
 };
-
-const login = () => {
-  loginUser();
-}
-
-const logout = () => {
-  localStorage.removeItem("user");
-  store.setCurrentUser(null);
-  if (router.currentRoute.value.name === "Profile") {
-    router.push({ name: "Home" });
-  }
-}
 
 const goToUserPage = () => {
   router.push({ name: "Profile" });
@@ -42,6 +31,8 @@ const handleSearch = (searchTerm) => {
 const getGravatarUrl = (email) => {
   return gravatarService.getGravatarUrl(email);
 };
+
+const { logout } = useAuthService();
 
 </script>
 
@@ -61,30 +52,22 @@ const getGravatarUrl = (email) => {
       <SearchBar v-model="searchQuery" @search="handleSearch" />
 
       <template v-if="$vuetify.display.mdAndUp">
-        <template v-if="store.currentUser">
-          <v-btn icon="mdi-account" variant="text" @click="goToUserPage"></v-btn>
-
-            <v-btn class="v-btn--icon v-btn--text" @click="goToUserPage">
-              <v-avatar class="small-avatar">
-                <img :src="getGravatarUrl(store.currentUser.email)" alt="User Avatar">
-              </v-avatar>
-            </v-btn>
+        <template v-if="isLoggedIn">
+          <v-btn class="v-btn--icon v-btn--text" @click="goToUserPage">
+            <v-avatar>
+              <v-img :src="getGravatarUrl(currentUser.email)" alt="User Avatar" />
+            </v-avatar>
+          </v-btn>
 
           <v-btn icon="mdi-logout" variant="text" @click="logout"></v-btn>
         </template>
         <template v-else>
-          <v-btn icon="mdi-login" variant="text" @click="login"></v-btn>
+          <v-btn icon="mdi-login" variant="text" to="/login"></v-btn>
         </template>
       </template>
     </v-app-bar>
 
     <!-- Navigation Drawer for Mobile -->
-    <NavigationDrawer v-model="drawerToggle" @login="login" @logout="logout" />
+    <NavigationDrawer v-model="drawerToggle" @logout="logout" />
   </span>
 </template>
-
-<style scoped>
-.small-avatar {
-
-}
-</style>

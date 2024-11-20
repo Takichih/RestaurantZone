@@ -3,6 +3,10 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { defineProps, defineEmits } from "vue";
 import { store } from "@/store";
+import { useStore } from "vuex";
+
+const vuexStore = useStore();
+const isLoggedIn = computed(() => vuexStore.getters.isAuthenticated);
 
 const props = defineProps({
   restaurant: {
@@ -73,7 +77,7 @@ const goToRestaurant = () => {
       </v-card-text>
 
       <v-card-actions class="justify-center">
-        <span v-if="store.currentUser">
+        <span v-if="isLoggedIn">
           <v-btn icon color="error" class="mx-2" @click="$emit('toggle-favorite', props.restaurant)">
             <v-icon icon="mdi-heart-outline"></v-icon>
           </v-btn>

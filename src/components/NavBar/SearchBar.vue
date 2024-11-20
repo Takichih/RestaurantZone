@@ -19,23 +19,17 @@ const emitSearch = () => {
 };
 
 const route = useRoute();
-const showSearchBar = computed(() => route.name !== "Home");
+const showSearchBar = computed(() => {
+  if (route.name !== "Home" || route.name !== "Login")
+    return false;
+  return true;
+});
 </script>
 
 <template>
-  <v-text-field
-    v-if="showSearchBar"
-    v-model="searchQuery"
-    append-icon="mdi-magnify"
-    label="Rechercher..."
-    solo-inverted
-    hide-details
-    class="mx-3"
-    @click:append="emitSearch"
-    @keyup.enter="emitSearch"
-    clearable
-    density="compact"
-  ></v-text-field>
+  <v-text-field v-if="showSearchBar" v-model="searchQuery" append-icon="mdi-magnify" label="Rechercher..." solo-inverted
+    hide-details class="mx-3" @click:append="emitSearch" @keyup.enter="emitSearch" clearable
+    density="compact"></v-text-field>
 </template>
 
 <style scoped>
