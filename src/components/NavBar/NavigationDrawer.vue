@@ -45,7 +45,7 @@ const getGravatarUrl = (email) => {
 
       <v-list-item v-if="isLoggedIn" id="userNameDrawer">
         <v-avatar class="user-avatar">
-          <img :src="getGravatarUrl(currentUser.email)" alt="User Avatar">
+          <img :src="getGravatarUrl(currentUser.email)" alt="User Avatar" class="avatar-img">
         </v-avatar>
         <span class="mr-4">{{ currentUser.name }}</span>
       </v-list-item>
@@ -86,6 +86,13 @@ const getGravatarUrl = (email) => {
 }
 
 .user-avatar {
-  margin-right: 8px;
+  width: 40px;
+  height: 40px;
+}
+
+.avatar-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 </style>
