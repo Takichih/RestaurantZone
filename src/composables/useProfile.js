@@ -1,16 +1,18 @@
-import { ref } from "vue";
-import { store } from "@/store";
+import { computed, ref } from "vue";
 import favoriteService from "@/api/favoriteService";
 import visitService from "@/api/visitService";
 import restaurantService from "@/api/restaurantService";
+import { useStore } from "vuex";
 
 export async function useProfile() {
+  const store = useStore();
   const userRecentVisits = ref([]);
   const allRestaurantNames = ref([]);
+  const currentUser = computed(() => store.getters.getCurrentUser);
 
   const getUserRecentVisits = async () => {
     try {
-      const visits = await visitService.getRecentVisits(store.currentUser.id);
+      const visits = await visitService.getRecentVisits(currentUser.value.id);
       userRecentVisits.value = visits;
     } catch (e) {
       console.error(e);
@@ -18,7 +20,7 @@ export async function useProfile() {
   }
 
   const getUserFavoriteLists = async () => {
-    const lists = await favoriteService.getUserFavorites(store.currentUser.id);
+    const lists = await favoriteService.getUserFavorites(currentUser.value.id);
 
     for (const list of lists) {
       list.restaurants = await Promise.all(
@@ -29,7 +31,7 @@ export async function useProfile() {
       );
     }
 
-    store.setCurrentUserFavorites(lists);
+    //store.setCurrentUserFavorites(lists);
   }
 
   const getAllRestaurantNames = async () => {
@@ -53,5 +55,5 @@ export async function useProfile() {
   await getUserFavoriteLists();
   await getAllRestaurantNames();
 
-  return { userRecentVisits, allRestaurantNames }
+  return { currentUser, userRecentVisits, allRestaurantNames }
 }

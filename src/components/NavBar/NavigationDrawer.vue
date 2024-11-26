@@ -1,24 +1,25 @@
 <script setup>
-import { store } from "@/store";
-import { ref, defineProps, defineEmits, watch, onMounted } from "vue";
+import { ref, defineProps, defineEmits, watch, onMounted, computed } from "vue";
+import { router } from "@/router";
+import gravatarService from "@/api/gravatarService";
+import { useStore } from "vuex";
 
+const store = useStore();
+const isLoggedIn = computed(() => store.getters.isAuthenticated);
+const currentUser = computed(() => store.getters.getCurrentUser);
 const props = defineProps({
   drawerToggle: Boolean,
   isLogged: Boolean,
   username: String,
 });
 
-const emit = defineEmits(["update:drawer", "login", "logout"]);
+const emit = defineEmits(["update:drawer", "logout"]);
 
 const localDrawer = ref(props.drawerToggle);
 
 watch(localDrawer, (newVal) => {
   emit("update:drawer", newVal);
 });
-
-const login = () => {
-  emit("login");
-};
 
 const logout = () => {
   emit("logout");
@@ -30,13 +31,23 @@ onMounted(() => {
     emit("login");
   }
 });
+const goToUserPage = () => {
+  router.push({ name: "Profile" });
+}
+const getGravatarUrl = (email) => {
+  return gravatarService.getGravatarUrl(email);
+};
 </script>
 
 <template>
-  <v-navigation-drawer v-model="localDrawer" class="d-md-none">
+  <v-navigation-drawer temporary v-model="localDrawer" class="d-md-none">
     <v-list>
-      <v-list-item v-if="store.currentUser" id="userNameDrawer">
-        <span class="mr-4">{{ store.currentUser.name }}</span>
+
+      <v-list-item v-if="isLoggedIn" id="userNameDrawer">
+        <v-avatar class="user-avatar">
+          <img :src="getGravatarUrl(currentUser.email)" alt="User Avatar" class="avatar-img">
+        </v-avatar>
+        <span class="mr-4">{{ currentUser.name }}</span>
       </v-list-item>
 
       <v-list-item link to="/" exact>
@@ -44,7 +55,7 @@ onMounted(() => {
         <v-list-item-title>Accueil</v-list-item-title>
       </v-list-item>
 
-      <template v-if="store.currentUser">
+      <template v-if="isLoggedIn">
         <v-list-item link to="/profile">
           <v-icon>mdi-account</v-icon>
           <v-list-item-title>Profil</v-list-item-title>
@@ -55,7 +66,7 @@ onMounted(() => {
         </v-list-item>
       </template>
       <template v-else>
-        <v-list-item @click="login">
+        <v-list-item link to="/login">
           <v-icon>mdi-login</v-icon>
           <v-list-item-title>Connexion</v-list-item-title>
         </v-list-item>
@@ -72,5 +83,16 @@ onMounted(() => {
   margin: 16px 0;
   font-weight: bold;
   font-size: 1.2em;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.avatar-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 </style>

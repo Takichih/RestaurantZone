@@ -8,11 +8,13 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import "leaflet/dist/leaflet.css";
 
-import { router } from "./router";
+import router from "./router";
 
 import App from "./App.vue";
 
 import "@/assets/app.css";
+
+import store from '@/store/index';
 
 const vuetify = createVuetify({
   components: {
@@ -22,4 +24,4 @@ const vuetify = createVuetify({
   directives,
 });
 
-createApp(App).use(router).use(vuetify).mount("#app");
+createApp(App).use(router).use(vuetify).use(store).mount("#app");
