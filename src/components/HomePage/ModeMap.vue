@@ -9,12 +9,15 @@
   import L from 'leaflet';
   import 'leaflet/dist/leaflet.css';
   import restaurantService from "@/api/restaurantService";
+  import { useRouter } from "vue-router";
+  const router = useRouter();
   
   const uniqueMapId = `map-${Math.random().toString(36).substr(2, 9)}`;
   const nearbyRestaurants = ref([]);
   const Latitude = ref(46.8054132);
   const Longitude = ref(-71.2897939);
   let carte = null;
+ 
   navigator.geolocation.getCurrentPosition((position) => {
         Latitude.value = position.coords.latitude;
         Longitude.value = position.coords.longitude;
@@ -63,8 +66,11 @@
         const longitude = restaurant.location.coordinates[0]
         console.log(`Ajout marqueur ${index}:`, latitude, longitude);
         const name = restaurant.name
-        L.marker([latitude, longitude]) .addTo(carte) 
-        .bindPopup(`<b>${name}</b>`); 
+        const goToRestaurant = () => {
+            router.push(`/restaurant/${restaurant.id}`);
+        }
+        L.marker([latitude, longitude]).on("click", goToRestaurant).bindPopup(`<b>${name}</b>`).bindTooltip(name, { permanent: false, direction: 'top' }).addTo(carte) 
+        ; 
         console.log(`Marqueur ${index} ajouté avec succès`); 
       })
       
