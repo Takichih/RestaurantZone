@@ -2,19 +2,20 @@
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import userService from "@/api/userService";
-import {useUserService} from "@/composables/useUserService";
-import {getCurrentUserID} from "@/composables/useUserService";
+import { getCurrentUserID } from "@/composables/useUserService";
 
 const searchQuery = ref(""); // Search query parameter
 const users = ref([]); // Users from the search
 const followedUsers = ref([]); // IDs of users already followed
+const followers = ref([]); // List of followers for the active user
 const activeUserId = ref(""); // ID of the active user
 
-const headers = [
+// Headers for the data table
+const headers = ref([
   { text: "ID", value: "id" },
   { text: "Nom de l'utilisateur", value: "name" },
   { text: "Actions", value: "actions", sortable: false },
-];
+]);
 
 const route = useRoute();
 const router = useRouter();
@@ -29,15 +30,13 @@ const fetchUsers = async () => {
   }
 };
 
-// Fetch the active user and their followers
-const fetchFollowedUsers = async () => {
+// Fetch the active user and their followers/following
+const fetchUserRelations = async () => {
   try {
-    const activeUserID = getCurrentUserID()
-    // activeUserId.value = activeUser;
-    // console.log(activeUser);
-
-    const user = await userService.getUser(activeUserID);
+    activeUserId.value = getCurrentUserID();
+    const user = await userService.getUser(activeUserId.value);
     followedUsers.value = user.following.map((user) => user.id);
+    followers.value = user.followers;
   } catch (error) {
     alert("Une erreur s'est produite lors de la récupération des données.");
     console.error(error);
@@ -68,7 +67,7 @@ const unfollowUser = async (userId) => {
 
 // Sync the search query with the query parameters
 const updateSearchQuery = () => {
-  router.replace({ query: { q: searchQuery.value } });
+  router.replace({query: {q: searchQuery.value}});
   fetchUsers();
 };
 
@@ -84,7 +83,7 @@ watch(
 // On mounted, initialize the view
 onMounted(async () => {
   searchQuery.value = route.query.q || "";
-  await fetchFollowedUsers();
+  await fetchUserRelations();
   await fetchUsers();
 });
 </script>
@@ -117,27 +116,47 @@ onMounted(async () => {
               <h2>Résultats</h2>
             </template>
 
+            <template v-slot:[`item.id`]="{ item }">
+              <a
+                href="#"
+                @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })"
+              >
+                {{ item.id }}
+              </a>
+            </template>
+
+            <template v-slot:[`item.name`]="{ item }">
+              <a
+                href="#"
+                @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })"
+              >
+                {{ item.name }}
+              </a>
+            </template>
+
             <template v-slot:[`item.actions`]="{ item }">
               <v-btn
                 v-if="!followedUsers.includes(item.id)"
                 color="primary"
+                icon
                 @click="followUser(item.id)"
               >
-                Suivre
+                <v-icon>mdi-account-plus</v-icon>
               </v-btn>
               <v-btn
                 v-else
                 color="grey"
                 icon
               >
-                <v-icon color="green">mdi-check-circle</v-icon>
+                <v-icon color="green">mdi-account-check</v-icon>
               </v-btn>
               <v-btn
                 v-if="followedUsers.includes(item.id)"
                 color="red"
+                icon
                 @click="unfollowUser(item.id)"
               >
-                Ne plus suivre
+                <v-icon>mdi-account-minus</v-icon>
               </v-btn>
             </template>
           </v-data-table>
@@ -146,9 +165,3 @@ onMounted(async () => {
     </v-container>
   </div>
 </template>
-
-
-
-<style scoped>
-/* Custom styles if needed */
-</style>

@@ -115,4 +115,50 @@ export default {
       throw error;
     }
   },
+  async getFollowers(userId) {
+    let followers = [];
+    try {
+      const response = await apiClient.get(`/users/${userId}`);
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch followers, please try again.");
+      }
+
+      followers = response.data.followers;
+    } catch (e) {
+      console.error(`Error fetching followers for user ${userId}:`, e);
+      throw e;
+    } finally {
+      return followers;
+    }
+  },
+
+  async getFollowing(userId) {
+    let following = [];
+    try {
+      const response = await apiClient.get(`/users/${userId}`);
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch following, please try again.");
+      }
+
+      following = response.data.following;
+    } catch (e) {
+      console.error(`Error fetching following for user ${userId}:`, e);
+      throw e;
+    } finally {
+      return following;
+    }
+  },
+  async isUserFollower(userId, activeUserId) {
+    try {
+      const response = await apiClient.get(`/users/${activeUserId}`);
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch followers, please try again.");
+      }
+
+      return response.data.followers.some((user) => user.id === userId);
+    } catch (error) {
+      console.error(`Error checking if user ${userId} is a follower:`, error);
+      throw error;
+    }
+  },
 };

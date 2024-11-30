@@ -7,6 +7,7 @@ import RestaurantView from "@/views/RestaurantView";
 import ProfileView from "@/views/ProfileView";
 import LoginView from "@/views/LoginView.vue";
 import UserView from "@/views/UserView";
+import UserDetailView from "@/views/UserDetailView";
 
 
 const routes = [
@@ -44,6 +45,12 @@ const routes = [
     path: "/users",
     name: "Users",
     component: UserView,
+  },
+  {
+    path: "/user-detail",
+    name: "UserDetailView",
+    component: UserDetailView,
+    props: (route) => ({ id: route.query.id }), // Passe l'ID en props
   },
   {
     path: "/:pathMatch(.*)*",
