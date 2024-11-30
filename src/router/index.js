@@ -6,6 +6,7 @@ import HomeView from "@/views/HomeView";
 import RestaurantView from "@/views/RestaurantView";
 import ProfileView from "@/views/ProfileView";
 import LoginView from "@/views/LoginView.vue";
+import UserView from "@/views/UserView";
 
 
 const routes = [
@@ -38,6 +39,11 @@ const routes = [
     path: "/",
     name: "Home",
     component: HomeView,
+  },
+  {
+    path: "/users",
+    name: "Users",
+    component: UserView,
   },
   {
     path: "/:pathMatch(.*)*",
