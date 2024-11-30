@@ -53,6 +53,7 @@ const { logout } = useAuthService();
 
       <template v-if="$vuetify.display.mdAndUp">
         <template v-if="isLoggedIn">
+           <v-btn icon="mdi-account-multiple" variant="text" to="/users"></v-btn>
           <v-btn class="v-btn--icon v-btn--text" @click="goToUserPage">
             <v-avatar>
               <v-img :src="getGravatarUrl(currentUser.email)" alt="User Avatar" />

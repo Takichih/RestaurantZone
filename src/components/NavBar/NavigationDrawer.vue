@@ -64,6 +64,10 @@ const getGravatarUrl = (email) => {
           <v-icon>mdi-logout</v-icon>
           <v-list-item-title>Déconnexion</v-list-item-title>
         </v-list-item>
+        <v-list-item link to="/users">
+          <v-icon>mdi-account-multiple</v-icon>
+          <v-list-item-title>Utilisateurs</v-list-item-title>
+        </v-list-item>
       </template>
       <template v-else>
         <v-list-item link to="/login">
