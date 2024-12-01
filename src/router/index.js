@@ -64,27 +64,37 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (store.getters.isAuthenticated) {
-      next();
-      return;
-    }
-    next("/login");
-  } else {
-    next();
-  }
-});
+  const token = localStorage.getItem("authToken");
+  const isAuthenticated = store.getters.isAuthenticated;
 
-router.beforeEach((to, from, next) => {
+  if (isAuthenticated && !token) {
+    store.dispatch("logout");
+    next("/login");
+    return;
+  }
+
+  console.log("Navigation vers :", to.path); // Ajout du log
+
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (store.getters.isAuthenticated && token) {
+      next();
+    } else {
+      next("/login");
+    }
+    return;
+  }
+
   if (to.matched.some((record) => record.meta.guest)) {
     if (store.getters.isAuthenticated) {
       next('/profile');
-      return;
+    }  else {
+      next();
     }
+
+    return;
+  } 
     next();
-  } else {
-    next();
-  }
 })
 
 export default router;

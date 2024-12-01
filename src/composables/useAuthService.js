@@ -24,12 +24,27 @@ export function useAuthService() {
     const userConnected = await authentificationService.login(formData);
 
     localStorage.setItem("authToken", userConnected.token);
+    localStorage.setItem("refreshToken", userConnected.refreshToken);
     setCurrentUser(userConnected);
   }
 
+  const refreshAccessToken = async () => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) throw new Error("Refresh token absent");
+
+    const formData = new URLSearchParams();
+    formData.append("refresh_token", refreshToken);
+
+    const refreshedData = await authentificationService.refreshToken(formData);
+    localStorage.setItem("authToken", refreshedData.token);
+  };
+
+
   const logout = () => {
     setCurrentUser();
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("refreshToken");
   }
 
-  return { login, logout }
+  return { login, logout, refreshAccessToken }
 }
