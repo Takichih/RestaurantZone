@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import * as momentUtils from "@/utils/momentUtils";
+import { useStore } from "vuex";
 
 const props = defineProps(["visits", "numberOfPages"]);
 const emit = defineEmits(['change-page'])
@@ -11,11 +12,15 @@ const updateChangePage = (page) => {
   currentPage.value = page;
   emit("change-page", page);
 }
+
+const vuexStore = useStore();
+const isLoggedIn = computed(() => vuexStore.getters.isAuthenticated);
+
 </script>
 
 <template>
   <div>
-    <v-card v-if="props.visits && props.visits.length" class="text-subtitle-1">
+    <v-card v-if="props.visits && props.visits.length && isLoggedIn" class="text-subtitle-1">
       <v-card-title class="mt-4">Avis des visiteurs</v-card-title>
       <v-divider></v-divider>
 
