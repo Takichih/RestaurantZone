@@ -13,12 +13,11 @@ export const store = reactive({
   currentAddingVisitRestaurantId: "",
   currentAddingVisitRestaurantVisits: [],
 
-  // Données liées à Facebook
   fbToken: null,
   fbUserName: null,
   fbUserEmail: null,
+  fbUserId: null,
 
-  // Méthodes pour gérer les données Facebook
   setFbToken(token) {
     this.fbToken = token;
   },
@@ -31,10 +30,15 @@ export const store = reactive({
   setFacebookAuth(authData) {
     this.facebookAuth = authData;
   },
+  setFbUserId(id) {
+    this.fbUserId = id;
+  },
+
   clearFbUser() {
     this.fbToken = null;
     this.fbUserName = null;
     this.fbUserEmail = null;
+    this.fbUserId = null;
   },
 
   handleVisitSubmittedFunction: () => { },

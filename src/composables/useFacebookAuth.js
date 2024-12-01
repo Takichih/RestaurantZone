@@ -44,11 +44,12 @@ export const useFacebookAuth = () => {
           if (response.authResponse) {
             const { accessToken, userID } = response.authResponse;
 
-            FB.api("/me", { fields: "name,email" }, async (user) => {
+            FB.api("/me", { fields: "id,name,email" }, async (user) => {
               try {
                 store.setFbToken(accessToken);
                 store.setFbUserName(user.name);
                 store.setFbUserEmail(user.email);
+                store.setFbUserId(user.id);
 
                 // Enregistrer ou récupérer l'utilisateur
                 const registeredUser = await registerOrFetchUserFb(user);
