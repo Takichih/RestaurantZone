@@ -19,8 +19,8 @@ const isLoggedIn = computed(() => vuexStore.getters.isAuthenticated);
 </script>
 
 <template>
-  <div>
-    <v-card v-if="props.visits && props.visits.length && isLoggedIn" class="text-subtitle-1">
+  <div v-if="isLoggedIn">
+    <v-card v-if="props.visits && props.visits.length" class="text-subtitle-1">
       <v-card-title class="mt-4">Avis des visiteurs</v-card-title>
       <v-divider></v-divider>
 

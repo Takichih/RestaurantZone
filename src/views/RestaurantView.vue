@@ -1,6 +1,6 @@
 <script setup>
 import { useRestaurant } from "@/composables/useRestaurant";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { ref, computed } from "vue";
 import { store } from "@/store";
 import { useStore } from "vuex";
@@ -11,12 +11,13 @@ import RestaurantVisits from "@/components/RestaurantPage/RestaurantVisits.vue";
 import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
 import restaurantService from "@/api/restaurantService";
 
+const router = useRouter();
 const vuexStore = useStore();
 const isLoggedIn = computed(() => vuexStore.getters.isAuthenticated);
 const currentUser = computed(() => vuexStore.getters.getCurrentUser);
 const route = useRoute();
 const currentRestaurantId = route.params.restaurantId;
-const { restaurant, numberOfPages } = await useRestaurant(currentRestaurantId);
+const { restaurant, similarRestaurants, numberOfPages } = await useRestaurant(currentRestaurantId);
 const visits = ref(await restaurantService.getRestaurantVisits(restaurant.value.id, 10, numberOfPages.value));
 const emits = defineEmits(["changePage"])
 
@@ -51,6 +52,14 @@ store.setHandleVisitSubmittedFunction(handleVisitSubmitted);
 
 const handleChangePage = async (pageId) => {
   visits.value = await restaurantService.getRestaurantVisits(restaurant.value.id, 10, pageId);
+}
+
+const load = ({ done }) => {
+  done('empty')
+}
+
+const goToRestaurant = (restaurantId) => {
+  router.push(`/restaurant/${restaurantId}`);
 }
 </script>
 
@@ -88,7 +97,7 @@ const handleChangePage = async (pageId) => {
               <p v-for="n in restaurant.price_range" :key="n">$</p>
               •
               <p v-for="(genre, index) in restaurant.genres" :key="index">
-                {{ genre }}
+                {{ genre }}<span v-if="index != (restaurant.genres.length - 1)">/</span>
               </p>
             </div>
 
@@ -127,6 +136,24 @@ const handleChangePage = async (pageId) => {
                   </tr>
                 </tbody>
               </v-table>
+            </v-card>
+          </v-col>
+          <v-col v-if="similarRestaurants.length > 0">
+            <v-card height="340">
+              <v-card-title>Restaurants similaires</v-card-title>
+
+              <v-infinite-scroll height="292" @load="load" empty-text="">
+                <v-list-item v-for="(restaurant, index) in similarRestaurants" :key="index">
+                  <template v-slot:prepend>
+                    <v-card-actions class="mr-2">
+                      <v-btn density="compact" icon color="secondary" @click="goToRestaurant(restaurant.id)">
+                        <v-icon icon="mdi-information-outline"></v-icon>
+                      </v-btn>
+                    </v-card-actions>
+                  </template>
+                  {{ restaurant.name }}
+                </v-list-item>
+              </v-infinite-scroll>
             </v-card>
           </v-col>
         </v-row>
@@ -171,5 +198,10 @@ th {
 
 .directions {
   text-decoration: none;
+}
+
+.actions {
+  min-height: none;
+  margin: 0;
 }
 </style>
