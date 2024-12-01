@@ -10,19 +10,22 @@ const apiClient = axios.create({
   },
 });
 
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("authToken");
-  if (token) {
-    config.headers.Authorization = `${token}`;
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      config.headers.Authorization = `${token}`;
+    }
+    return config;
   }
-  return config;
-});
+);
 
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
 
+      /*
       try {
         const { refreshAccessToken } = useAuthService();
         await refreshAccessToken();
@@ -32,7 +35,8 @@ apiClient.interceptors.response.use(
         localStorage.removeItem("authToken");
         window.location.href = "/login";
       }
-      
+      */
+
     }
     return Promise.reject(error);
   }

@@ -1,6 +1,5 @@
 <script setup>
-import { ref, defineProps, defineEmits, watch, onMounted, computed } from "vue";
-import { router } from "@/router";
+import { ref, defineProps, defineEmits, watch, computed } from "vue";
 import gravatarService from "@/api/gravatarService";
 import { useStore } from "vuex";
 
@@ -25,15 +24,6 @@ const logout = () => {
   emit("logout");
 };
 
-onMounted(() => {
-  const loggedIn = localStorage.getItem("isLogged");
-  if (loggedIn) {
-    emit("login");
-  }
-});
-const goToUserPage = () => {
-  router.push({ name: "Profile" });
-}
 const getGravatarUrl = (email) => {
   return gravatarService.getGravatarUrl(email);
 };
@@ -56,6 +46,10 @@ const getGravatarUrl = (email) => {
       </v-list-item>
 
       <template v-if="isLoggedIn">
+        <v-list-item link to="/users">
+          <v-icon>mdi-account-multiple</v-icon>
+          <v-list-item-title>Utilisateurs</v-list-item-title>
+        </v-list-item>
         <v-list-item link to="/profile">
           <v-icon>mdi-account</v-icon>
           <v-list-item-title>Profil</v-list-item-title>
@@ -63,10 +57,6 @@ const getGravatarUrl = (email) => {
         <v-list-item @click="logout">
           <v-icon>mdi-logout</v-icon>
           <v-list-item-title>Déconnexion</v-list-item-title>
-        </v-list-item>
-        <v-list-item link to="/users">
-          <v-icon>mdi-account-multiple</v-icon>
-          <v-list-item-title>Utilisateurs</v-list-item-title>
         </v-list-item>
       </template>
       <template v-else>

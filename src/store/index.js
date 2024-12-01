@@ -7,6 +7,7 @@ import mutations from "./mutations";
 const state = {
   currentUser: null,
   currentUserFavorites: null,
+  accountExists: true,
 }
 
 export default createStore({
