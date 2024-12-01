@@ -23,9 +23,7 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-
-      /*
+    if (error.response && (error.response.status === 401 || error.response.status === 403) && !error.request.responseURL.includes("login")) {
       try {
         const { refreshAccessToken } = useAuthService();
         await refreshAccessToken();
@@ -35,8 +33,6 @@ apiClient.interceptors.response.use(
         localStorage.removeItem("authToken");
         window.location.href = "/login";
       }
-      */
-
     }
     return Promise.reject(error);
   }
