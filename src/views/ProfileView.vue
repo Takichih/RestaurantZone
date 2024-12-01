@@ -25,7 +25,6 @@ const router = useRouter();
 const fetchUserRelations = async () => {
   try {
     const user = await userService.getUser(currentUser.value.id);
-
     followedUsers.value = user.following;
     followers.value = user.followers;
   } catch (error) {

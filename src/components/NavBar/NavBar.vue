@@ -37,7 +37,7 @@ const goToFacebookLogin = () => {
   router.push({ name: "FacebookLogin" });
 };
 
-
+console.log(isLoggedIn);
 </script>
 
 <template>

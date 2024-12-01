@@ -20,7 +20,7 @@ const emitSearch = () => {
 
 const route = useRoute();
 const showSearchBar = computed(() => {
-  if (route.name !== "Home" || route.name !== "Login")
+  if (route.name === "Home" || route.name === "Login")
     return false;
   return true;
 });

@@ -9,10 +9,14 @@ export function useAuthService() {
   const setCurrentUser = async (userInfo = null) => {
     if (userInfo) {
       store.dispatch("setConnectedUser", userInfo);
+      localStorage.setItem("authToken", userInfo.token);
+      localStorage.setItem("refreshToken", userInfo.refreshToken);
       router.push({ name: "Profile" });
-    } else {
+    } else if(userInfo == null) {
       store.dispatch("setConnectedUser", null);
       router.push({ name: "Home" });
+    } else {
+      store.dispatch("setAccountExists", false);
     }
   }
 
@@ -23,8 +27,6 @@ export function useAuthService() {
 
     const userConnected = await authentificationService.login(formData);
 
-    localStorage.setItem("authToken", userConnected.token);
-    localStorage.setItem("refreshToken", userConnected.refreshToken);
     setCurrentUser(userConnected);
   }
 

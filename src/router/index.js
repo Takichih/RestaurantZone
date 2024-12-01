@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import store from '@/store/index';
+import { useStore } from "vuex";
 
 // Components
 import HomeView from "@/views/HomeView";
@@ -76,6 +76,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const store = useStore();
+
+  store.dispatch("setAccountExists", true);
+
   const token = localStorage.getItem("authToken");
   const isAuthenticated = store.getters.isAuthenticated;
 
@@ -86,7 +90,6 @@ router.beforeEach((to, from, next) => {
   }
 
   console.log("Navigation vers :", to.path); // Ajout du log
-
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (store.getters.isAuthenticated && token) {
@@ -100,13 +103,13 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.guest)) {
     if (store.getters.isAuthenticated) {
       next('/profile');
-    }  else {
+    } else {
       next();
     }
 
     return;
   }
-    next();
+  next();
 })
 
 export default router;
