@@ -36,8 +36,7 @@ const postVisit = async () => {
           closeVisitModal();
         });
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Erreur lors de l'enregistrement de la visite :", error);
   }
 
