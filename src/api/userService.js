@@ -161,4 +161,24 @@ export default {
       throw error;
     }
   },
+  async getUserByEmail(email) {
+    try {
+      const response = await apiClient.get(`/users?email=${email}`);
+      return response.data.items[0] || null; // Supposez que la réponse contient une liste
+    } catch (error) {
+      console.error("Erreur lors de la récupération de l'utilisateur par email:", error);
+      throw error;
+    }
+  },
+
+  async createUser(userData) {
+    try {
+      const response = await apiClient.post("/users", userData);
+      return response.data;
+    } catch (error) {
+      console.error("Erreur lors de la création de l'utilisateur:", error);
+      throw error;
+    }
+  },
+
 };
