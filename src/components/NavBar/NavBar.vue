@@ -3,7 +3,6 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthService } from '@/composables/useAuthService';
 
-// Components
 import SearchBar from "@/components/NavBar/SearchBar.vue";
 import NavigationDrawer from '@/components/NavBar/NavigationDrawer.vue';
 import gravatarService from '@/api/gravatarService';
@@ -34,12 +33,16 @@ const getGravatarUrl = (email) => {
 
 const { logout } = useAuthService();
 
+const goToFacebookLogin = () => {
+  router.push({ name: "FacebookLogin" });
+};
+
+
 </script>
 
 <template>
   <span>
     <v-app-bar color="primary" temporary>
-      <!-- Navigation Drawer button for Mobile -->
       <v-app-bar-nav-icon class="d-md-none" @click.stop="toggleDrawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>UFood</v-toolbar-title>
@@ -47,8 +50,10 @@ const { logout } = useAuthService();
       <v-spacer></v-spacer>
 
       <v-btn v-if="$vuetify.display.mdAndUp" icon="mdi-home" variant="text" to="/" exact :active="false"></v-btn>
+      <v-btn icon="mdi-facebook" variant="text" @click="goToFacebookLogin">
+            <v-icon color="blue">mdi-facebook</v-icon>
+      </v-btn>
 
-      <!-- Search bar: always visible except on home page-->
       <SearchBar v-model="searchQuery" @search="handleSearch" />
 
       <template v-if="$vuetify.display.mdAndUp">
@@ -68,7 +73,6 @@ const { logout } = useAuthService();
       </template>
     </v-app-bar>
 
-    <!-- Navigation Drawer for Mobile -->
     <NavigationDrawer v-model="drawerToggle" @logout="logout" />
   </span>
 </template>
