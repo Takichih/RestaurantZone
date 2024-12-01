@@ -20,10 +20,12 @@ const headers = ref([
 
 const router = useRouter();
 
+
 // Fetch les utilisateurs suivis et les followers
 const fetchUserRelations = async () => {
   try {
-    const user = await userService.getUser(currentUser.id);
+    const user = await userService.getUser(currentUser.value.id);
+
     followedUsers.value = user.following;
     followers.value = user.followers;
   } catch (error) {
@@ -35,7 +37,9 @@ const fetchUserRelations = async () => {
 // Suivre un utilisateur
 const followUser = async (userId) => {
   try {
+
     await userService.followUser(userId);
+
     const user = await userService.getUser(userId);
     followedUsers.value.push(user);
   } catch (error) {

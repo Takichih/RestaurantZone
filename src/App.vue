@@ -29,7 +29,7 @@ onBeforeMount(() => {
         <!-- Main Content -->
         <v-main>
           <v-container fluid>
-            <router-view></router-view>
+            <router-view :key="$route.fullPath"></router-view>
           </v-container>
         </v-main>
       </v-layout>

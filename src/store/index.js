@@ -16,12 +16,3 @@ export default createStore({
   mutations,
   plugins: [createPersistedState()]
 })
-
-export const syncAuthState = ({ commit }) => {
-  const token = localStorage.getItem("authToken");
-  if (token) {
-    commit("setConnectedUser", { token });
-  } else {
-    commit("setConnectedUser", null);
-  }
-};
