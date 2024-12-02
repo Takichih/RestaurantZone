@@ -3,6 +3,8 @@
 import NavBar from "@/components/NavBar/NavBar.vue";
 import RestaurantVisitModal from "@/components/Modals/RestaurantVisitModal";
 import SuspenseSpinner from "./components/SuspenseSpinner.vue";
+import { store } from "@/store";
+import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
 </script>
 
 <template>
@@ -16,6 +18,15 @@ import SuspenseSpinner from "./components/SuspenseSpinner.vue";
         <!-- Modals -->
         <RestaurantVisitModal />
         <!-- /Modals -->
+
+        <!-- Dialog des favoris -->
+        <FavoritesDialog
+        :isOpen="store.isFavoriteDialogOpen"
+        :favoriteLists="store.favoriteLists"
+        :restaurantId="store.currentAddingVisitRestaurantId"
+        @close="store.setFavoritesModalOpen(false)"
+        @add-to-favorites="store.handleAddToFavorites"
+      />
 
         <!-- Main Content -->
         <v-main>

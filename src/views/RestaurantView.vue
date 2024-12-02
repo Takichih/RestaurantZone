@@ -11,7 +11,6 @@ import InteractiveMap from "@/components/RestaurantPage/InteractiveMap";
 import RestaurantVisits from "@/components/RestaurantPage/RestaurantVisits.vue";
 import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
 import restaurantService from "@/api/restaurantService";
-import favoriteService from "@/api/favoriteService";
 
 const router = useRouter();
 const vuexStore = useStore();
@@ -28,48 +27,25 @@ const visits = ref(
     numberOfPages.value,
   ),
 );
+
 const emits = defineEmits(["changePage"]);
 const { allFavoriteListNames } = await useProfile();
 
-const isFavoriteDialogOpen = ref(false);
-const favoriteLists = ref(allFavoriteListNames.value);
-
 const openFavoriteDialog = () => {
-  isFavoriteDialogOpen.value = true;
+  store.setFavoriteLists(allFavoriteListNames.value);
+  store.setFavoritesModalOpen(true);
 };
-
 const openVisitModal = () => {
   store.setCurrentAddingVisitRestaurantId(restaurant.value.id);
   store.setCurrentAddingVisitRestaurantVisits(visits.value);
   store.setVisitModalOpen(true);
 };
-
 const handleVisitSubmitted = (visitData) => {
   visitData.user_id = currentUser.value.id;
   visits.value.items.unshift(visitData);
 };
 
-const handleAddToFavorites = async  ({ restaurantId, listId }) => {
-  try{
-    const favoriteList = await favoriteService.getFavoriteList(listId);
-
-    const isRestaurantInList = favoriteList.restaurants.some(
-      (restaurant) => restaurant.id === restaurantId
-    );
-
-    if (isRestaurantInList) {
-      console.log(`Restaurant ${restaurantId} already exists in list ${listId}`);
-      return;
-    }
-    await favoriteService.addRestaurantToFavoriteList(listId, restaurantId);
-    console.log(`Restaurant ${restaurantId} added to list ${listId}`);
-  } catch (error) {
-    console.error("Error adding restaurant to favorites:", error);
-  }
-};
-
 store.setHandleVisitSubmittedFunction(handleVisitSubmitted);
-
 const handleChangePage = async (pageId) => {
   visits.value = await restaurantService.getRestaurantVisits(
     restaurant.value.id,
@@ -77,11 +53,9 @@ const handleChangePage = async (pageId) => {
     pageId,
   );
 };
-
 const load = ({ done }) => {
   done("empty");
 };
-
 const goToRestaurant = (restaurantId) => {
   router.push(`/restaurant/${restaurantId}`);
 };
@@ -239,11 +213,11 @@ const goToRestaurant = (restaurantId) => {
       </v-col>
     </v-row>
     <FavoritesDialog
-      :isOpen="isFavoriteDialogOpen"
-      :favoriteLists="favoriteLists"
+      :isOpen="store.isFavoriteDialogOpen"
+      :favoriteLists="store.favoriteLists"
       :restaurantId="restaurant.id"
-      @close="isFavoriteDialogOpen = false"
-      @add-to-favorites="handleAddToFavorites"
+      @close="store.setFavoritesModalOpen(false)"
+      @add-to-favorites="store.handleAddToFavorites"
     />
   </v-col>
 </template>
