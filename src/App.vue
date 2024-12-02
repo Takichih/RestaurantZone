@@ -21,12 +21,12 @@ import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
 
         <!-- Dialog des favoris -->
         <FavoritesDialog
-        :isOpen="store.isFavoriteDialogOpen"
-        :favoriteLists="store.favoriteLists"
-        :restaurantId="store.currentAddingVisitRestaurantId"
-        @close="store.setFavoritesModalOpen(false)"
-        @add-to-favorites="store.handleAddToFavorites"
-      />
+          :isOpen="store.isFavoriteDialogOpen"
+          :favoriteLists="store.favoriteLists"
+          :restaurantId="store.currentAddingVisitRestaurantId"
+          @close="store.setFavoritesModalOpen(false)"
+          @add-to-favorites="store.handleAddToFavorites"
+        />
 
         <!-- Main Content -->
         <v-main>

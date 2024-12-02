@@ -76,10 +76,10 @@ const getGravatarUrl = (email) => {
 };
 
 watch(
-    () => props.searchQuery,
-    (newQuery) => {
-      fetchUsers();
-    }
+  () => props.searchQuery,
+  (newQuery) => {
+    fetchUsers();
+  },
 );
 
 onMounted(async () => {
@@ -90,10 +90,10 @@ onMounted(async () => {
 
 <template>
   <v-data-table
-      :headers="headers"
-      :items="filteredUsers"
-      item-value="id"
-      class="elevation-1"
+    :headers="headers"
+    :items="filteredUsers"
+    item-value="id"
+    class="elevation-1"
   >
     <template v-slot:top>
       <h2 class="table-title">Résultats</h2>
@@ -101,51 +101,55 @@ onMounted(async () => {
 
     <template v-slot:[`item.gravatar`]="{ item }">
       <v-avatar class="user-avatar">
-        <img :src="getGravatarUrl(item.email)" alt="User Avatar" class="avatar-img"/>
+        <img
+          :src="getGravatarUrl(item.email)"
+          alt="User Avatar"
+          class="avatar-img"
+        />
       </v-avatar>
     </template>
     <template v-slot:[`item.name`]="{ item }">
       <a
-          href="#"
-          @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })"
+        href="#"
+        @click.prevent="
+          $router.push({ name: 'UserDetailView', query: { id: item.id } })
+        "
       >
         {{ item.name }}
       </a>
     </template>
     <template v-slot:[`item.email`]="{ item }">
       <a
-          href="#"
-          @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })"
+        href="#"
+        @click.prevent="
+          $router.push({ name: 'UserDetailView', query: { id: item.id } })
+        "
       >
         {{ item.email }}
       </a>
     </template>
 
-    <template  v-slot:[`item.actions`]="{ item }" >
+    <template v-slot:[`item.actions`]="{ item }">
       <template v-if="item.id !== activeUserId">
-      <v-btn
+        <v-btn
           v-if="!followedUsers.includes(item.id)"
           color="primary"
           icon
           @click="followUser(item.id)"
-      >
-        <v-icon>mdi-account-plus</v-icon>
-      </v-btn>
-      <v-btn
-          v-else
-          color="grey"
-          icon
-      >
-        <v-icon color="green">mdi-account-check</v-icon>
-      </v-btn>
-      <v-btn
+        >
+          <v-icon>mdi-account-plus</v-icon>
+        </v-btn>
+        <v-btn v-else color="grey" icon>
+          <v-icon color="green">mdi-account-check</v-icon>
+        </v-btn>
+        <v-btn
           v-if="followedUsers.includes(item.id)"
           color="red"
           icon
           @click="unfollowUser(item.id)"
-      >
-        <v-icon>mdi-account-minus</v-icon>
-      </v-btn>
+        >
+          <v-icon>mdi-account-minus</v-icon>
+        </v-btn>
       </template>
     </template>
   </v-data-table>

@@ -8,7 +8,7 @@ export const store = reactive({
   visitModalContent: {
     comment: "",
     rating: 0,
-    selectedDate: null
+    selectedDate: null,
   },
   favoritesModalOpen: false,
   currentAddingVisitRestaurantId: "",
@@ -33,7 +33,7 @@ export const store = reactive({
     try {
       const favoriteList = await favoriteService.getFavoriteList(listId);
       const isRestaurantInList = favoriteList.restaurants.some(
-        (restaurant) => restaurant.id === restaurantId
+        (restaurant) => restaurant.id === restaurantId,
       );
       if (isRestaurantInList) {
         alert(`Restaurant ${restaurantId} already exists in list ${listId}`);
@@ -67,7 +67,7 @@ export const store = reactive({
     this.fbUserId = null;
   },
 
-  handleVisitSubmittedFunction: () => { },
+  handleVisitSubmittedFunction: () => {},
   setCurrentUserFavorites(newFavorites) {
     this.currentUserFavorites = newFavorites;
   },

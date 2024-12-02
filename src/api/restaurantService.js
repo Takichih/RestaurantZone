@@ -22,7 +22,9 @@ export default {
     }
 
     try {
-      const response = await apiClient.get("/restaurants", { params: queryParams });
+      const response = await apiClient.get("/restaurants", {
+        params: queryParams,
+      });
 
       if (response.status !== 200) {
         throw new Error("Restaurants were not found, please try again.");
@@ -59,7 +61,8 @@ export default {
 
     try {
       const response = await apiClient.get(
-        `/restaurants/${restaurantId}/visits`, { params: { limit, page } }
+        `/restaurants/${restaurantId}/visits`,
+        { params: { limit, page } },
       );
 
       if (response.status !== 200) {
@@ -67,13 +70,14 @@ export default {
       }
 
       let orderedList = response.data;
-      orderedList.items
-        .sort((a, b) => {
-          return new Date(b.date) - new Date(a.date)
-        });
-      orderedList.items = orderedList.items.filter((visit) => new Date(visit.date) <= new Date());
+      orderedList.items.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
+      orderedList.items = orderedList.items.filter(
+        (visit) => new Date(visit.date) <= new Date(),
+      );
 
-      restaurantVisits = orderedList
+      restaurantVisits = orderedList;
     } catch (error) {
       console.error(error);
     } finally {

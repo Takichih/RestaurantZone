@@ -32,7 +32,9 @@ const fetchFollowedUsers = async () => {
 const unfollowUser = async (userId) => {
   try {
     await userService.removeFollow(userId);
-    followedUsers.value = followedUsers.value.filter((user) => user.id !== userId);
+    followedUsers.value = followedUsers.value.filter(
+      (user) => user.id !== userId,
+    );
   } catch (error) {
     alert("Une erreur s'est produite lors de l'annulation du suivi.");
     console.error(error);
@@ -65,7 +67,11 @@ onMounted(async () => {
 
     <template v-slot:[`item.gravatar`]="{ item }">
       <v-avatar class="user-avatar">
-        <img :src="getGravatarUrl(item.email)" alt="User Avatar" class="avatar-img"/>
+        <img
+          :src="getGravatarUrl(item.email)"
+          alt="User Avatar"
+          class="avatar-img"
+        />
       </v-avatar>
     </template>
 
@@ -78,11 +84,7 @@ onMounted(async () => {
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">
-      <v-btn
-        color="red"
-        icon
-        @click="unfollowUser(item.id)"
-      >
+      <v-btn color="red" icon @click="unfollowUser(item.id)">
         <v-icon>mdi-account-minus</v-icon>
       </v-btn>
     </template>

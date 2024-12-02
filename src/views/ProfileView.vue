@@ -7,7 +7,8 @@ import VisitedRestaurantCard from "@/components/UserPage/VisitedRestaurantCard.v
 import FollowedUsersTable from "@/components/UserPage/FollowedUsersTable.vue";
 import FollowersTable from "@/components/UserPage/FollowersTable.vue";
 
-const { currentUser, userRecentVisits, allRestaurantNames } = await useProfile();
+const { currentUser, userRecentVisits, allRestaurantNames } =
+  await useProfile();
 </script>
 
 <template>
@@ -50,9 +51,18 @@ const { currentUser, userRecentVisits, allRestaurantNames } = await useProfile()
         </template>
 
         <template v-else>
-          <v-col cols="12" md="3" v-for="restaurant in userRecentVisits" :key="restaurant.restaurant_id">
-            <VisitedRestaurantCard :name="restaurant.name" :rating="restaurant.rating" :visits="restaurant.visits"
-                                   :restaurant_id="restaurant.restaurant_id" />
+          <v-col
+            cols="12"
+            md="3"
+            v-for="restaurant in userRecentVisits"
+            :key="restaurant.restaurant_id"
+          >
+            <VisitedRestaurantCard
+              :name="restaurant.name"
+              :rating="restaurant.rating"
+              :visits="restaurant.visits"
+              :restaurant_id="restaurant.restaurant_id"
+            />
           </v-col>
         </template>
       </v-row>
@@ -93,15 +103,14 @@ h2 {
   font-weight: bold;
 }
 
-.name, .email {
+.name,
+.email {
   margin-left: 10px;
   //height: 100%;
   //align-items: center;
   font-weight: bold;
-
 }
 h3 {
   margin-bottom: 20px;
-
 }
 </style>

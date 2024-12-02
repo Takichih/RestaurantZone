@@ -19,7 +19,7 @@ export async function useProfile() {
     } catch (e) {
       console.error(e);
     }
-  }
+  };
 
   const getUserFavoriteLists = async () => {
     const lists = await favoriteService.getUserFavorites(currentUser.value.id);
@@ -27,14 +27,16 @@ export async function useProfile() {
     for (const list of lists) {
       list.restaurants = await Promise.all(
         list.restaurants.map(async (restaurant) => {
-          const detailsResponse = await restaurantService.getRestaurant(restaurant.id);
+          const detailsResponse = await restaurantService.getRestaurant(
+            restaurant.id,
+          );
           return detailsResponse;
         }),
       );
     }
 
     store.setCurrentUserFavorites(lists);
-  }
+  };
 
   const getAllRestaurantNames = async () => {
     try {
@@ -51,11 +53,13 @@ export async function useProfile() {
     } catch (error) {
       console.error("Erreur lors de la récupération des restaurants :", error);
     }
-  }
+  };
 
   const getAllFavoriteListNames = async () => {
-    try{
-      const response = await favoriteService.getUserFavorites(currentUser.value.id);
+    try {
+      const response = await favoriteService.getUserFavorites(
+        currentUser.value.id,
+      );
       const filteredLists = response
         .filter((List) => List.name && List.id)
         .map((List) => ({
@@ -65,15 +69,20 @@ export async function useProfile() {
       allFavoriteListNames.value = filteredLists;
       const listNames = allFavoriteListNames.value.map((list) => list.name);
       console.log(`list names in parent are :  ${listNames}`);
-    }catch (error){
+    } catch (error) {
       console.error("Erreur lors de la récupération des lests :", error);
     }
-  }
+  };
 
   await getUserRecentVisits();
   await getUserFavoriteLists();
   await getAllRestaurantNames();
   await getAllFavoriteListNames();
 
-  return { currentUser, userRecentVisits, allRestaurantNames, allFavoriteListNames}
+  return {
+    currentUser,
+    userRecentVisits,
+    allRestaurantNames,
+    allFavoriteListNames,
+  };
 }

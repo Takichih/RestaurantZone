@@ -42,7 +42,7 @@ function openReadOnlyVisitModal(visitData) {
   store.setVisitModalContent({
     comment: visitData.comment,
     rating: visitData.rating,
-    selectedDate: new Date(visitData.date)
+    selectedDate: new Date(visitData.date),
   });
 }
 </script>
@@ -64,11 +64,19 @@ function openReadOnlyVisitModal(visitData) {
     <v-expand-transition>
       <div v-if="showVisitDetails" class="visit-details">
         <v-list>
-          <v-list-item v-for="(visit, index) in visitDetails" :key="index" @click="openReadOnlyVisitModal(visit)">
+          <v-list-item
+            v-for="(visit, index) in visitDetails"
+            :key="index"
+            @click="openReadOnlyVisitModal(visit)"
+          >
             <v-list-item-content>
               <v-list-item-title>Date: {{ visit.date }}</v-list-item-title>
-              <v-list-item-subtitle>Comment: {{ visit.comment }}</v-list-item-subtitle>
-              <v-list-item-subtitle>Rating: {{ visit.rating }}</v-list-item-subtitle>
+              <v-list-item-subtitle
+                >Comment: {{ visit.comment }}</v-list-item-subtitle
+              >
+              <v-list-item-subtitle
+                >Rating: {{ visit.rating }}</v-list-item-subtitle
+              >
             </v-list-item-content>
           </v-list-item>
         </v-list>

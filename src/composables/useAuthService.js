@@ -23,7 +23,7 @@ export function useAuthService() {
     } else {
       store.dispatch("setAccountExists", false);
     }
-  }
+  };
 
   const login = async (userEmail, userPassword) => {
     let formData = new URLSearchParams();
@@ -33,7 +33,7 @@ export function useAuthService() {
     const userConnected = await authentificationService.login(formData);
 
     setCurrentUser(userConnected);
-  }
+  };
 
   const refreshAccessToken = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -46,10 +46,9 @@ export function useAuthService() {
     localStorage.setItem("authToken", refreshedData.token);
   };
 
-
   const logout = () => {
     setCurrentUser();
-  }
+  };
 
-  return { login, logout, refreshAccessToken }
+  return { login, logout, refreshAccessToken };
 }

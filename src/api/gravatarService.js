@@ -1,8 +1,9 @@
-import md5 from 'md5';
+import md5 from "md5";
 
 const gravatarService = {
   getGravatarUrl(email) {
-    const defaultImageUrl = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp';
+    const defaultImageUrl =
+      "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp";
 
     if (!email) {
       return defaultImageUrl;
@@ -17,7 +18,7 @@ const gravatarService = {
       console.error("Error generating Gravatar URL:", error);
       return defaultImageUrl;
     }
-  }
+  },
 };
 
 export default gravatarService;

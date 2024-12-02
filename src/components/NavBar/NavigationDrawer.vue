@@ -32,10 +32,13 @@ const getGravatarUrl = (email) => {
 <template>
   <v-navigation-drawer temporary v-model="localDrawer" class="d-md-none">
     <v-list>
-
       <v-list-item v-if="isLoggedIn" id="userNameDrawer">
         <v-avatar class="user-avatar">
-          <img :src="getGravatarUrl(currentUser.email)" alt="User Avatar" class="avatar-img">
+          <img
+            :src="getGravatarUrl(currentUser.email)"
+            alt="User Avatar"
+            class="avatar-img"
+          />
         </v-avatar>
         <span class="mr-4">{{ currentUser.name }}</span>
       </v-list-item>

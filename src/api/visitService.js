@@ -52,10 +52,15 @@ export default {
     let restaurantVisitsOfUser = [];
 
     try {
-      const response = await apiClient.get(`/users/${userId}/restaurants/${restaurantId}/visits`, { params: { limit, page } });
+      const response = await apiClient.get(
+        `/users/${userId}/restaurants/${restaurantId}/visits`,
+        { params: { limit, page } },
+      );
 
       if (response.status !== 200) {
-        throw new Error("Restaurant visits for specified user were not found, please try again.");
+        throw new Error(
+          "Restaurant visits for specified user were not found, please try again.",
+        );
       }
 
       restaurantVisitsOfUser = response.data.items;

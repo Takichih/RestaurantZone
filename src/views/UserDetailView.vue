@@ -1,19 +1,19 @@
 <script setup>
-import {ref, onMounted} from 'vue';
-import {useRoute, useRouter} from 'vue-router';
-import userService from '@/api/userService';
-import {useProfile} from "@/composables/useProfile";
-import gravatarService from '@/api/gravatarService';
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import userService from "@/api/userService";
+import { useProfile } from "@/composables/useProfile";
+import gravatarService from "@/api/gravatarService";
 
 const route = useRoute();
 const router = useRouter();
 const user = ref(null);
-const userId = ref(route.query.id || '');
+const userId = ref(route.query.id || "");
 const userDetails = ref(null);
 const isFollowing = ref(false);
-const activeUserId = ref('');
+const activeUserId = ref("");
 const avatarSize = ref(200);
-const {currentUser} = await useProfile();
+const { currentUser } = await useProfile();
 
 const fetchUser = async (userId) => {
   try {
@@ -29,7 +29,7 @@ const fetchUserDetails = async () => {
     const activeUser = await userService.getUser(activeUserId.value);
     userDetails.value = await userService.getUser(userId.value);
     isFollowing.value = activeUser.following.some(
-      (user) => user.id === userId.value
+      (user) => user.id === userId.value,
     );
   } catch (error) {
     alert("Erreur lors de la récupération des détails de l'utilisateur.");
@@ -85,7 +85,7 @@ const updateAvatarSize = () => {
   }
 };
 
-window.addEventListener('resize', updateAvatarSize);
+window.addEventListener("resize", updateAvatarSize);
 onMounted(updateAvatarSize);
 </script>
 
@@ -105,8 +105,9 @@ onMounted(updateAvatarSize);
                 <p>{{ userDetails?.email }}</p>
                 <p>Nombre d'abonnés : {{ userDetails?.followers.length }}</p>
                 <p>Personnes suivies : {{ userDetails?.following.length }}</p>
-                <br>
-                <h4 class="text-left">Score:
+                <br />
+                <h4 class="text-left">
+                  Score:
                   {{ userDetails?.rating }}
                   <v-icon color="amber" class="ms-2">mdi-star-shooting</v-icon>
                 </h4>
@@ -132,7 +133,11 @@ onMounted(updateAvatarSize);
             </v-col>
             <v-col cols="12" md="6" class="d-flex justify-center align-center">
               <v-avatar :size="avatarSize" class="user-avatar">
-                <img :src="getGravatarUrl(userDetails?.email)" alt="User Avatar" class="avatar-img">
+                <img
+                  :src="getGravatarUrl(userDetails?.email)"
+                  alt="User Avatar"
+                  class="avatar-img"
+                />
               </v-avatar>
             </v-col>
           </v-row>

@@ -68,7 +68,11 @@ onMounted(async () => {
 
     <template v-slot:[`item.gravatar`]="{ item }">
       <v-avatar class="user-avatar">
-        <img :src="getGravatarUrl(item.email)" alt="User Avatar" class="avatar-img"/>
+        <img
+          :src="getGravatarUrl(item.email)"
+          alt="User Avatar"
+          class="avatar-img"
+        />
       </v-avatar>
     </template>
 
@@ -89,11 +93,7 @@ onMounted(async () => {
       >
         <v-icon>mdi-account-plus</v-icon>
       </v-btn>
-      <v-btn
-        v-else
-        color="grey"
-        icon
-      >
+      <v-btn v-else color="grey" icon>
         <v-icon color="green">mdi-account-check</v-icon>
       </v-btn>
     </template>

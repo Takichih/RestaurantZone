@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import store from '@/store/index';
+import store from "@/store/index";
 import apiClient from "@/utils/apiClient";
 import { config } from "@/config";
 
@@ -21,13 +21,13 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: ProfileView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: "/login",
     name: "Login",
     component: LoginView,
-    meta: { guest: true }
+    meta: { guest: true },
   },
   /*
   {
@@ -40,20 +40,20 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: HomeView
+    component: HomeView,
   },
   {
     path: "/users",
     name: "Users",
     component: UserView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: "/user-detail",
     name: "UserDetailView",
     component: UserDetailView,
     props: (route) => ({ id: route.query.id }),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: "/:pathMatch(.*)*",
@@ -93,7 +93,7 @@ router.beforeEach((to, from, next) => {
 
   if (to.matched.some((record) => record.meta.guest)) {
     if (store.getters.isAuthenticated) {
-      next('/profile');
+      next("/profile");
     } else {
       next();
     }
@@ -101,6 +101,6 @@ router.beforeEach((to, from, next) => {
   }
 
   next();
-})
+});
 
 export default router;
