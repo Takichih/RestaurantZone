@@ -3,6 +3,7 @@ import { useProfile } from "@/composables/useProfile";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import userService from "@/api/userService";
+import gravatarService from "@/api/gravatarService";
 
 // Components
 import FavoriteLists from "@/components/UserPage/FavoriteLists.vue";
@@ -13,9 +14,12 @@ const followedUsers = ref([]); // Liste des utilisateurs suivis
 const followers = ref([]); // Liste des utilisateurs qui suivent
 
 const headers = ref([
-  { text: "ID", value: "id" },
-  { text: "Nom de l'utilisateur", value: "name" },
-  { text: "Actions", value: "actions", sortable: false },
+  // { title: "ID", key: "id" },
+  { title: "", key: "gravatar", sortable: false },
+  { title: "Nom de l'utilisateur", key: "name" },
+  { title: "Courriel", key: "email" },
+  // { title: "Score", key: "rating" },
+  { title: "Actions", key: "actions", sortable: false },
 ]);
 
 const router = useRouter();
@@ -61,6 +65,9 @@ const unfollowUser = async (userId) => {
 const goToUserDetail = (userId) => {
   router.push({ name: "UserDetailView", query: { id: userId } });
 };
+const getGravatarUrl = (email) => {
+  return gravatarService.getGravatarUrl(email);
+};
 
 // Fetch user relations lors de l'initialisation
 onMounted(async () => {
@@ -78,7 +85,13 @@ onMounted(async () => {
             <h3 class="name">{{ currentUser.name }}</h3>
           </v-card>
         </v-col>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="4">
+          <h4 class="text-left">Courriel:</h4>
+          <v-card>
+            <h3 class="email">{{ currentUser.email }}</h3>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="1">
           <h4 class="text-left">Score:</h4>
           <h3 class="text-left">
             {{ currentUser.rating }}
@@ -90,7 +103,7 @@ onMounted(async () => {
 
     <v-container>
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="12">
           <h3 class="text-left">Restaurants visités récemment:</h3>
         </v-col>
       </v-row>
@@ -110,12 +123,19 @@ onMounted(async () => {
       </v-row>
     </v-container>
 
-    <FavoriteLists :allRestaurantNames="allRestaurantNames" />
-
-    <!-- Liste des utilisateurs suivis -->
+    <!-- Adjusted width for Favorite Lists -->
     <v-container>
       <v-row>
-        <v-col cols="12">
+        <v-col cols="12" md="12">
+          <FavoriteLists :allRestaurantNames="allRestaurantNames" />
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <!-- Liste des utilisateurs suivis et des followers côte à côte -->
+    <v-container>
+      <v-row>
+        <v-col cols="12" md="6">
           <v-data-table
             :headers="headers"
             :items="followedUsers"
@@ -123,15 +143,25 @@ onMounted(async () => {
             class="elevation-1"
           >
             <template v-slot:top>
-              <h2>Utilisateurs suivis</h2>
+              <h2 class="table-title">UFooders suivis</h2>
             </template>
 
-            <template v-slot:[`item.id`]="{ item }">
-              <a href="#" @click.prevent="goToUserDetail(item.id)">{{ item.id }}</a>
+            <template v-slot:[`item.gravatar`]="{ item }">
+              <v-avatar class="user-avatar">
+                <img :src="getGravatarUrl(item.email)" alt="User Avatar" class="avatar-img"/>
+              </v-avatar>
             </template>
 
             <template v-slot:[`item.name`]="{ item }">
               <a href="#" @click.prevent="goToUserDetail(item.id)">{{ item.name }}</a>
+            </template>
+
+            <template v-slot:[`item.email`]="{ item }">
+              <a href="#" @click.prevent="goToUserDetail(item.id)">{{ item.email }}</a>
+            </template>
+
+            <template v-slot:[`item.rating`]="{ item }">
+              <span>{{ item.rating }}</span>
             </template>
 
             <template v-slot:[`item.actions`]="{ item }">
@@ -145,13 +175,8 @@ onMounted(async () => {
             </template>
           </v-data-table>
         </v-col>
-      </v-row>
-    </v-container>
 
-    <!-- Liste des followers -->
-    <v-container>
-      <v-row>
-        <v-col cols="12">
+        <v-col cols="12" md="6">
           <v-data-table
             :headers="headers"
             :items="followers"
@@ -159,16 +184,26 @@ onMounted(async () => {
             class="elevation-1"
           >
             <template v-slot:top>
-              <h2>Utilisateurs qui me suivent</h2>
+              <h2 class="table-title">Mes abonnés</h2>
             </template>
 
-            <template v-slot:[`item.id`]="{ item }">
-              <a href="#" @click.prevent="goToUserDetail(item.id)">{{ item.id }}</a>
+            <template v-slot:[`item.gravatar`]="{ item }">
+              <v-avatar class="user-avatar">
+                <img :src="getGravatarUrl(item.email)" alt="User Avatar" class="avatar-img"/>
+              </v-avatar>
             </template>
 
             <template v-slot:[`item.name`]="{ item }">
               <a href="#" @click.prevent="goToUserDetail(item.id)">{{ item.name }}</a>
             </template>
+
+            <template v-slot:[`item.email`]="{ item }">
+              <a href="#" @click.prevent="goToUserDetail(item.id)">{{ item.email }}</a>
+            </template>
+
+            <!--            <template v-slot:[`item.rating`]="{ item }">-->
+            <!--              <span>{{ item.rating }}</span>-->
+            <!--            </template>-->
 
             <template v-slot:[`item.actions`]="{ item }">
               <v-btn
@@ -195,6 +230,9 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+h2 {
+  margin-left: 20px;
+}
 .d-flex {
   display: flex;
   justify-content: flex-end;
@@ -206,5 +244,22 @@ onMounted(async () => {
 
 .name {
   margin-left: 10px;
+}
+.email {
+  margin-left: 10px;
+}
+h3 {
+  margin-bottom: 20px;
+}
+.user-avatar {
+  margin: auto;
+}
+.avatar-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.table-title {
+  margin-left: 20px;
 }
 </style>
