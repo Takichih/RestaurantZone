@@ -20,7 +20,6 @@ const headers = ref([
 
 const router = useRouter();
 
-
 // Fetch les utilisateurs suivis et les followers
 const fetchUserRelations = async () => {
   try {
