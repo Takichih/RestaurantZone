@@ -192,7 +192,7 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
         <v-expansion-panel v-for="(favoriteList, index) in store.currentUserFavorites" :key="index">
           <v-expansion-panel-title>
             <div class="d-flex align-center justify-space-between" style="width: 100%">
-              <span v-if="!favoriteList.isEditing"><strong>{{ favoriteList.name }}</strong></span>
+              <span v-if="!favoriteList.isEditing" class="favorite-list-name">{{ favoriteList.name }}</span>
               <v-text-field v-else v-model="favoriteList.newName" label="Renommer la liste" dense
                 :rules="[nameRequiredRule]" maxlength="50" required hide-details
                 style="max-width: 200px"></v-text-field>
@@ -261,4 +261,10 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
   background-color: #f8f9fa;
   border-radius: 8px;
 }
+.favorite-list-name {
+   font-size: 1.2rem;
+   margin-bottom: 20px;
+  font-weight: bold;
+ }
+
 </style>
