@@ -116,6 +116,7 @@ onMounted(updateAvatarSize);
                   v-if="!isFollowing"
                   color="primary"
                   @click="followUser"
+                  :disabled="userDetails?.id === activeUserId"
                 >
                   Suivre
                 </v-btn>
@@ -123,6 +124,7 @@ onMounted(updateAvatarSize);
                   v-else
                   color="red"
                   @click="unfollowUser"
+                  :disabled="userDetails?.id === activeUserId"
                 >
                   Ne plus suivre
                 </v-btn>
