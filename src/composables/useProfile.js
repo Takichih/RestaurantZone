@@ -9,6 +9,7 @@ export async function useProfile() {
   const userStore = useStore();
   const userRecentVisits = ref([]);
   const allRestaurantNames = ref([]);
+  const allFavoriteListNames = ref([]);
   const currentUser = computed(() => userStore.getters.getCurrentUser);
 
   const getUserRecentVisits = async () => {
@@ -52,9 +53,27 @@ export async function useProfile() {
     }
   }
 
+  const getAllFavoriteListNames = async () => {
+    try{
+      const response = await favoriteService.getUserFavorites(currentUser.value.id);
+      const filteredLists = response
+        .filter((List) => List.name && List.id)
+        .map((List) => ({
+          id: List.id,
+          name: List.name,
+        }));
+      allFavoriteListNames.value = filteredLists;
+      const listNames = allFavoriteListNames.value.map((list) => list.name);
+      console.log(`list names in parent are :  ${listNames}`);
+    }catch (error){
+      console.error("Erreur lors de la récupération des lests :", error);
+    }
+  }
+
   await getUserRecentVisits();
   await getUserFavoriteLists();
   await getAllRestaurantNames();
+  await getAllFavoriteListNames();
 
-  return { currentUser, userRecentVisits, allRestaurantNames }
+  return { currentUser, userRecentVisits, allRestaurantNames, allFavoriteListNames}
 }
