@@ -8,9 +8,6 @@ import ProfileView from "@/views/ProfileView";
 import LoginView from "@/views/LoginView.vue";
 import UserView from "@/views/UserView";
 import UserDetailView from "@/views/UserDetailView";
-import FacebookLogin from "@/components/Facebook/FacebookLogin.vue";
-import FacebookCallback from "@/components/Facebook/FacebookCallback.vue";
-
 
 const routes = [
   {
@@ -29,16 +26,6 @@ const routes = [
     name: "Login",
     component: LoginView,
     meta: { guest: true }
-  },
-  {
-    path: "/facebook-login",
-    name: "FacebookLogin",
-    component: FacebookLogin,
-  },
-  {
-    path: "/facebook-callback",
-    name: "FacebookCallback",
-    component: FacebookCallback,
   },
   /*
   {

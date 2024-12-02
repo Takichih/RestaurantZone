@@ -1,14 +1,17 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import favoriteService from "@/api/favoriteService";
 import { store } from "@/store";
+import { useStore } from "vuex";
 
+const userStore = useStore();
 const props = defineProps(["allRestaurantNames"]);
 const router = useRouter();
 const newListForm = ref();
 const newListName = ref("");
 const selectedRestaurant = ref(null);
+const currentUser = computed(() => userStore.getters.getCurrentUser);
 
 const nameRequiredRule = (v) =>
   !!v || "Veuillez entrer un nom pour la liste";
@@ -80,7 +83,7 @@ const postFavoriteList = async () => {
     let tempUserFavorites = store.currentUserFavorites;
     const response = await favoriteService.createFavoriteList(
       newListName.value,
-      store.currentUser.email,
+      currentUser.value.email,
     );
     console.log(response);
     tempUserFavorites.push(response);
