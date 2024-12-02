@@ -33,7 +33,9 @@ export const store = reactive({
         (restaurant) => restaurant.id === restaurantId,
       );
       if (isRestaurantInList) {
-        console.log(`Restaurant ${restaurantId} already exists in list ${listId}`);
+        console.log(
+          `Restaurant ${restaurantId} already exists in list ${listId}`,
+        );
         return;
       }
 

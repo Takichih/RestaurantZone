@@ -2,11 +2,9 @@ import { computed, ref } from "vue";
 import favoriteService from "@/api/favoriteService";
 import visitService from "@/api/visitService";
 import restaurantService from "@/api/restaurantService";
-import { useStore } from "vuex";
 import { store } from "@/store";
 
-export async function useProfile() {
-  const userStore = useStore();
+export async function useProfile(userStore) {
   const userRecentVisits = ref([]);
   const allRestaurantNames = ref([]);
   const allFavoriteListNames = ref([]);

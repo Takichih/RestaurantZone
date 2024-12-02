@@ -1,14 +1,15 @@
 <!-- src/views/ProfileView.vue -->
 <script setup>
 import { useProfile } from "@/composables/useProfile";
-import { ref, onMounted } from "vue";
 import FavoriteLists from "@/components/UserPage/FavoriteLists.vue";
 import VisitedRestaurantCard from "@/components/UserPage/VisitedRestaurantCard.vue";
 import FollowedUsersTable from "@/components/UserPage/FollowedUsersTable.vue";
 import FollowersTable from "@/components/UserPage/FollowersTable.vue";
+import { useStore } from "vuex";
 
+const userStore = useStore();
 const { currentUser, userRecentVisits, allRestaurantNames } =
-  await useProfile();
+  await useProfile(userStore);
 </script>
 
 <template>
@@ -93,6 +94,7 @@ const { currentUser, userRecentVisits, allRestaurantNames } =
 h2 {
   margin-left: 20px;
 }
+
 .d-flex {
   display: flex;
   justify-content: flex-end;
@@ -106,10 +108,13 @@ h2 {
 .name,
 .email {
   margin-left: 10px;
-  //height: 100%;
-  //align-items: center;
+  /*
+  height: 100%;
+  align-items: center;
+  */
   font-weight: bold;
 }
+
 h3 {
   margin-bottom: 20px;
 }

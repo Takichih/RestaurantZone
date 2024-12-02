@@ -4,7 +4,9 @@ import { useRoute, useRouter } from "vue-router";
 import userService from "@/api/userService";
 import { useProfile } from "@/composables/useProfile";
 import gravatarService from "@/api/gravatarService";
+import { useStore } from "vuex";
 
+const userStore = useStore();
 const route = useRoute();
 const router = useRouter();
 const user = ref(null);
@@ -13,7 +15,7 @@ const userDetails = ref(null);
 const isFollowing = ref(false);
 const activeUserId = ref("");
 const avatarSize = ref(200);
-const { currentUser } = await useProfile();
+const { currentUser } = await useProfile(userStore);
 
 const fetchUser = async (userId) => {
   try {

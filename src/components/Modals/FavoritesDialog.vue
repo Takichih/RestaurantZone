@@ -25,7 +25,10 @@ const addRestaurantToList = (favoritesListId) => {
     });
     emit("close");
   } catch (error) {
-    console.error("An error occurred while adding the restaurant to the list:", error);
+    console.error(
+      "An error occurred while adding the restaurant to the list:",
+      error,
+    );
   }
 };
 </script>
@@ -55,7 +58,7 @@ const addRestaurantToList = (favoritesListId) => {
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn variant="outlined" color="primary" @click="emit('close')">
-          <v-icon icon="mdi-close"/>
+          <v-icon icon="mdi-close" />
         </v-btn>
       </v-card-actions>
     </v-card>

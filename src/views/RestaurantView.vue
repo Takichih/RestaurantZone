@@ -29,7 +29,7 @@ const visits = ref(
 );
 
 const emits = defineEmits(["changePage"]);
-const { allFavoriteListNames } = await useProfile();
+const { allFavoriteListNames } = await useProfile(vuexStore);
 
 const openFavoriteDialog = () => {
   store.setFavoriteLists(allFavoriteListNames.value);

@@ -4,9 +4,11 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useProfile } from "@/composables/useProfile";
 import UserList from "@/components/UserPage/UserList.vue";
+import { useStore } from "vuex";
 
+const userStore = useStore();
 const searchQuery = ref("");
-const { currentUser } = await useProfile();
+const { currentUser } = await useProfile(userStore);
 
 const route = useRoute();
 

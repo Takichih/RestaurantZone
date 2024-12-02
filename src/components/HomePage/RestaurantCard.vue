@@ -48,11 +48,14 @@ const goToRestaurant = () => {
   router.push(`/restaurant/${props.restaurant.id}`);
 };
 
-const { allFavoriteListNames } = await useProfile();
-const openFavoriteDialog = () => {
-  store.setCurrentAddingVisitRestaurantId(props.restaurant.id);
-  store.setFavoriteLists(allFavoriteListNames.value);
-  store.setFavoritesModalOpen(true);
+const openFavoriteDialog = async () => {
+  await useProfile(vuexStore).then(({ allFavoriteListNames }) => {
+    if (allFavoriteListNames) {
+      store.setCurrentAddingVisitRestaurantId(props.restaurant.id);
+      store.setFavoriteLists(allFavoriteListNames.value);
+      store.setFavoritesModalOpen(true);
+    }
+  });
 };
 </script>
 
