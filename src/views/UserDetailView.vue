@@ -2,7 +2,7 @@
 import {ref, onMounted} from "vue";
 import {useRoute} from "vue-router";
 import userService from "@/api/userService";
-import {getCurrentUserID} from "@/composables/useUserService";
+import {useProfile} from "@/composables/useProfile";
 
 const route = useRoute();
 
@@ -10,6 +10,7 @@ const userId = ref(route.query.id || ""); // ID de l'utilisateur à afficher
 const userDetails = ref(null); // Détails de l'utilisateur
 const isFollowing = ref(false); // Indique si l'utilisateur est suivi
 const activeUserId = ref(""); // ID de l'utilisateur actif
+const { currentUser } = await useProfile();
 
 // Récupérer les informations de l'utilisateur
 const fetchUserDetails = async () => {
@@ -48,7 +49,8 @@ const unfollowUser = async () => {
 };
 
 onMounted(async () => {
-  activeUserId.value = await getCurrentUserID(); // Récupérer l'utilisateur actif
+  activeUserId.value = currentUser.value.id; // Récupérer l'utilisateur actif
+  console.log("activeUserId", activeUserId.value);
   await fetchUserDetails();
 });
 </script>
