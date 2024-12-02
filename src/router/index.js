@@ -44,12 +44,14 @@ const routes = [
     path: "/users",
     name: "Users",
     component: UserView,
+    meta: { requiresAuth: true }
   },
   {
     path: "/user-detail",
     name: "UserDetailView",
     component: UserDetailView,
-    props: (route) => ({ id: route.query.id }), // Passe l'ID en props
+    props: (route) => ({ id: route.query.id }),
+    meta: { requiresAuth: true }
   },
   {
     path: "/:pathMatch(.*)*",
