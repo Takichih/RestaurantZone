@@ -101,7 +101,7 @@ const deleteFavoriteList = async (listId) => {
 
     let tempUserFavorites = store.currentUserFavorites.filter(
       (list) => list.id !== listId,
-    ); // Remove from local list
+    );
 
     store.setCurrentUserFavorites(tempUserFavorites);
   } catch (error) {
