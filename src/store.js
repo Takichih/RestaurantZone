@@ -22,9 +22,6 @@ export const store = reactive({
   favoriteLists: [],
   isFavoriteDialogOpen: false,
 
-  setFavoritesModalOpen(value) {
-    this.isFavoriteDialogOpen = value;
-  },
   setFavoriteLists(lists) {
     this.favoriteLists = lists;
   },
@@ -36,7 +33,7 @@ export const store = reactive({
         (restaurant) => restaurant.id === restaurantId,
       );
       if (isRestaurantInList) {
-        alert(`Restaurant ${restaurantId} already exists in list ${listId}`);
+        console.log(`Restaurant ${restaurantId} already exists in list ${listId}`);
         return;
       }
 
