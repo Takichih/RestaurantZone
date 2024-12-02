@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from "vue";
-import { defineProps, defineEmits } from "vue";
+import { defineProps, computed } from "vue";
 import visitService from "@/api/visitService";
 import { store } from "@/store";
+import { useStore } from "vuex";
 
 const props = defineProps({
   name: String,
@@ -11,13 +12,15 @@ const props = defineProps({
   restaurant_id: String,
 });
 
+const userStore = useStore();
 const showVisitDetails = ref(false);
 const visitDetails = ref([]);
+const currentUser = computed(() => userStore.getters.getCurrentUser);
 
 const fetchVisitDetails = async () => {
   try {
     const response = await visitService.getVisitsForRestaurant(
-      store.currentUser.id,
+      currentUser.value.id,
       props.restaurant_id,
     );
     visitDetails.value = response;

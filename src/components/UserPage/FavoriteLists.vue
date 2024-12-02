@@ -1,14 +1,17 @@
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import {computed, ref} from "vue";
+import {useRouter} from "vue-router";
 import favoriteService from "@/api/favoriteService";
-import { store } from "@/store";
+import {store} from "@/store";
+import {useStore} from "vuex";
 
+const userStore = useStore();
 const props = defineProps(["allRestaurantNames"]);
 const router = useRouter();
 const newListForm = ref();
 const newListName = ref("");
 const selectedRestaurant = ref(null);
+const currentUser = computed(() => userStore.getters.getCurrentUser);
 
 const nameRequiredRule = (v) =>
   !!v || "Veuillez entrer un nom pour la liste";
@@ -80,7 +83,7 @@ const postFavoriteList = async () => {
     let tempUserFavorites = store.currentUserFavorites;
     const response = await favoriteService.createFavoriteList(
       newListName.value,
-      store.currentUser.email,
+      currentUser.value.email,
     );
     console.log(response);
     tempUserFavorites.push(response);
@@ -176,7 +179,7 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
         <v-row>
           <v-col cols="4">
             <v-text-field density="compact" v-model="newListName" label="Nom de la nouvelle liste de favoris *"
-              maxlength="50" required></v-text-field>
+                          maxlength="50" required></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-btn color="primary" type="submit">Créer la liste</v-btn>
@@ -189,10 +192,10 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
         <v-expansion-panel v-for="(favoriteList, index) in store.currentUserFavorites" :key="index">
           <v-expansion-panel-title>
             <div class="d-flex align-center justify-space-between" style="width: 100%">
-              <span v-if="!favoriteList.isEditing"><strong>{{ favoriteList.name }}</strong></span>
+              <span v-if="!favoriteList.isEditing" class="favorite-list-name">{{ favoriteList.name }}</span>
               <v-text-field v-else v-model="favoriteList.newName" label="Renommer la liste" dense
-                :rules="[nameRequiredRule]" maxlength="50" required hide-details
-                style="max-width: 200px"></v-text-field>
+                            :rules="[nameRequiredRule]" maxlength="50" required hide-details
+                            style="max-width: 200px"></v-text-field>
 
               <div class="d-flex align-center">
                 <template v-if="favoriteList.isEditing">
@@ -224,8 +227,8 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
                     <div style="display: flex; align-items: center">
                       <strong> {{ restaurant.name }} </strong>
                       <v-rating half-increments hover readonly :length="5" :size="32" :model-value="restaurant.rating"
-                        active-color="primary" color="grey-lighten-2"
-                        style="margin-left: 8px; vertical-align: middle" />
+                                active-color="primary" color="grey-lighten-2"
+                                style="margin-left: 8px; vertical-align: middle"/>
                     </div>
                   </div>
                   <div class="d-flex">
@@ -240,9 +243,10 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
               </v-list-item>
             </v-list>
             <v-select v-model="selectedRestaurant" :items="props.allRestaurantNames" item-title="name" item-value="id"
-              label="Select"></v-select>
+                      label="Select"></v-select>
             <v-btn color="primary" @click="addSelectedRestaurantToList(favoriteList.id)">
-              <v-icon>mdi-plus</v-icon> Ajouter
+              <v-icon>mdi-plus</v-icon>
+              Ajouter
             </v-btn>
           </v-expansion-panel-text>
         </v-expansion-panel>
@@ -258,4 +262,11 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
   background-color: #f8f9fa;
   border-radius: 8px;
 }
+
+.favorite-list-name {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
 </style>
