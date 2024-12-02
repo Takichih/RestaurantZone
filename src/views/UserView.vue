@@ -2,13 +2,15 @@
 import { ref, onMounted, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import userService from "@/api/userService";
-import { getCurrentUserID } from "@/composables/useUserService";
+import {useProfile} from "@/composables/useProfile";
 
 const searchQuery = ref("");
 const users = ref([]);
 const followedUsers = ref([]);
 const followers = ref([]);
 const activeUserId = ref("");
+
+const { currentUser } = await useProfile();
 
 const headers = ref([
   { text: "ID", value: "id" },
@@ -35,7 +37,7 @@ const filteredUsers = computed(() => {
 
 const fetchUserRelations = async () => {
   try {
-    activeUserId.value = getCurrentUserID();
+    activeUserId.value = currentUser.value.id;
     const user = await userService.getUser(activeUserId.value);
     followedUsers.value = user.following.map((user) => user.id);
     followers.value = user.followers;
