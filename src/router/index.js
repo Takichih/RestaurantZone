@@ -76,7 +76,7 @@ router.beforeEach((to, from, next) => {
     store.dispatch("logout");
     next("/login");
     return;
-  } else {
+  } else if (!isAuthenticated) {
     apiClient.defaults.baseURL = `${config.apiUrl}/unsecure`;
   }
 
