@@ -6,6 +6,7 @@ import HomeView from "@/views/HomeView";
 import RestaurantView from "@/views/RestaurantView";
 import ProfileView from "@/views/ProfileView";
 import LoginView from "@/views/LoginView.vue";
+import RegisterView from "@/views/RegisterView.vue";
 
 
 const routes = [
@@ -26,14 +27,12 @@ const routes = [
     component: LoginView,
     meta: { guest: true }
   },
-  /*
   {
     path: "/register",
     name: "Register",
     component: RegisterView,
     meta: { guest: true }
   },
-  */
   {
     path: "/",
     name: "Home",

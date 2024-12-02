@@ -22,14 +22,23 @@ export function useAuthService() {
     formData.append("password", userPassword);
 
     const userConnected = await authentificationService.login(formData);
-
     localStorage.setItem("authToken", userConnected.token);
     setCurrentUser(userConnected);
   }
+
+  const signup = async (name, email, password) => {
+    let formData = new URLSearchParams();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+
+    const newUser = await authentificationService.signup(formData);
+    console.log("------------- newUser ---------------", newUser);
+  };
 
   const logout = () => {
     setCurrentUser();
   }
 
-  return { login, logout }
+  return { login, signup, logout }
 }

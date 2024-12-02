@@ -23,7 +23,25 @@ export default {
     } finally {
       return user;
     }
-  }
+  },
+
+  async signup(formData) {
+    try {
+      apiClient.defaults.baseURL = config.apiUrl;
+      const response = await apiClient.post(`/signup`, formData, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      if (response.status !== 200) {
+        throw new Error("Failed to signUp, please try again.");
+      }
+    }catch (e) {
+      console.error(e.message);
+    } finally {
+      return  response.data;
+    }
+  },
 }
 
 //TODO Logout
