@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { ref, computed } from "vue";
 import { store } from "@/store";
 import { useStore } from "vuex";
+import { useProfile } from "@/composables/useProfile";
 
 // Components
 import InteractiveMap from "@/components/RestaurantPage/InteractiveMap";
@@ -17,50 +18,47 @@ const isLoggedIn = computed(() => vuexStore.getters.isAuthenticated);
 const currentUser = computed(() => vuexStore.getters.getCurrentUser);
 const route = useRoute();
 const currentRestaurantId = route.params.restaurantId;
-const { restaurant, similarRestaurants, numberOfPages } = await useRestaurant(currentRestaurantId);
-const visits = ref(await restaurantService.getRestaurantVisits(restaurant.value.id, 10, numberOfPages.value));
-const emits = defineEmits(["changePage"])
+const { restaurant, similarRestaurants, numberOfPages } =
+  await useRestaurant(currentRestaurantId);
+const visits = ref(
+  await restaurantService.getRestaurantVisits(
+    restaurant.value.id,
+    10,
+    numberOfPages.value,
+  ),
+);
 
-const isFavoriteDialogOpen = ref(false);
-const favoriteLists = ref([
-  { id: 1, name: "Favorites" },
-  { id: 2, name: "Wishlist" },
-  // Add more lists as needed
-]);
+const emits = defineEmits(["changePage"]);
+const { allFavoriteListNames } = await useProfile();
 
 const openFavoriteDialog = () => {
-  isFavoriteDialogOpen.value = true;
+  store.setFavoriteLists(allFavoriteListNames.value);
+  store.setFavoritesModalOpen(true);
 };
-
 const openVisitModal = () => {
   store.setCurrentAddingVisitRestaurantId(restaurant.value.id);
   store.setCurrentAddingVisitRestaurantVisits(visits.value);
   store.setVisitModalOpen(true);
 };
-
 const handleVisitSubmitted = (visitData) => {
   visitData.user_id = currentUser.value.id;
   visits.value.items.unshift(visitData);
 };
 
-const handleAddToFavorites = ({ restaurantId, listId }) => {
-  // Handle adding the restaurant to the selected favorite list
-  console.log(`Restaurant ${restaurantId} added to list ${listId}`);
-};
-
 store.setHandleVisitSubmittedFunction(handleVisitSubmitted);
-
 const handleChangePage = async (pageId) => {
-  visits.value = await restaurantService.getRestaurantVisits(restaurant.value.id, 10, pageId);
-}
-
+  visits.value = await restaurantService.getRestaurantVisits(
+    restaurant.value.id,
+    10,
+    pageId,
+  );
+};
 const load = ({ done }) => {
-  done('empty')
-}
-
+  done("empty");
+};
 const goToRestaurant = (restaurantId) => {
   router.push(`/restaurant/${restaurantId}`);
-}
+};
 </script>
 
 <template>
@@ -69,8 +67,12 @@ const goToRestaurant = (restaurantId) => {
       <v-col cols="12" md="6">
         <v-card :restaurant="restaurant" class="mx-auto" height="100%">
           <v-carousel :show-arrows="false" cycle hide-delimiters height="70vh">
-            <v-carousel-item v-for="(restaurantPicture, index) in restaurant.pictures" :key="index"
-              :src="restaurantPicture" cover></v-carousel-item>
+            <v-carousel-item
+              v-for="(restaurantPicture, index) in restaurant.pictures"
+              :key="index"
+              :src="restaurantPicture"
+              cover
+            ></v-carousel-item>
           </v-carousel>
 
           <v-card-item>
@@ -85,8 +87,14 @@ const goToRestaurant = (restaurantId) => {
           </v-card-item>
           <v-card-text class="pb-2">
             <v-row class="mx-0 align-center">
-              <v-rating :model-value="restaurant.rating" color="amber" density="compact" size="small" half-increments
-                readonly></v-rating>
+              <v-rating
+                :model-value="restaurant.rating"
+                color="amber"
+                density="compact"
+                size="small"
+                half-increments
+                readonly
+              ></v-rating>
 
               <div class="text-grey ms-2 mt-1">
                 {{ Math.round(restaurant.rating * 100) / 100 }}
@@ -97,16 +105,27 @@ const goToRestaurant = (restaurantId) => {
               <p v-for="n in restaurant.price_range" :key="n">$</p>
               •
               <p v-for="(genre, index) in restaurant.genres" :key="index">
-                {{ genre }}<span v-if="index != (restaurant.genres.length - 1)">/</span>
+                {{ genre
+                }}<span v-if="index != restaurant.genres.length - 1">/</span>
               </p>
             </div>
 
             <v-card-actions class="justify-center">
               <span v-if="isLoggedIn">
-                <v-btn icon color="error" class="mx-2" @click="openFavoriteDialog">
+                <v-btn
+                  icon
+                  color="error"
+                  class="mx-2"
+                  @click="openFavoriteDialog"
+                >
                   <v-icon icon="mdi-heart-outline"></v-icon>
                 </v-btn>
-                <v-btn icon color="primary" class="mx-2" @click="openVisitModal">
+                <v-btn
+                  icon
+                  color="primary"
+                  class="mx-2"
+                  @click="openVisitModal"
+                >
                   <v-icon icon="mdi-plus-circle-outline"></v-icon>
                 </v-btn>
               </span>
@@ -128,7 +147,10 @@ const goToRestaurant = (restaurantId) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(hours, day, index) in restaurant.opening_hours" :key="index">
+                  <tr
+                    v-for="(hours, day, index) in restaurant.opening_hours"
+                    :key="index"
+                  >
                     <td>
                       <p>{{ day }}</p>
                     </td>
@@ -141,14 +163,22 @@ const goToRestaurant = (restaurantId) => {
           <v-col v-if="similarRestaurants.length > 0">
             <v-card height="340">
               <v-card-title>Restaurants similaires</v-card-title>
-              
+
               <v-divider></v-divider>
 
               <v-infinite-scroll height="292" @load="load" empty-text="">
-                <v-list-item v-for="(restaurant, index) in similarRestaurants" :key="index">
+                <v-list-item
+                  v-for="(restaurant, index) in similarRestaurants"
+                  :key="index"
+                >
                   <template v-slot:prepend>
                     <v-card-actions class="mr-2">
-                      <v-btn density="compact" icon color="secondary" @click="goToRestaurant(restaurant.id)">
+                      <v-btn
+                        density="compact"
+                        icon
+                        color="secondary"
+                        @click="goToRestaurant(restaurant.id)"
+                      >
                         <v-icon icon="mdi-information-outline"></v-icon>
                       </v-btn>
                     </v-card-actions>
@@ -163,8 +193,10 @@ const goToRestaurant = (restaurantId) => {
         <v-row>
           <v-col>
             <v-card width="100%">
-              <InteractiveMap :longitude="restaurant.location.coordinates[0]"
-                :latitude="restaurant.location.coordinates[1]" />
+              <InteractiveMap
+                :longitude="restaurant.location.coordinates[0]"
+                :latitude="restaurant.location.coordinates[1]"
+              />
             </v-card>
           </v-col>
         </v-row>
@@ -173,11 +205,20 @@ const goToRestaurant = (restaurantId) => {
 
     <v-row v-if="visits.items.length > 0">
       <v-col>
-        <RestaurantVisits :visits="visits.items" @change-page="handleChangePage" :numberOfPages="numberOfPages" />
+        <RestaurantVisits
+          :visits="visits.items"
+          @change-page="handleChangePage"
+          :numberOfPages="numberOfPages"
+        />
       </v-col>
     </v-row>
-    <FavoritesDialog :isOpen="isFavoriteDialogOpen" :favoriteLists="favoriteLists" :restaurantId="restaurant.id"
-      @close="isFavoriteDialogOpen = false" @add-to-favorites="handleAddToFavorites" />
+    <FavoritesDialog
+      :isOpen="store.isFavoriteDialogOpen"
+      :favoriteLists="store.favoriteLists"
+      :restaurantId="restaurant.id"
+      @close="store.setFavoritesModalOpen(false)"
+      @add-to-favorites="store.handleAddToFavorites"
+    />
   </v-col>
 </template>
 

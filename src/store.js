@@ -1,4 +1,5 @@
 import { reactive } from "vue";
+import favoriteService from "@/api/favoriteService";
 
 export const store = reactive({
   currentUserFavorites: null,
@@ -17,6 +18,34 @@ export const store = reactive({
   fbUserName: null,
   fbUserEmail: null,
   fbUserId: null,
+
+  favoriteLists: [],
+  isFavoriteDialogOpen: false,
+
+  setFavoritesModalOpen(value) {
+    this.isFavoriteDialogOpen = value;
+  },
+  setFavoriteLists(lists) {
+    this.favoriteLists = lists;
+  },
+
+  async handleAddToFavorites({ restaurantId, listId }) {
+    try {
+      const favoriteList = await favoriteService.getFavoriteList(listId);
+      const isRestaurantInList = favoriteList.restaurants.some(
+        (restaurant) => restaurant.id === restaurantId
+      );
+      if (isRestaurantInList) {
+        alert(`Restaurant ${restaurantId} already exists in list ${listId}`);
+        return;
+      }
+
+      await favoriteService.addRestaurantToFavoriteList(listId, restaurantId);
+      console.log(`Restaurant ${restaurantId} added to list ${listId}`);
+    } catch (error) {
+      console.error("Error adding restaurant to favorites:", error);
+    }
+  },
 
   setFbToken(token) {
     this.fbToken = token;

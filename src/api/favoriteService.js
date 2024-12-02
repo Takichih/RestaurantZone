@@ -101,7 +101,7 @@ export default {
   },
   async addRestaurantToFavoriteList(listId, restaurantId) {
     let updatedFavoriteList = [];
-
+    
     try {
       const response = await apiClient.post(`/favorites/${listId}/restaurants`, { id: restaurantId });
 
