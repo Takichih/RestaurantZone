@@ -52,7 +52,7 @@ const closeVisitModal = () => {
   store.setVisitModalContent({
     comment: "",
     rating: 0,
-    selectedDate: new Date()
+    selectedDate: null
   });
   store.setVisitModalOpen(false);
 };
@@ -67,16 +67,16 @@ const closeVisitModal = () => {
         <v-card-text class="mt-4">
           <v-row class="d-flex align-center justify-center flex-column">
             Note donnée
-            <v-input :disabled="store.readOnlyVisitModal" v-model="store.visitModalContent.rating"
-              :rules="ratingRules">
+            <v-input :disabled="store.readOnlyVisitModal" v-model="store.visitModalContent.rating" :rules="ratingRules">
               <v-rating half-increments hover :length="5" :size="30" v-model="store.visitModalContent.rating"
                 active-color="warning" />
             </v-input>
           </v-row>
           <v-row dense>
             <v-col class="mt-4">
-              <v-date-input :disabled="store.readOnlyVisitModal" v-model="store.visitModalContent.selectedDate"
-                prepend-icon="" prepend-inner-icon="$calendar" label=" Date de la visite"></v-date-input>
+              <v-date-input :allowed-dates="(date) => new Date() >= date" :disabled="store.readOnlyVisitModal"
+                v-model="store.visitModalContent.selectedDate" prepend-icon="" prepend-inner-icon="$calendar"
+                label=" Date de la visite"></v-date-input>
             </v-col>
           </v-row>
           <v-row dense>

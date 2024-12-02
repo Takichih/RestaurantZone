@@ -7,7 +7,7 @@ export const store = reactive({
   visitModalContent: {
     comment: "",
     rating: 0,
-    selectedDate: new Date()
+    selectedDate: null
   },
   favoritesModalOpen: false,
   currentAddingVisitRestaurantId: "",
