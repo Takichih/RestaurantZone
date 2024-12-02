@@ -1,17 +1,28 @@
 <script setup>
 import {ref, onMounted} from "vue";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import userService from "@/api/userService";
 import {getCurrentUserID} from "@/composables/useUserService";
 
 const route = useRoute();
+const router = useRouter();
+const user = ref(null);
+
 
 const userId = ref(route.query.id || ""); // ID de l'utilisateur à afficher
 const userDetails = ref(null); // Détails de l'utilisateur
 const isFollowing = ref(false); // Indique si l'utilisateur est suivi
 const activeUserId = ref(""); // ID de l'utilisateur actif
 
-// Récupérer les informations de l'utilisateur
+const fetchUser = async (userId) => {
+  try {
+    user.value = await userService.getUser(userId);
+  } catch (error) {
+    console.error(error);
+    user.value = null;
+  }
+};
+
 const fetchUserDetails = async () => {
   try {
     const activeUser = await userService.getUser(activeUserId.value);
@@ -48,7 +59,18 @@ const unfollowUser = async () => {
 };
 
 onMounted(async () => {
-  activeUserId.value = await getCurrentUserID(); // Récupérer l'utilisateur actif
+  activeUserId.value = await getCurrentUserID();
+  const userId = route.query.id;
+  if (!userId) {
+    router.push("/users");
+    return;
+  }
+
+  await fetchUser(userId);
+
+  if (!user.value.name) {
+    router.push("/users");
+  }
   await fetchUserDetails();
 });
 </script>
