@@ -3,7 +3,6 @@ import { useAuthService } from "@/composables/useAuthService";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
-// Values
 const store = useStore();
 const visible = ref(false);
 const loginForm = ref();
@@ -11,7 +10,6 @@ const email = ref("");
 const password = ref("");
 const accountExists = computed(() => store.getters.getAccountExists);
 
-// Rules
 const emailRules = [(v) => !!v || "Un courriel doit être entré."];
 
 const passwordRules = [(v) => !!v || "Un mot de passe doit être entré."];
