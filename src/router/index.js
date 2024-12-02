@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useStore } from "vuex";
+import store from '@/store/index';
+import apiClient from "@/utils/apiClient";
+import { config } from "@/config";
 
 // Components
 import HomeView from "@/views/HomeView";
@@ -38,7 +40,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: HomeView,
+    component: HomeView
   },
   {
     path: "/users",
@@ -65,8 +67,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const store = useStore();
-
   store.dispatch("setAccountExists", true);
 
   const token = localStorage.getItem("authToken");
@@ -76,6 +76,8 @@ router.beforeEach((to, from, next) => {
     store.dispatch("logout");
     next("/login");
     return;
+  } else {
+    apiClient.defaults.baseURL = `${config.apiUrl}/unsecure`;
   }
 
   console.log("Navigation vers :", to.path); // Ajout du log
@@ -95,9 +97,9 @@ router.beforeEach((to, from, next) => {
     } else {
       next();
     }
-
     return;
   }
+
   next();
 })
 
