@@ -7,7 +7,7 @@ export const store = reactive({
   visitModalContent: {
     comment: "",
     rating: 0,
-    selectedDate: new Date()
+    selectedDate: null
   },
   favoritesModalOpen: false,
   currentAddingVisitRestaurantId: "",
@@ -26,9 +26,6 @@ export const store = reactive({
   },
   setFbUserEmail(email) {
     this.fbUserEmail = email;
-  },
-  setFacebookAuth(authData) {
-    this.facebookAuth = authData;
   },
   setFbUserId(id) {
     this.fbUserId = id;

@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useStore } from "vuex";
+import store from '@/store/index';
+import apiClient from "@/utils/apiClient";
+import { config } from "@/config";
 
 // Components
 import HomeView from "@/views/HomeView";
@@ -8,9 +10,6 @@ import ProfileView from "@/views/ProfileView";
 import LoginView from "@/views/LoginView.vue";
 import UserView from "@/views/UserView";
 import UserDetailView from "@/views/UserDetailView";
-import FacebookLogin from "@/components/Facebook/FacebookLogin.vue";
-import FacebookCallback from "@/components/Facebook/FacebookCallback.vue";
-
 
 const routes = [
   {
@@ -30,16 +29,6 @@ const routes = [
     component: LoginView,
     meta: { guest: true }
   },
-  {
-    path: "/facebook-login",
-    name: "FacebookLogin",
-    component: FacebookLogin,
-  },
-  {
-    path: "/facebook-callback",
-    name: "FacebookCallback",
-    component: FacebookCallback,
-  },
   /*
   {
     path: "/register",
@@ -51,18 +40,20 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: HomeView,
+    component: HomeView
   },
   {
     path: "/users",
     name: "Users",
     component: UserView,
+    meta: { requiresAuth: true }
   },
   {
     path: "/user-detail",
     name: "UserDetailView",
     component: UserDetailView,
-    props: (route) => ({ id: route.query.id }), // Passe l'ID en props
+    props: (route) => ({ id: route.query.id }),
+    meta: { requiresAuth: true }
   },
   {
     path: "/:pathMatch(.*)*",
@@ -76,8 +67,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const store = useStore();
-
   store.dispatch("setAccountExists", true);
 
   const token = localStorage.getItem("authToken");
@@ -87,6 +76,8 @@ router.beforeEach((to, from, next) => {
     store.dispatch("logout");
     next("/login");
     return;
+  } else {
+    apiClient.defaults.baseURL = `${config.apiUrl}/unsecure`;
   }
 
   console.log("Navigation vers :", to.path); // Ajout du log
@@ -106,9 +97,9 @@ router.beforeEach((to, from, next) => {
     } else {
       next();
     }
-
     return;
   }
+
   next();
 })
 

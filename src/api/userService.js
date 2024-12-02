@@ -72,7 +72,7 @@ export default {
       return responseStatus;
     }
   }
-,
+  ,
   async removeFollow(userId) {
     let responseStatus;
 
@@ -136,7 +136,6 @@ export default {
       return followers;
     }
   },
-
   async getFollowing(userId) {
     let following = [];
     try {
@@ -175,7 +174,6 @@ export default {
       throw error;
     }
   },
-
   async createUser(userData) {
     try {
       const response = await apiClient.post("/users", userData);
