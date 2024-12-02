@@ -1,78 +1,13 @@
+<!-- src/views/ProfileView.vue -->
 <script setup>
 import { useProfile } from "@/composables/useProfile";
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import userService from "@/api/userService";
-import gravatarService from "@/api/gravatarService";
-
-// Components
 import FavoriteLists from "@/components/UserPage/FavoriteLists.vue";
 import VisitedRestaurantCard from "@/components/UserPage/VisitedRestaurantCard.vue";
+import FollowedUsersTable from "@/components/UserPage/FollowedUsersTable.vue";
+import FollowersTable from "@/components/UserPage/FollowersTable.vue";
 
 const { currentUser, userRecentVisits, allRestaurantNames } = await useProfile();
-const followedUsers = ref([]); // Liste des utilisateurs suivis
-const followers = ref([]); // Liste des utilisateurs qui suivent
-
-const headers = ref([
-  // { title: "ID", key: "id" },
-  { title: "", key: "gravatar", sortable: false },
-  { title: "Nom de l'utilisateur", key: "name" },
-  { title: "Courriel", key: "email" },
-  // { title: "Score", key: "rating" },
-  { title: "Actions", key: "actions", sortable: false },
-]);
-
-const router = useRouter();
-
-// Fetch les utilisateurs suivis et les followers
-const fetchUserRelations = async () => {
-  try {
-    const user = await userService.getUser(currentUser.value.id);
-    followedUsers.value = user.following;
-    followers.value = user.followers;
-  } catch (error) {
-    alert("Une erreur s'est produite lors de la récupération des données.");
-    console.error(error);
-  }
-};
-
-// Suivre un utilisateur
-const followUser = async (userId) => {
-  try {
-
-    await userService.followUser(userId);
-
-    const user = await userService.getUser(userId);
-    followedUsers.value.push(user);
-  } catch (error) {
-    alert("Une erreur s'est produite lors du suivi de l'utilisateur.");
-    console.error(error);
-  }
-};
-
-// Ne plus suivre un utilisateur
-const unfollowUser = async (userId) => {
-  try {
-    await userService.removeFollow(userId);
-    followedUsers.value = followedUsers.value.filter((user) => user.id !== userId);
-  } catch (error) {
-    alert("Une erreur s'est produite lors de l'annulation du suivi.");
-    console.error(error);
-  }
-};
-
-// Redirection vers UserDetailView
-const goToUserDetail = (userId) => {
-  router.push({ name: "UserDetailView", query: { id: userId } });
-};
-const getGravatarUrl = (email) => {
-  return gravatarService.getGravatarUrl(email);
-};
-
-// Fetch user relations lors de l'initialisation
-onMounted(async () => {
-  await fetchUserRelations();
-});
 </script>
 
 <template>
@@ -82,21 +17,21 @@ onMounted(async () => {
         <v-col cols="12" md="4">
           <h4 class="text-left">Nom:</h4>
           <v-card>
-            <h3 class="name">{{ currentUser.name }}</h3>
+            <span class="name">{{ currentUser.name }}</span>
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
           <h4 class="text-left">Courriel:</h4>
           <v-card>
-            <h3 class="email">{{ currentUser.email }}</h3>
+            <span class="email">{{ currentUser.email }}</span>
           </v-card>
         </v-col>
         <v-col cols="12" md="1">
           <h4 class="text-left">Score:</h4>
-          <h3 class="text-left">
+          <span class="text-left">
             {{ currentUser.rating }}
             <v-icon color="amber" class="ms-2">mdi-star-shooting</v-icon>
-          </h3>
+          </span>
         </v-col>
       </v-row>
     </v-container>
@@ -123,7 +58,6 @@ onMounted(async () => {
       </v-row>
     </v-container>
 
-    <!-- Adjusted width for Favorite Lists -->
     <v-container>
       <v-row>
         <v-col cols="12" md="12">
@@ -132,97 +66,13 @@ onMounted(async () => {
       </v-row>
     </v-container>
 
-    <!-- Liste des utilisateurs suivis et des followers côte à côte -->
     <v-container>
       <v-row>
         <v-col cols="12" md="6">
-          <v-data-table
-            :headers="headers"
-            :items="followedUsers"
-            item-value="id"
-            class="elevation-1"
-          >
-            <template v-slot:top>
-              <h2 class="table-title">UFooders suivis</h2>
-            </template>
-
-            <template v-slot:[`item.gravatar`]="{ item }">
-              <v-avatar class="user-avatar">
-                <img :src="getGravatarUrl(item.email)" alt="User Avatar" class="avatar-img"/>
-              </v-avatar>
-            </template>
-
-            <template v-slot:[`item.name`]="{ item }">
-              <a href="#" @click.prevent="goToUserDetail(item.id)">{{ item.name }}</a>
-            </template>
-
-            <template v-slot:[`item.email`]="{ item }">
-              <a href="#" @click.prevent="goToUserDetail(item.id)">{{ item.email }}</a>
-            </template>
-
-            <template v-slot:[`item.rating`]="{ item }">
-              <span>{{ item.rating }}</span>
-            </template>
-
-            <template v-slot:[`item.actions`]="{ item }">
-              <v-btn
-                color="red"
-                icon
-                @click="unfollowUser(item.id)"
-              >
-                <v-icon>mdi-account-minus</v-icon>
-              </v-btn>
-            </template>
-          </v-data-table>
+          <FollowedUsersTable :currentUser="currentUser" />
         </v-col>
-
         <v-col cols="12" md="6">
-          <v-data-table
-            :headers="headers"
-            :items="followers"
-            item-value="id"
-            class="elevation-1"
-          >
-            <template v-slot:top>
-              <h2 class="table-title">Mes abonnés</h2>
-            </template>
-
-            <template v-slot:[`item.gravatar`]="{ item }">
-              <v-avatar class="user-avatar">
-                <img :src="getGravatarUrl(item.email)" alt="User Avatar" class="avatar-img"/>
-              </v-avatar>
-            </template>
-
-            <template v-slot:[`item.name`]="{ item }">
-              <a href="#" @click.prevent="goToUserDetail(item.id)">{{ item.name }}</a>
-            </template>
-
-            <template v-slot:[`item.email`]="{ item }">
-              <a href="#" @click.prevent="goToUserDetail(item.id)">{{ item.email }}</a>
-            </template>
-
-            <!--            <template v-slot:[`item.rating`]="{ item }">-->
-            <!--              <span>{{ item.rating }}</span>-->
-            <!--            </template>-->
-
-            <template v-slot:[`item.actions`]="{ item }">
-              <v-btn
-                v-if="!followedUsers.some((user) => user.id === item.id)"
-                color="primary"
-                icon
-                @click="followUser(item.id)"
-              >
-                <v-icon>mdi-account-plus</v-icon>
-              </v-btn>
-              <v-btn
-                v-else
-                color="grey"
-                icon
-              >
-                <v-icon color="green">mdi-account-check</v-icon>
-              </v-btn>
-            </template>
-          </v-data-table>
+          <FollowersTable :currentUser="currentUser" />
         </v-col>
       </v-row>
     </v-container>
@@ -240,26 +90,18 @@ h2 {
 
 .text-left {
   padding: 5px;
+  font-weight: bold;
 }
 
-.name {
+.name, .email {
   margin-left: 10px;
-}
-.email {
-  margin-left: 10px;
+  //height: 100%;
+  //align-items: center;
+  font-weight: bold;
+
 }
 h3 {
   margin-bottom: 20px;
-}
-.user-avatar {
-  margin: auto;
-}
-.avatar-img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-.table-title {
-  margin-left: 20px;
+
 }
 </style>
