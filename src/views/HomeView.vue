@@ -109,11 +109,6 @@ onMounted(() => {
             <v-card-text>
               <v-tabs-window v-model="tab">
                 <v-tabs-window-item value="one">
-                  <v-row class="justify-center">
-                    <v-col cols="11">
-                      <h1 class="text-center">Liste des Restaurants</h1>
-                    </v-col>
-                  </v-row>
                   <v-row>
                     <template v-if="paginatedRestaurants.length > 0">
                       <RestaurantCard v-for="restaurant in paginatedRestaurants" :key="restaurant.place_id"
