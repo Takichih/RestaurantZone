@@ -3,15 +3,10 @@ import {ref, onMounted} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import userService from "@/api/userService";
 import {useProfile} from "@/composables/useProfile";
-import gravatarService from '@/api/gravatarService';
 
-
-
-const userId = ref(route.query.id || '');
-const userDetails = ref(null);
-const isFollowing = ref(false);
-const activeUserId = ref('');
-
+const route = useRoute();
+const router = useRouter();
+const user = ref(null);
 
 
 const userId = ref(route.query.id || ""); // ID de l'utilisateur à afficher
@@ -19,7 +14,6 @@ const userDetails = ref(null); // Détails de l'utilisateur
 const isFollowing = ref(false); // Indique si l'utilisateur est suivi
 const activeUserId = ref(""); // ID de l'utilisateur actif
 const { currentUser } = await useProfile();
-
 
 const fetchUser = async (userId) => {
   try {
@@ -43,6 +37,7 @@ const fetchUserDetails = async () => {
   }
 };
 
+// Suivre l'utilisateur
 const followUser = async () => {
   try {
     await userService.followUser(userId.value);
@@ -53,10 +48,7 @@ const followUser = async () => {
   }
 };
 
-const getGravatarUrl = (email) => {
-  return gravatarService.getGravatarUrl(email);
-};
-
+// Ne plus suivre l'utilisateur
 const unfollowUser = async () => {
   try {
     await userService.removeFollow(userId.value);
@@ -84,17 +76,6 @@ onMounted(async () => {
 
   await fetchUserDetails();
 });
-
-const updateAvatarSize = () => {
-  if (window.innerWidth < 600) {
-    avatarSize.value = 100;
-  } else {
-    avatarSize.value = 200;
-  }
-};
-
-window.addEventListener('resize', updateAvatarSize);
-onMounted(updateAvatarSize);
 </script>
 
 <template>
@@ -103,45 +84,24 @@ onMounted(updateAvatarSize);
       <v-col cols="12" md="6">
         <h3>Détails de l'utilisateur</h3>
         <v-card>
-          <v-row>
-            <v-col cols="12" md="6">
-              <v-card-title>
-                {{ userDetails?.name }}
-              </v-card-title>
-<!--              <v-card-subtitle>ID : {{ userDetails?.id }}</v-card-subtitle>-->
-              <v-card-text>
-                <p>{{ userDetails?.email }}</p>
-                <p>Nombre d'abonnés : {{ userDetails?.followers.length }}</p>
-                <p>Personnes suivies : {{ userDetails?.following.length }}</p>
-                <br>
-                <h4 class="text-left">Score:
-                  {{ userDetails?.rating }}
-                  <v-icon color="amber" class="ms-2">mdi-star-shooting</v-icon>
-                </h4>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn
-                  v-if="!isFollowing"
-                  color="primary"
-                  @click="followUser"
-                >
-                  Suivre
-                </v-btn>
-                <v-btn
-                  v-else
-                  color="red"
-                  @click="unfollowUser"
-                >
-                  Ne plus suivre
-                </v-btn>
-              </v-card-actions>
-            </v-col>
-            <v-col cols="12" md="6" class="d-flex justify-center align-center">
-              <v-avatar :size="avatarSize" class="user-avatar">
-                <img :src="getGravatarUrl(userDetails?.email)" alt="User Avatar" class="avatar-img">
-              </v-avatar>
-            </v-col>
-          </v-row>
+          <v-card-title>Nom : {{ userDetails?.name }}</v-card-title>
+          <v-card-subtitle>ID : {{ userDetails?.id }}</v-card-subtitle>
+          <v-card-actions>
+            <v-btn
+              v-if="!isFollowing"
+              color="primary"
+              @click="followUser"
+            >
+              Suivre
+            </v-btn>
+            <v-btn
+              v-else
+              color="red"
+              @click="unfollowUser"
+            >
+              Ne plus suivre
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -151,13 +111,5 @@ onMounted(updateAvatarSize);
 <style scoped>
 h3 {
   margin-bottom: 20px;
-}
-.user-avatar {
-  margin: auto;
-}
-.avatar-img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
 }
 </style>

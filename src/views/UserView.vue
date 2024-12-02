@@ -2,10 +2,7 @@
 import { ref, onMounted, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import userService from "@/api/userService";
-
 import {useProfile} from "@/composables/useProfile";
-import gravatarService from "@/api/gravatarService";
-
 
 const searchQuery = ref("");
 const users = ref([]);
@@ -16,12 +13,9 @@ const activeUserId = ref("");
 const { currentUser } = await useProfile();
 
 const headers = ref([
-  // { title: "ID", key: "id" },
-  { title: "", key: "gravatar", sortable: false },
-  { title: "Nom de l'utilisateur", key: "name" },
-  { title: "Courriel", key: "email" },
-  { title: "Score", key: "rating" },
-  { title: "Actions", key: "actions", sortable: false },
+  { text: "ID", value: "id" },
+  { text: "Nom de l'utilisateur", value: "name" },
+  { text: "Actions", value: "actions", sortable: false },
 ]);
 
 const route = useRoute();
@@ -79,10 +73,6 @@ const handleKeyPress = (event) => {
   }
 };
 
-const getGravatarUrl = (email) => {
-  return gravatarService.getGravatarUrl(email);
-};
-
 watch(
   () => route.query.q,
   (newQuery) => {
@@ -123,38 +113,24 @@ onMounted(async () => {
             class="elevation-1"
           >
             <template v-slot:top>
-              <h2 class="table-title">Résultats</h2>
+              <h2>Résultats</h2>
             </template>
 
-<!--            <template v-slot:[`item.id`]="{ item }">-->
-<!--              <a-->
-<!--                href="#"-->
-<!--                @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })"-->
-<!--              >-->
-<!--                {{ item.id }}-->
-<!--              </a>-->
-<!--            </template>-->
-
-
-            <template v-slot:[`item.gravatar`]="{ item }">
-              <v-avatar class="user-avatar">
-                <img :src="getGravatarUrl(item.email)" alt="User Avatar" class="avatar-img"/>
-              </v-avatar>
+            <template v-slot:[`item.id`]="{ item }">
+              <a
+                href="#"
+                @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })"
+              >
+                {{ item.id }}
+              </a>
             </template>
+
             <template v-slot:[`item.name`]="{ item }">
               <a
                 href="#"
                 @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })"
               >
                 {{ item.name }}
-              </a>
-            </template>
-            <template v-slot:[`item.email`]="{ item }">
-              <a
-                href="#"
-                @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })"
-              >
-                {{ item.email }}
               </a>
             </template>
 
@@ -190,19 +166,3 @@ onMounted(async () => {
   </div>
 </template>
 
-<style scoped>
-h3 {
-  margin-bottom: 20px;
-}
-.user-avatar {
-  margin: auto;
-}
-.avatar-img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-.table-title {
-  margin-left: 20px;
-}
-</style>
