@@ -1,11 +1,14 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { store } from "@/store";
 import * as momentUtils from "@/utils/momentUtils";
 import VisitService from "@/api/visitService";
+import { useStore } from "vuex";
 
 // Values
+const userStore = useStore();
 const visitForm = ref();
+const currentUser = computed(() => userStore.getters.getCurrentUser);
 
 // Rules
 const ratingRules = [
@@ -30,7 +33,7 @@ const postVisit = async () => {
         date: momentUtils.formatDateForAPIPost(store.visitModalContent.selectedDate),
       };
 
-      await VisitService.createVisit(store.currentUser.id, visitData)
+      await VisitService.createVisit(currentUser.value.id, visitData)
         .then((response) => {
           store.handleVisitSubmittedFunction(response.data);
           closeVisitModal();
@@ -64,7 +67,8 @@ const closeVisitModal = () => {
         <v-card-text class="mt-4">
           <v-row class="d-flex align-center justify-center flex-column">
             Note donnée
-            <v-input :disabled="store.readOnlyVisitModal" v-model="store.visitModalContent.rating" :rules="ratingRules">
+            <v-input :disabled="store.readOnlyVisitModal" v-model="store.visitModalContent.rating"
+              :rules="ratingRules">
               <v-rating half-increments hover :length="5" :size="30" v-model="store.visitModalContent.rating"
                 active-color="warning" />
             </v-input>

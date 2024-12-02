@@ -13,7 +13,6 @@
     "@mdi/font": "^7.4.47",
     "axios": "^1.7.7",
     "core-js": "^3.8.3",
-    "facebook-js-sdk": "^1.0.4",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
     "leaflet.locatecontrol": "^0.81.1",

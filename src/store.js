@@ -27,9 +27,6 @@ export const store = reactive({
   setFbUserEmail(email) {
     this.fbUserEmail = email;
   },
-  setFacebookAuth(authData) {
-    this.facebookAuth = authData;
-  },
   setFbUserId(id) {
     this.fbUserId = id;
   },

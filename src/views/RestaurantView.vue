@@ -141,6 +141,8 @@ const goToRestaurant = (restaurantId) => {
           <v-col v-if="similarRestaurants.length > 0">
             <v-card height="340">
               <v-card-title>Restaurants similaires</v-card-title>
+              
+              <v-divider></v-divider>
 
               <v-infinite-scroll height="292" @load="load" empty-text="">
                 <v-list-item v-for="(restaurant, index) in similarRestaurants" :key="index">

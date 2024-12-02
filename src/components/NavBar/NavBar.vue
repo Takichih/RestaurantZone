@@ -32,12 +32,6 @@ const getGravatarUrl = (email) => {
 };
 
 const { logout } = useAuthService();
-
-const goToFacebookLogin = () => {
-  router.push({ name: "FacebookLogin" });
-};
-
-console.log(isLoggedIn);
 </script>
 
 <template>
@@ -50,21 +44,17 @@ console.log(isLoggedIn);
       <v-spacer></v-spacer>
 
       <v-btn v-if="$vuetify.display.mdAndUp" icon="mdi-home" variant="text" to="/" exact :active="false"></v-btn>
-      <v-btn icon="mdi-facebook" variant="text" @click="goToFacebookLogin">
-            <v-icon color="blue">mdi-facebook</v-icon>
-      </v-btn>
+      <v-btn v-if="isLoggedIn" icon="mdi-account-multiple" variant="text" to="/users"></v-btn>
 
       <SearchBar v-model="searchQuery" @search="handleSearch" />
 
       <template v-if="$vuetify.display.mdAndUp">
         <template v-if="isLoggedIn">
-           <v-btn icon="mdi-account-multiple" variant="text" to="/users"></v-btn>
           <v-btn class="v-btn--icon v-btn--text" @click="goToUserPage">
             <v-avatar>
               <v-img :src="getGravatarUrl(currentUser.email)" alt="User Avatar" />
             </v-avatar>
           </v-btn>
-
           <v-btn icon="mdi-logout" variant="text" @click="logout"></v-btn>
         </template>
         <template v-else>
