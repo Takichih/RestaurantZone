@@ -19,6 +19,8 @@ export default {
 
       user = response.data;
     } catch (e) {
+      apiClient.defaults.baseURL = `${config.apiUrl}/unsecure`;
+      user = false;
       console.error(e);
     } finally {
       return user;

@@ -1,4 +1,6 @@
 import authentificationService from "@/api/authentificationService";
+import { config } from "@/config";
+import apiClient from "@/utils/apiClient";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
@@ -9,10 +11,17 @@ export function useAuthService() {
   const setCurrentUser = async (userInfo = null) => {
     if (userInfo) {
       store.dispatch("setConnectedUser", userInfo);
+      localStorage.setItem("authToken", userInfo.token);
+      localStorage.setItem("refreshToken", userInfo.refreshToken);
       router.push({ name: "Profile" });
-    } else {
+    } else if (userInfo == null) {
       store.dispatch("setConnectedUser", null);
+      apiClient.defaults.baseURL = `${config.apiUrl}/unsecure`;
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("refreshToken");
       router.push({ name: "Home" });
+    } else {
+      store.dispatch("setAccountExists", false);
     }
   }
 
@@ -22,9 +31,20 @@ export function useAuthService() {
     formData.append("password", userPassword);
 
     const userConnected = await authentificationService.login(formData);
-    localStorage.setItem("authToken", userConnected.token);
     setCurrentUser(userConnected);
   }
+
+  const refreshAccessToken = async () => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) throw new Error("Refresh token absent");
+
+    const formData = new URLSearchParams();
+    formData.append("refresh_token", refreshToken);
+
+    const refreshedData = await authentificationService.refreshToken(formData);
+    localStorage.setItem("authToken", refreshedData.token);
+  };
+
 
   const signup = async (name, email, password) => {
     let formData = new URLSearchParams();
@@ -40,5 +60,5 @@ export function useAuthService() {
     setCurrentUser();
   }
 
-  return { login, signup, logout }
+  return { login, signup, logout, refreshAccessToken }
 }

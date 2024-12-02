@@ -1,12 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from '@/store/index';
+import apiClient from "@/utils/apiClient";
+import { config } from "@/config";
 
 // Components
 import HomeView from "@/views/HomeView";
 import RestaurantView from "@/views/RestaurantView";
 import ProfileView from "@/views/ProfileView";
 import LoginView from "@/views/LoginView.vue";
-import RegisterView from "@/views/RegisterView.vue";
+import UserView from "@/views/UserView";
+import UserDetailView from "@/views/UserDetailView";import RegisterView from "@/views/RegisterView.vue";
 
 
 const routes = [
@@ -36,7 +39,20 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: HomeView,
+    component: HomeView
+  },
+  {
+    path: "/users",
+    name: "Users",
+    component: UserView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/user-detail",
+    name: "UserDetailView",
+    component: UserDetailView,
+    props: (route) => ({ id: route.query.id }),
+    meta: { requiresAuth: true }
   },
   {
     path: "/:pathMatch(.*)*",
@@ -50,27 +66,40 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (store.getters.isAuthenticated) {
-      next();
-      return;
-    }
-    next("/login");
-  } else {
-    next();
-  }
-});
+  store.dispatch("setAccountExists", true);
 
-router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem("authToken");
+  const isAuthenticated = store.getters.isAuthenticated;
+
+  if (isAuthenticated && !token) {
+    store.dispatch("logout");
+    next("/login");
+    return;
+  } else {
+    apiClient.defaults.baseURL = `${config.apiUrl}/unsecure`;
+  }
+
+  console.log("Navigation vers :", to.path); // Ajout du log
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (store.getters.isAuthenticated && token) {
+      next();
+    } else {
+      next("/login");
+    }
+    return;
+  }
+
   if (to.matched.some((record) => record.meta.guest)) {
     if (store.getters.isAuthenticated) {
       next('/profile');
-      return;
+    } else {
+      next();
     }
-    next();
-  } else {
-    next();
+    return;
   }
+
+  next();
 })
 
 export default router;

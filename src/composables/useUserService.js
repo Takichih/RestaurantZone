@@ -19,3 +19,10 @@ export function useUserService() {
 
   return { loginUser }
 }
+
+//TODO Magie pour sacoir le ID du User
+
+export function getCurrentUserID() {
+  return "6716e7304bffd95d58ab6b40";
+}
+

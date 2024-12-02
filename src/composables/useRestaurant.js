@@ -3,6 +3,7 @@ import restaurantService from "@/api/restaurantService";
 
 export async function useRestaurant(restaurantId) {
   const restaurant = ref({});
+  const similarRestaurants = ref({});
   const numberOfPages = ref(0);
 
   const getRestaurant = async () => {
@@ -12,6 +13,17 @@ export async function useRestaurant(restaurantId) {
     cleanUpTelForHref();
     cleanUpOpeningHours();
   };
+
+  const getSimilarRestaurants = async () => {
+    await restaurantService.getRestaurant(restaurantId)
+      .then(async (currentRestaurantInfo) => {
+        const currentRestaurantGenres = currentRestaurantInfo.genres.join(",");
+        const restaurants = await restaurantService.getRestaurants(0, 0, null, currentRestaurantGenres)
+          .then((restaurants) => { return restaurants.filter((restaurant) => restaurant.id !== currentRestaurantInfo.id) });
+
+        similarRestaurants.value = restaurants;
+      });
+  }
 
   const getRestaurantVisitsNumberOfPages = async () => {
     const data = await restaurantService.getRestaurantVisits(restaurantId, 1);
@@ -76,7 +88,8 @@ export async function useRestaurant(restaurantId) {
   };
 
   await getRestaurant();
+  await getSimilarRestaurants();
   await getRestaurantVisitsNumberOfPages();
 
-  return { restaurant, numberOfPages };
+  return { restaurant, similarRestaurants, numberOfPages };
 }
