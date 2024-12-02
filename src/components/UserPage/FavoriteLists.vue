@@ -195,7 +195,7 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
               <span v-if="!favoriteList.isEditing" class="favorite-list-name">{{ favoriteList.name }}</span>
               <v-text-field v-else v-model="favoriteList.newName" label="Renommer la liste" dense
                 :rules="[nameRequiredRule]" maxlength="50" required hide-details
-                style="max-width: 200px"></v-text-field>
+                style="max-width: 200px" @click.stop></v-text-field>
 
               <div class="d-flex align-center">
                 <template v-if="favoriteList.isEditing">
