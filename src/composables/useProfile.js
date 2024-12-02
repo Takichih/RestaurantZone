@@ -3,12 +3,13 @@ import favoriteService from "@/api/favoriteService";
 import visitService from "@/api/visitService";
 import restaurantService from "@/api/restaurantService";
 import { useStore } from "vuex";
+import { store } from "@/store";
 
 export async function useProfile() {
-  const store = useStore();
+  const userStore = useStore();
   const userRecentVisits = ref([]);
   const allRestaurantNames = ref([]);
-  const currentUser = computed(() => store.getters.getCurrentUser);
+  const currentUser = computed(() => userStore.getters.getCurrentUser);
 
   const getUserRecentVisits = async () => {
     try {
@@ -31,7 +32,7 @@ export async function useProfile() {
       );
     }
 
-    //store.setCurrentUserFavorites(lists);
+    store.setCurrentUserFavorites(lists);
   }
 
   const getAllRestaurantNames = async () => {

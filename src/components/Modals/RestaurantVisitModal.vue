@@ -1,11 +1,14 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { store } from "@/store";
 import * as momentUtils from "@/utils/momentUtils";
 import VisitService from "@/api/visitService";
+import { useStore } from "vuex";
 
 // Values
+const userStore = useStore();
 const visitForm = ref();
+const currentUser = computed(() => userStore.getters.getCurrentUser);
 
 // Rules
 const ratingRules = [
@@ -30,14 +33,13 @@ const postVisit = async () => {
         date: momentUtils.formatDateForAPIPost(store.visitModalContent.selectedDate),
       };
 
-      await VisitService.createVisit(store.currentUser.id, visitData)
+      await VisitService.createVisit(currentUser.value.id, visitData)
         .then((response) => {
           store.handleVisitSubmittedFunction(response.data);
           closeVisitModal();
         });
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Erreur lors de l'enregistrement de la visite :", error);
   }
 
@@ -50,7 +52,7 @@ const closeVisitModal = () => {
   store.setVisitModalContent({
     comment: "",
     rating: 0,
-    selectedDate: new Date()
+    selectedDate: null
   });
   store.setVisitModalOpen(false);
 };
@@ -72,8 +74,9 @@ const closeVisitModal = () => {
           </v-row>
           <v-row dense>
             <v-col class="mt-4">
-              <v-date-input :disabled="store.readOnlyVisitModal" v-model="store.visitModalContent.selectedDate"
-                prepend-icon="" prepend-inner-icon="$calendar" label=" Date de la visite"></v-date-input>
+              <v-date-input :allowed-dates="(date) => new Date() >= date" :disabled="store.readOnlyVisitModal"
+                v-model="store.visitModalContent.selectedDate" prepend-icon="" prepend-inner-icon="$calendar"
+                label=" Date de la visite"></v-date-input>
             </v-col>
           </v-row>
           <v-row dense>

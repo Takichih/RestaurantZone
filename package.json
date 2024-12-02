@@ -16,6 +16,7 @@
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
     "leaflet.locatecontrol": "^0.81.1",
+    "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "moment-timezone": "^0.5.46",
     "vue": "^3.2.13",
