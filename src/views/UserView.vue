@@ -2,24 +2,24 @@
 import { ref, onMounted, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import userService from "@/api/userService";
-import {useProfile} from "@/composables/useProfile";
 import gravatarService from "@/api/gravatarService";
+import { useStore } from "vuex";
 
+const store = useStore();
 const searchQuery = ref("");
 const users = ref([]);
 const followedUsers = ref([]);
 const followers = ref([]);
 const activeUserId = ref("");
-
-const { currentUser } = await useProfile();
+const currentUser = computed(() => store.getters.getCurrentUser);
 
 const headers = ref([
   // { title: "ID", key: "id" },
-  {title: "", key: "gravatar", sortable: false},
-  {title: "Nom de l'utilisateur", key: "name"},
-  {title: "Courriel", key: "email"},
-  {title: "Score", key: "rating"},
-  {title: "Actions", key: "actions", sortable: false},
+  { title: "", key: "gravatar", sortable: false },
+  { title: "Nom de l'utilisateur", key: "name" },
+  { title: "Courriel", key: "email" },
+  { title: "Score", key: "rating" },
+  { title: "Actions", key: "actions", sortable: false },
 ]);
 
 const route = useRoute();
@@ -102,24 +102,14 @@ onMounted(async () => {
     <v-container>
       <v-row>
         <v-col cols="12" md="8">
-          <v-text-field
-            v-model="searchQuery"
-            label="Rechercher un utilisateur"
-            append-icon="mdi-magnify"
-            @keypress="handleKeyPress"
-            @click:append="fetchUsers"
-          />
+          <v-text-field v-model="searchQuery" label="Rechercher un utilisateur" append-icon="mdi-magnify"
+            @keypress="handleKeyPress" @click:append="fetchUsers" />
         </v-col>
       </v-row>
 
       <v-row>
         <v-col cols="12">
-          <v-data-table
-            :headers="headers"
-            :items="filteredUsers"
-            item-value="id"
-            class="elevation-1"
-          >
+          <v-data-table :headers="headers" :items="filteredUsers" item-value="id" class="elevation-1">
             <template v-slot:top>
               <h2 class="table-title">Résultats</h2>
             </template>
@@ -136,48 +126,28 @@ onMounted(async () => {
 
             <template v-slot:[`item.gravatar`]="{ item }">
               <v-avatar class="user-avatar">
-                <img :src="getGravatarUrl(item.email)" alt="User Avatar" class="avatar-img"/>
+                <img :src="getGravatarUrl(item.email)" alt="User Avatar" class="avatar-img" />
               </v-avatar>
             </template>
             <template v-slot:[`item.name`]="{ item }">
-              <a
-                href="#"
-                @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })"
-              >
+              <a href="#" @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })">
                 {{ item.name }}
               </a>
             </template>
             <template v-slot:[`item.email`]="{ item }">
-              <a
-                href="#"
-                @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })"
-              >
+              <a href="#" @click.prevent="$router.push({ name: 'UserDetailView', query: { id: item.id } })">
                 {{ item.email }}
               </a>
             </template>
 
             <template v-slot:[`item.actions`]="{ item }">
-              <v-btn
-                v-if="!followedUsers.includes(item.id)"
-                color="primary"
-                icon
-                @click="followUser(item.id)"
-              >
+              <v-btn v-if="!followedUsers.includes(item.id)" color="primary" icon @click="followUser(item.id)">
                 <v-icon>mdi-account-plus</v-icon>
               </v-btn>
-              <v-btn
-                v-else
-                color="grey"
-                icon
-              >
+              <v-btn v-else color="grey" icon>
                 <v-icon color="green">mdi-account-check</v-icon>
               </v-btn>
-              <v-btn
-                v-if="followedUsers.includes(item.id)"
-                color="red"
-                icon
-                @click="unfollowUser(item.id)"
-              >
+              <v-btn v-if="followedUsers.includes(item.id)" color="red" icon @click="unfollowUser(item.id)">
                 <v-icon>mdi-account-minus</v-icon>
               </v-btn>
             </template>
