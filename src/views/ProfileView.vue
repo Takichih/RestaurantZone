@@ -1,4 +1,3 @@
-<!-- src/views/ProfileView.vue -->
 <script setup>
 import { useProfile } from "@/composables/useProfile";
 import FavoriteLists from "@/components/UserPage/FavoriteLists.vue";
@@ -108,10 +107,6 @@ h2 {
 .name,
 .email {
   margin-left: 10px;
-  /*
-  height: 100%;
-  align-items: center;
-  */
   font-weight: bold;
 }
 

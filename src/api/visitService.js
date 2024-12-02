@@ -19,7 +19,7 @@ export default {
           const restaurantDetails =
             await restaurantService.getRestaurant(restaurantId);
           restaurantVisits[restaurantId] = {
-            restaurant_id: restaurantId, // Include the restaurant_id
+            restaurant_id: restaurantId,
             name: restaurantDetails.name,
             rating: parseFloat(restaurantDetails.rating.toFixed(2)),
             visits: 1,

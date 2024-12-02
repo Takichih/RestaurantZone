@@ -1,5 +1,5 @@
 <script setup>
-// Components
+
 import NavBar from "@/components/NavBar/NavBar.vue";
 import RestaurantVisitModal from "@/components/Modals/RestaurantVisitModal";
 import SuspenseSpinner from "./components/SuspenseSpinner.vue";
@@ -11,15 +11,8 @@ import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
   <Suspense>
     <template #default>
       <v-layout>
-        <!-- NavBar -->
         <NavBar />
-        <!-- /NavBar -->
-
-        <!-- Modals -->
         <RestaurantVisitModal />
-        <!-- /Modals -->
-
-        <!-- Dialog des favoris -->
         <FavoritesDialog
           :isOpen="store.isFavoriteDialogOpen"
           :favoriteLists="store.favoriteLists"
@@ -28,13 +21,12 @@ import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
           @add-to-favorites="store.handleAddToFavorites"
         />
 
-        <!-- Main Content -->
         <v-main>
           <v-container fluid>
             <router-view :key="$route.fullPath"></router-view>
           </v-container>
         </v-main>
-        <!-- /Main Content -->
+
       </v-layout>
     </template>
 

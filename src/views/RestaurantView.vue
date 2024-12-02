@@ -6,7 +6,6 @@ import { store } from "@/store";
 import { useStore } from "vuex";
 import { useProfile } from "@/composables/useProfile";
 
-// Components
 import InteractiveMap from "@/components/RestaurantPage/InteractiveMap";
 import RestaurantVisits from "@/components/RestaurantPage/RestaurantVisits.vue";
 import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";

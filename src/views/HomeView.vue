@@ -3,7 +3,6 @@ import { ref, watch, onMounted, computed } from "vue";
 import { useRestaurants } from "@/composables/useRestaurants";
 import { useRoute } from "vue-router";
 
-// Components
 import RestaurantFilters from "@/components/HomePage/RestaurantFilters.vue";
 import RestaurantCard from "@/components/HomePage/RestaurantCard.vue";
 import ModeMap from "@/components/HomePage/ModeMap.vue";
@@ -48,7 +47,6 @@ const updateFilteredRestaurants = async () => {
     return matchesSearch && matchesPrice && matchesSpeciality;
   });
 
-  // Réinitialiser à la première page lors d'une nouvelle recherche ou d'un changement de filtre
   currentPage.value = 1;
   updatePaginatedRestaurants();
 };
@@ -60,12 +58,11 @@ const updatePaginatedRestaurants = () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
-// Mettre à jour `filteredRestaurants` lorsque les critères de recherche ou de filtre changent
 watch(
   [search, selectedPrice, selectedSpeciality, restaurants],
   updateFilteredRestaurants,
 );
-// Observer les changements de `currentPage` pour mettre à jour `paginatedRestaurants`
+
 watch(currentPage, updatePaginatedRestaurants);
 
 updateFilteredRestaurants();
@@ -110,7 +107,6 @@ onMounted(() => {
             />
           </v-card>
 
-          <!-- Liste de restaurants filtrée -->
           <v-card>
             <v-tabs v-model="tab" align-tabs="center" bg-color="primary">
               <v-tab :value="one">Liste de restaurants</v-tab>
@@ -165,32 +161,3 @@ onMounted(() => {
   font-size: 1.75rem;
 }
 </style>
-
-<!--<script setup>
-
-</script>
-
-<template>
-  <v-card>
-    <v-tabs
-      v-model="tab"
-      align-tabs="center"
-      bg-color="primary"
-    >
-      <v-tab :value="one">Liste de restaurants</v-tab>
-      <v-tab :value="two">Mode Map</v-tab>
-    </v-tabs>
-
-    <v-card-text>
-      <v-tabs-window v-model="tab">
-        <v-tabs-window-item value="one">
-          <RestaurantList :initialSearch="search" />
-        </v-tabs-window-item>
-        <v-tabs-window-item value="two">
-          <ModeMap/>
-        </v-tabs-window-item>
-      </v-tabs-window>
-    </v-card-text>
-  </v-card>
-</template>
--->

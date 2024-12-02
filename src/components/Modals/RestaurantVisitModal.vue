@@ -5,12 +5,10 @@ import * as momentUtils from "@/utils/momentUtils";
 import VisitService from "@/api/visitService";
 import { useStore } from "vuex";
 
-// Values
 const userStore = useStore();
 const visitForm = ref();
 const currentUser = computed(() => userStore.getters.getCurrentUser);
 
-// Rules
 const ratingRules = [
   (v) => !!v || "Une note doit être donnée.",
   (v) =>

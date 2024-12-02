@@ -120,7 +120,7 @@ export default {
         throw new Error("Failed to fetch followers, please try again.");
       }
 
-      // Vérifie si l'utilisateur figure dans la liste des "following"
+
       return response.data.following.some((user) => user.id === userId);
     } catch (error) {
       console.error(`Error checking if user ${userId} is followed:`, error);
@@ -175,7 +175,7 @@ export default {
   async getUserByEmail(email) {
     try {
       const response = await apiClient.get(`/users?email=${email}`);
-      return response.data.items[0] || null; // Supposez que la réponse contient une liste
+      return response.data.items[0] || null;
     } catch (error) {
       console.error(
         "Erreur lors de la récupération de l'utilisateur par email:",

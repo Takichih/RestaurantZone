@@ -39,14 +39,14 @@ export async function useProfile(userStore) {
   const getAllRestaurantNames = async () => {
     try {
       const response = await restaurantService.getRestaurants(150);
-      // Use a temporary variable to store filtered and mapped data
+
       const filteredRestaurants = response
         .filter((restaurant) => restaurant.name && restaurant.id)
         .map((restaurant) => ({
           name: restaurant.name,
           id: restaurant.id,
         }));
-      // Assign the processed data to the reactive allRestaurants array
+
       allRestaurantNames.value = filteredRestaurants;
     } catch (error) {
       console.error("Erreur lors de la récupération des restaurants :", error);
