@@ -12,6 +12,35 @@ export const store = reactive({
   favoritesModalOpen: false,
   currentAddingVisitRestaurantId: "",
   currentAddingVisitRestaurantVisits: [],
+
+  fbToken: null,
+  fbUserName: null,
+  fbUserEmail: null,
+  fbUserId: null,
+
+  setFbToken(token) {
+    this.fbToken = token;
+  },
+  setFbUserName(name) {
+    this.fbUserName = name;
+  },
+  setFbUserEmail(email) {
+    this.fbUserEmail = email;
+  },
+  setFacebookAuth(authData) {
+    this.facebookAuth = authData;
+  },
+  setFbUserId(id) {
+    this.fbUserId = id;
+  },
+
+  clearFbUser() {
+    this.fbToken = null;
+    this.fbUserName = null;
+    this.fbUserEmail = null;
+    this.fbUserId = null;
+  },
+
   handleVisitSubmittedFunction: () => { },
   setCurrentUserFavorites(newFavorites) {
     this.currentUserFavorites = newFavorites;

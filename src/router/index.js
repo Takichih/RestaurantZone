@@ -1,11 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
-import store from '@/store/index';
+import { useStore } from "vuex";
 
 // Components
 import HomeView from "@/views/HomeView";
 import RestaurantView from "@/views/RestaurantView";
 import ProfileView from "@/views/ProfileView";
 import LoginView from "@/views/LoginView.vue";
+import UserView from "@/views/UserView";
+import UserDetailView from "@/views/UserDetailView";
+import FacebookLogin from "@/components/Facebook/FacebookLogin.vue";
+import FacebookCallback from "@/components/Facebook/FacebookCallback.vue";
 
 
 const routes = [
@@ -26,6 +30,16 @@ const routes = [
     component: LoginView,
     meta: { guest: true }
   },
+  {
+    path: "/facebook-login",
+    name: "FacebookLogin",
+    component: FacebookLogin,
+  },
+  {
+    path: "/facebook-callback",
+    name: "FacebookCallback",
+    component: FacebookCallback,
+  },
   /*
   {
     path: "/register",
@@ -40,6 +54,17 @@ const routes = [
     component: HomeView,
   },
   {
+    path: "/users",
+    name: "Users",
+    component: UserView,
+  },
+  {
+    path: "/user-detail",
+    name: "UserDetailView",
+    component: UserDetailView,
+    props: (route) => ({ id: route.query.id }), // Passe l'ID en props
+  },
+  {
     path: "/:pathMatch(.*)*",
     redirect: "/",
   },
@@ -51,27 +76,40 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (store.getters.isAuthenticated) {
-      next();
-      return;
-    }
-    next("/login");
-  } else {
-    next();
-  }
-});
+  const store = useStore();
 
-router.beforeEach((to, from, next) => {
+  store.dispatch("setAccountExists", true);
+
+  const token = localStorage.getItem("authToken");
+  const isAuthenticated = store.getters.isAuthenticated;
+
+  if (isAuthenticated && !token) {
+    store.dispatch("logout");
+    next("/login");
+    return;
+  }
+
+  console.log("Navigation vers :", to.path); // Ajout du log
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (store.getters.isAuthenticated && token) {
+      next();
+    } else {
+      next("/login");
+    }
+    return;
+  }
+
   if (to.matched.some((record) => record.meta.guest)) {
     if (store.getters.isAuthenticated) {
       next('/profile');
-      return;
+    } else {
+      next();
     }
-    next();
-  } else {
-    next();
+
+    return;
   }
+  next();
 })
 
 export default router;
