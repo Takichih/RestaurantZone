@@ -18,11 +18,15 @@ watch(
 );
 
 const addRestaurantToList = (favoritesListId) => {
-  emit("add-to-favorites", {
-    restaurantId: props.restaurantId,
-    listId: favoritesListId,
-  });
-  emit("close");
+  try {
+    emit("add-to-favorites", {
+      restaurantId: props.restaurantId,
+      listId: favoritesListId,
+    });
+    emit("close");
+  } catch (error) {
+    console.error("An error occurred while adding the restaurant to the list:", error);
+  }
 };
 </script>
 
@@ -39,12 +43,9 @@ const addRestaurantToList = (favoritesListId) => {
         >
           <template v-slot:prepend>
             <v-list-item-action start>
-              <v-checkbox-btn
-                :model-value="
-                  item.restaurants &&
-                  item.restaurants.find((x) => x.id === props.restaurantId)
-                "
-              ></v-checkbox-btn>
+              <v-btn icon>
+                <v-icon color="red" icon="mdi-heart-outline"></v-icon>
+              </v-btn>
             </v-list-item-action>
           </template>
           <v-list-item-title>{{ item.name }}</v-list-item-title>
@@ -54,7 +55,7 @@ const addRestaurantToList = (favoritesListId) => {
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn variant="outlined" color="primary" @click="emit('close')">
-          <v-icon icon="mdi-close" />
+          <v-icon icon="mdi-close"/>
         </v-btn>
       </v-card-actions>
     </v-card>
