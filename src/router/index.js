@@ -3,7 +3,6 @@ import store from "@/store/index";
 import apiClient from "@/utils/apiClient";
 import { config } from "@/config";
 
-// Components
 import HomeView from "@/views/HomeView";
 import RestaurantView from "@/views/RestaurantView";
 import ProfileView from "@/views/ProfileView";
@@ -29,14 +28,6 @@ const routes = [
     component: LoginView,
     meta: { guest: true },
   },
-  /*
-  {
-    path: "/register",
-    name: "Register",
-    component: RegisterView,
-    meta: { guest: true }
-  },
-  */
   {
     path: "/",
     name: "Home",
