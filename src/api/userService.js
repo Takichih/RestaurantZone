@@ -56,30 +56,35 @@ export default {
     let responseStatus;
 
     try {
-      const response = await apiClient.post("/follow", { params: { id: userId } });
+      const response = await apiClient.post("/follow", { id: userId });
+      console.log("From follow user : user added" + response.status);
 
-      if (response.status !== 200) {
+      if (response.status !== 201) {
+        console.log("From follow user : " + response.status);
         throw new Error("User follow failed, please try again.");
       }
 
       responseStatus = response.status;
     } catch (e) {
-      console.error(e);
+      console.error("Error following user:", e);
+      throw e;
     } finally {
       return responseStatus;
     }
-  },
+  }
+,
   async removeFollow(userId) {
     let responseStatus;
 
     try {
-      const response = await apiClient.post(`/follow/${userId}`);
+      const response = await apiClient.delete(`/follow/${userId}`);
 
       if (response.status !== 200) {
         throw new Error("User unfollow failed, please try again.");
       }
 
       responseStatus = response.status;
+      console.log("From follow user : user deleted" + response.status);
     } catch (e) {
       console.error(e);
     } finally {
@@ -87,7 +92,7 @@ export default {
     }
   },
 
-  async searchUsers(query, limit = 10, page = 0) {
+  async searchUsers(query, limit = 100, page = 0) {
     let users = [];
     try {
       const response = await apiClient.get("/users", { params: { q: query, limit, page } });
