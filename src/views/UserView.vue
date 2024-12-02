@@ -1,16 +1,15 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import userService from "@/api/userService";
 import { getCurrentUserID } from "@/composables/useUserService";
 
-const searchQuery = ref(""); // Search query parameter
-const users = ref([]); // Users from the search
-const followedUsers = ref([]); // IDs of users already followed
-const followers = ref([]); // List of followers for the active user
-const activeUserId = ref(""); // ID of the active user
+const searchQuery = ref("");
+const users = ref([]);
+const followedUsers = ref([]);
+const followers = ref([]);
+const activeUserId = ref("");
 
-// Headers for the data table
 const headers = ref([
   { text: "ID", value: "id" },
   { text: "Nom de l'utilisateur", value: "name" },
@@ -20,7 +19,6 @@ const headers = ref([
 const route = useRoute();
 const router = useRouter();
 
-// Fetch the list of users based on the search query
 const fetchUsers = async () => {
   try {
     users.value = await userService.searchUsers(searchQuery.value);
@@ -30,7 +28,11 @@ const fetchUsers = async () => {
   }
 };
 
-// Fetch the active user and their followers/following
+
+const filteredUsers = computed(() => {
+  return users.value.filter((user) => user.name && user.name.trim() !== "");
+});
+
 const fetchUserRelations = async () => {
   try {
     activeUserId.value = getCurrentUserID();
@@ -43,7 +45,6 @@ const fetchUserRelations = async () => {
   }
 };
 
-// Follow a user
 const followUser = async (userId) => {
   try {
     await userService.followUser(userId);
@@ -54,7 +55,6 @@ const followUser = async (userId) => {
   }
 };
 
-// Unfollow a user
 const unfollowUser = async (userId) => {
   try {
     await userService.removeFollow(userId);
@@ -65,13 +65,12 @@ const unfollowUser = async (userId) => {
   }
 };
 
-// Sync the search query with the query parameters
-const updateSearchQuery = () => {
-  router.replace({query: {q: searchQuery.value}});
-  fetchUsers();
+const handleKeyPress = (event) => {
+  if (event.key === "Enter") {
+    fetchUsers();
+  }
 };
 
-// Watch for query parameter changes
 watch(
   () => route.query.q,
   (newQuery) => {
@@ -80,7 +79,6 @@ watch(
   }
 );
 
-// On mounted, initialize the view
 onMounted(async () => {
   searchQuery.value = route.query.q || "";
   await fetchUserRelations();
@@ -88,27 +86,27 @@ onMounted(async () => {
 });
 </script>
 
+
 <template>
   <div>
     <v-container>
-      <!-- Barre de recherche -->
       <v-row>
         <v-col cols="12" md="8">
           <v-text-field
             v-model="searchQuery"
             label="Rechercher un utilisateur"
             append-icon="mdi-magnify"
-            @input="updateSearchQuery"
+            @keypress="handleKeyPress"
+            @click:append="fetchUsers"
           />
         </v-col>
       </v-row>
 
-      <!-- Tableau des utilisateurs -->
       <v-row>
         <v-col cols="12">
           <v-data-table
             :headers="headers"
-            :items="users"
+            :items="filteredUsers"
             item-value="id"
             class="elevation-1"
           >
@@ -165,3 +163,4 @@ onMounted(async () => {
     </v-container>
   </div>
 </template>
+
