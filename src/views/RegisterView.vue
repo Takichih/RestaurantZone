@@ -1,6 +1,8 @@
 <script setup>
     import { useAuthService } from "@/composables/useAuthService";
     import { ref } from "vue";
+    import { useRouter } from "vue-router";
+
 
     const visible = ref(false);
     const signupForm = ref();
@@ -21,6 +23,7 @@
     const passwordValid = ref(false);
 
     const { signup } = useAuthService();
+    const router = useRouter();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -60,11 +63,11 @@
         }
 
         try {
-            await signup(name.value, email.value, password.value);
+            signup(name.value, email.value, password.value);
             alert("Inscription réussie !");
             router.push({ name: "Login" });
         } catch (error) {
-            console.error("Erreur d'inscription :", error);
+            console.error("Erreur d'inscription :", error.message);
             alert("Une erreur est survenue. Veuillez réessayer.");
         }
     };

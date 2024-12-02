@@ -38,10 +38,9 @@ export default {
       if (response.status !== 200) {
         throw new Error("Failed to signUp, please try again.");
       }
-    }catch (e) {
-      console.error(e.message);
-    } finally {
       return  response.data;
+    }catch (e) {
+      console.error(e);
     }
   },
 }
