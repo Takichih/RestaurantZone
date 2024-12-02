@@ -1,5 +1,5 @@
 <script setup>
-// Components
+
 import NavBar from "@/components/NavBar/NavBar.vue";
 import RestaurantVisitModal from "@/components/Modals/RestaurantVisitModal";
 import SuspenseSpinner from "./components/SuspenseSpinner.vue";

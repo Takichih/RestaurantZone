@@ -71,7 +71,7 @@ router.beforeEach((to, from, next) => {
     apiClient.defaults.baseURL = `${config.apiUrl}/unsecure`;
   }
 
-  console.log("Navigation vers :", to.path); // Ajout du log
+  console.log("Navigation vers :", to.path);
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (store.getters.isAuthenticated && token) {

@@ -175,7 +175,7 @@ export default {
   async getUserByEmail(email) {
     try {
       const response = await apiClient.get(`/users?email=${email}`);
-      return response.data.items[0] || null; // Supposez que la réponse contient une liste
+      return response.data.items[0] || null;
     } catch (error) {
       console.error(
         "Erreur lors de la récupération de l'utilisateur par email:",
