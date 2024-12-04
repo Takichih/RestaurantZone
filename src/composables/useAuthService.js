@@ -64,8 +64,5 @@ export function useAuthService() {
     setCurrentUser();
   };
 
-  return { login, logout, refreshAccessToken };
-}
-
-  return { login, signup, logout, refreshAccessToken }
+  return { login, signup, logout, refreshAccessToken };
 }
