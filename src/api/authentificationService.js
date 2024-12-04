@@ -9,8 +9,8 @@ export default {
       apiClient.defaults.baseURL = config.apiUrl;
       const response = await apiClient.post(`/login`, formData, {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       });
 
       if (response.status !== 200) {

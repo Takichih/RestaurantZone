@@ -5,7 +5,9 @@ export default {
     let users = [];
 
     try {
-      const response = await apiClient.get("/users", { params: { limit, page } });
+      const response = await apiClient.get("/users", {
+        params: { limit, page },
+      });
 
       if (response.status !== 200) {
         throw new Error("Users were not found, please try again.");
@@ -39,10 +41,14 @@ export default {
     let userFavoriteLists = [];
 
     try {
-      const response = await apiClient.get(`/users/${userId}/favorites`, { params: { limit, page } });
+      const response = await apiClient.get(`/users/${userId}/favorites`, {
+        params: { limit, page },
+      });
 
       if (response.status !== 200) {
-        throw new Error("Favorite lists of specified user were not found, please try again.");
+        throw new Error(
+          "Favorite lists of specified user were not found, please try again.",
+        );
       }
 
       userFavoriteLists = response.data.items;
@@ -71,8 +77,7 @@ export default {
     } finally {
       return responseStatus;
     }
-  }
-  ,
+  },
   async removeFollow(userId) {
     let responseStatus;
 
@@ -95,7 +100,9 @@ export default {
   async searchUsers(query, limit = 100, page = 0) {
     let users = [];
     try {
-      const response = await apiClient.get("/users", { params: { q: query, limit, page } });
+      const response = await apiClient.get("/users", {
+        params: { q: query, limit, page },
+      });
       if (response.status !== 200) {
         throw new Error("Search failed, please try again.");
       }
@@ -113,7 +120,7 @@ export default {
         throw new Error("Failed to fetch followers, please try again.");
       }
 
-      // Vérifie si l'utilisateur figure dans la liste des "following"
+
       return response.data.following.some((user) => user.id === userId);
     } catch (error) {
       console.error(`Error checking if user ${userId} is followed:`, error);
@@ -168,9 +175,12 @@ export default {
   async getUserByEmail(email) {
     try {
       const response = await apiClient.get(`/users?email=${email}`);
-      return response.data.items[0] || null; // Supposez que la réponse contient une liste
+      return response.data.items[0] || null;
     } catch (error) {
-      console.error("Erreur lors de la récupération de l'utilisateur par email:", error);
+      console.error(
+        "Erreur lors de la récupération de l'utilisateur par email:",
+        error,
+      );
       throw error;
     }
   },
@@ -183,5 +193,4 @@ export default {
       throw error;
     }
   },
-
 };

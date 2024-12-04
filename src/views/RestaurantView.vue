@@ -4,8 +4,8 @@ import { useRoute, useRouter } from "vue-router";
 import { ref, computed } from "vue";
 import { store } from "@/store";
 import { useStore } from "vuex";
+import { useProfile } from "@/composables/useProfile";
 
-// Components
 import InteractiveMap from "@/components/RestaurantPage/InteractiveMap";
 import RestaurantVisits from "@/components/RestaurantPage/RestaurantVisits.vue";
 import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
@@ -17,50 +17,48 @@ const isLoggedIn = computed(() => vuexStore.getters.isAuthenticated);
 const currentUser = computed(() => vuexStore.getters.getCurrentUser);
 const route = useRoute();
 const currentRestaurantId = route.params.restaurantId;
-const { restaurant, similarRestaurants, numberOfPages } = await useRestaurant(currentRestaurantId);
-const visits = ref(await restaurantService.getRestaurantVisits(restaurant.value.id, 10, numberOfPages.value));
-const emits = defineEmits(["changePage"])
+const { restaurant, similarRestaurants, numberOfPages } =
+  await useRestaurant(currentRestaurantId);
+const visits = ref(
+  await restaurantService.getRestaurantVisits(
+    restaurant.value.id,
+    10,
+    numberOfPages.value,
+  ),
+);
 
-const isFavoriteDialogOpen = ref(false);
-const favoriteLists = ref([
-  { id: 1, name: "Favorites" },
-  { id: 2, name: "Wishlist" },
-  // Add more lists as needed
-]);
+const emits = defineEmits(["changePage"]);
 
-const openFavoriteDialog = () => {
-  isFavoriteDialogOpen.value = true;
+const openFavoriteDialog = async () => {
+  await useProfile(vuexStore).then(({ allFavoriteListNames }) => {
+    store.setFavoriteLists(allFavoriteListNames.value);
+    store.setFavoritesModalOpen(true);
+  });
 };
-
 const openVisitModal = () => {
   store.setCurrentAddingVisitRestaurantId(restaurant.value.id);
   store.setCurrentAddingVisitRestaurantVisits(visits.value);
   store.setVisitModalOpen(true);
 };
-
 const handleVisitSubmitted = (visitData) => {
   visitData.user_id = currentUser.value.id;
   visits.value.items.unshift(visitData);
 };
 
-const handleAddToFavorites = ({ restaurantId, listId }) => {
-  // Handle adding the restaurant to the selected favorite list
-  console.log(`Restaurant ${restaurantId} added to list ${listId}`);
-};
-
 store.setHandleVisitSubmittedFunction(handleVisitSubmitted);
-
 const handleChangePage = async (pageId) => {
-  visits.value = await restaurantService.getRestaurantVisits(restaurant.value.id, 10, pageId);
-}
-
+  visits.value = await restaurantService.getRestaurantVisits(
+    restaurant.value.id,
+    10,
+    pageId,
+  );
+};
 const load = ({ done }) => {
-  done('empty')
-}
-
+  done("empty");
+};
 const goToRestaurant = (restaurantId) => {
   router.push(`/restaurant/${restaurantId}`);
-}
+};
 </script>
 
 <template>
@@ -97,7 +95,8 @@ const goToRestaurant = (restaurantId) => {
               <p v-for="n in restaurant.price_range" :key="n">$</p>
               •
               <p v-for="(genre, index) in restaurant.genres" :key="index">
-                {{ genre }}<span v-if="index != (restaurant.genres.length - 1)">/</span>
+                {{ genre
+                }}<span v-if="index != restaurant.genres.length - 1">/</span>
               </p>
             </div>
 
@@ -141,7 +140,7 @@ const goToRestaurant = (restaurantId) => {
           <v-col v-if="similarRestaurants.length > 0">
             <v-card height="340">
               <v-card-title>Restaurants similaires</v-card-title>
-              
+
               <v-divider></v-divider>
 
               <v-infinite-scroll height="292" @load="load" empty-text="">
@@ -176,8 +175,9 @@ const goToRestaurant = (restaurantId) => {
         <RestaurantVisits :visits="visits.items" @change-page="handleChangePage" :numberOfPages="numberOfPages" />
       </v-col>
     </v-row>
-    <FavoritesDialog :isOpen="isFavoriteDialogOpen" :favoriteLists="favoriteLists" :restaurantId="restaurant.id"
-      @close="isFavoriteDialogOpen = false" @add-to-favorites="handleAddToFavorites" />
+    <FavoritesDialog :isOpen="store.isFavoriteDialogOpen" :favoriteLists="store.favoriteLists"
+      :restaurantId="restaurant.id" @close="store.setFavoritesModalOpen(false)"
+      @add-to-favorites="store.handleAddToFavorites" />
   </v-col>
 </template>
 

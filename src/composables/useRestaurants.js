@@ -27,9 +27,9 @@ export async function useRestaurants(loading) {
       }));
     priceRanges.value = uniquePriceRanges;
     loading.value = false;
-  }
+  };
 
   await getRestaurants();
 
-  return { restaurants, specialities, priceRanges }
+  return { restaurants, specialities, priceRanges };
 }

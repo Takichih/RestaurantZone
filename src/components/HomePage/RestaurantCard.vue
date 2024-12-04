@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 import { defineProps, defineEmits } from "vue";
 import { store } from "@/store";
 import { useStore } from "vuex";
+import { useProfile } from "@/composables/useProfile";
 
 const vuexStore = useStore();
 const isLoggedIn = computed(() => vuexStore.getters.isAuthenticated);
@@ -45,30 +46,56 @@ const priceSymbols = computed(() => {
 
 const goToRestaurant = () => {
   router.push(`/restaurant/${props.restaurant.id}`);
-}
+};
+
+const openFavoriteDialog = async () => {
+  await useProfile(vuexStore).then(({ allFavoriteListNames }) => {
+    if (allFavoriteListNames) {
+      store.setCurrentAddingVisitRestaurantId(props.restaurant.id);
+      store.setFavoriteLists(allFavoriteListNames.value);
+      store.setFavoritesModalOpen(true);
+    }
+  });
+};
 </script>
 
 <template>
   <v-col cols="12" sm="6" md="4" lg="3">
     <v-card>
-      <v-img :src="props.restaurant.pictures[0]" alt="Image du restaurant" height="200" cover></v-img>
+      <v-img
+        :src="props.restaurant.pictures[0]"
+        alt="Image du restaurant"
+        height="200"
+        cover
+      ></v-img>
       <v-card-subtitle class="text-center mt-2">{{
         props.restaurant.name
       }}</v-card-subtitle>
       <v-card-text>
-        <div class="text-center address" :title="props.restaurant.address"
-          @click="copyToClipboard(props.restaurant.address)">
+        <div
+          class="text-center address"
+          :title="props.restaurant.address"
+          @click="copyToClipboard(props.restaurant.address)"
+        >
           {{ props.restaurant.address }}
         </div>
-        <span v-if="showCopiedMessage" class="copied-message">Adresse copiée !</span>
+        <span v-if="showCopiedMessage" class="copied-message"
+          >Adresse copiée !</span
+        >
         <br />
         <strong>Téléphone :</strong> {{ props.restaurant.tel }} <br />
         <strong>Prix :</strong> {{ priceSymbols }} <br />
         <strong>Type :</strong> {{ props.restaurant.genres.join(", ") }}
         <br /><br />
         <v-row class="mx-0 align-center">
-          <v-rating :model-value="props.restaurant.rating" color="amber" density="compact" size="medium" half-increments
-            readonly></v-rating>
+          <v-rating
+            :model-value="props.restaurant.rating"
+            color="amber"
+            density="compact"
+            size="medium"
+            half-increments
+            readonly
+          ></v-rating>
 
           <div class="text-grey ms-2 mt-1">
             {{ Math.round(props.restaurant.rating * 100) / 100 }}
@@ -78,7 +105,7 @@ const goToRestaurant = () => {
 
       <v-card-actions class="justify-center">
         <span v-if="isLoggedIn">
-          <v-btn icon color="error" class="mx-2" @click="$emit('toggle-favorite', props.restaurant)">
+          <v-btn icon color="error" class="mx-2" @click="openFavoriteDialog">
             <v-icon icon="mdi-heart-outline"></v-icon>
           </v-btn>
           <v-btn icon color="primary" class="mx-2" @click="openVisitModal">

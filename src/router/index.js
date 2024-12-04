@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
-import store from '@/store/index';
+import store from "@/store/index";
 import apiClient from "@/utils/apiClient";
 import { config } from "@/config";
 
-// Components
 import HomeView from "@/views/HomeView";
 import RestaurantView from "@/views/RestaurantView";
 import ProfileView from "@/views/ProfileView";
@@ -22,13 +21,13 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: ProfileView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: "/login",
     name: "Login",
     component: LoginView,
-    meta: { guest: true }
+    meta: { guest: true },
   },
   {
     path: "/register",
@@ -39,20 +38,20 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: HomeView
+    component: HomeView,
   },
   {
     path: "/users",
     name: "Users",
     component: UserView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: "/user-detail",
     name: "UserDetailView",
     component: UserDetailView,
     props: (route) => ({ id: route.query.id }),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: "/:pathMatch(.*)*",
@@ -75,11 +74,11 @@ router.beforeEach((to, from, next) => {
     store.dispatch("logout");
     next("/login");
     return;
-  } else {
+  } else if (!isAuthenticated) {
     apiClient.defaults.baseURL = `${config.apiUrl}/unsecure`;
   }
 
-  console.log("Navigation vers :", to.path); // Ajout du log
+  console.log("Navigation vers :", to.path);
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (store.getters.isAuthenticated && token) {
@@ -92,7 +91,7 @@ router.beforeEach((to, from, next) => {
 
   if (to.matched.some((record) => record.meta.guest)) {
     if (store.getters.isAuthenticated) {
-      next('/profile');
+      next("/profile");
     } else {
       next();
     }
@@ -100,6 +99,6 @@ router.beforeEach((to, from, next) => {
   }
 
   next();
-})
+});
 
 export default router;
