@@ -36,11 +36,11 @@ export default {
         },
       });
       if (response.status !== 200) {
-        throw new Error("Failed to signUp, please try again.");
+        throw new Error("Un compte existe déjà avec cette adresse e-mail.");
       }
       return  response.data;
     }catch (e) {
-      console.error(e);
+      throw new Error("Un compte existe déjà avec cette adresse e-mail.");
     }
   },
 }

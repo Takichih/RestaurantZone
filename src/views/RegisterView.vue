@@ -35,6 +35,7 @@
         emailError.value = "";
         return true;
     };
+    const required = (value) => !!value || "Ce champ est requis.";
 
     const updatePasswordCriteria = () => {
         const pwd = password.value;
@@ -58,17 +59,19 @@
         const isEmailValid = validateEmail();
         updatePasswordCriteria();
 
-        if (!isEmailValid || !passwordValid.value) {
+        if (!isEmailValid || !passwordValid.value || !name.value) {
             return;
         }
 
         try {
-            signup(name.value, email.value, password.value);
-            alert("Inscription réussie !");
+            await signup(name.value, email.value, password.value);
             router.push({ name: "Login" });
         } catch (error) {
-            console.error("Erreur d'inscription :", error.message);
-            alert("Une erreur est survenue. Veuillez réessayer.");
+            if (error.message.includes("Un compte existe déjà")) {
+                emailError.value = error.message;
+            } else {
+                console.error("Erreur d'inscription :", error.message);
+            }
         }
     };
 
@@ -101,7 +104,7 @@
                 placeholder="Entrez votre nom"
                 prepend-inner-icon="mdi-account-outline"
                 variant="outlined"
-                required
+                :rules="[required]"
             ></v-text-field>
 
             <div class="text-subtitle-1 text-medium-emphasis">Courriel</div>

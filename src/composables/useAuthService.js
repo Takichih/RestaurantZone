@@ -1,4 +1,5 @@
 import authentificationService from "@/api/authentificationService";
+import userService from "@/api/userService";
 import { config } from "@/config";
 import apiClient from "@/utils/apiClient";
 import { useRouter } from "vue-router";
@@ -47,13 +48,16 @@ export function useAuthService() {
 
 
   const signup = async (name, email, password) => {
-    let formData = new URLSearchParams();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
+    try {
+      let formData = new URLSearchParams();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
 
-    const newUser = await authentificationService.signup(formData);
-    console.log("------------- newUser ---------------", newUser);
+      await authentificationService.signup(formData);
+    } catch (error) {
+      throw new Error("Un compte existe déjà avec cette adresse e-mail.");
+    }
   };
 
   const logout = () => {
