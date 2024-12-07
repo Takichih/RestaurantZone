@@ -60,7 +60,6 @@ function openReadOnlyVisitModal(visitData) {
       </v-btn>
     </v-card-actions>
 
-    <!-- Expandable section for visit details -->
     <v-expand-transition>
       <div v-if="showVisitDetails" class="visit-details">
         <v-list>

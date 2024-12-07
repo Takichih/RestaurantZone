@@ -1,5 +1,4 @@
 <script setup>
-
 import NavBar from "@/components/NavBar/NavBar.vue";
 import RestaurantVisitModal from "@/components/Modals/RestaurantVisitModal";
 import SuspenseSpinner from "./components/SuspenseSpinner.vue";
@@ -26,7 +25,6 @@ import FavoritesDialog from "@/components/Modals/FavoritesDialog.vue";
             <router-view :key="$route.fullPath"></router-view>
           </v-container>
         </v-main>
-
       </v-layout>
     </template>
 

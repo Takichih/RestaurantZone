@@ -1,5 +1,4 @@
 import authentificationService from "@/api/authentificationService";
-import userService from "@/api/userService";
 import { config } from "@/config";
 import apiClient from "@/utils/apiClient";
 import { useRouter } from "vue-router";
@@ -45,7 +44,6 @@ export function useAuthService() {
     const refreshedData = await authentificationService.refreshToken(formData);
     localStorage.setItem("authToken", refreshedData.token);
   };
-
 
   const signup = async (name, email, password) => {
     try {

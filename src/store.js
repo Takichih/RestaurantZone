@@ -14,11 +14,6 @@ export const store = reactive({
   currentAddingVisitRestaurantId: "",
   currentAddingVisitRestaurantVisits: [],
 
-  fbToken: null,
-  fbUserName: null,
-  fbUserEmail: null,
-  fbUserId: null,
-
   favoriteLists: [],
   isFavoriteDialogOpen: false,
 
@@ -33,39 +28,14 @@ export const store = reactive({
         (restaurant) => restaurant.id === restaurantId,
       );
       if (isRestaurantInList) {
-        console.log(
-          `Restaurant ${restaurantId} already exists in list ${listId}`,
-        );
         return;
       }
 
       await favoriteService.addRestaurantToFavoriteList(listId, restaurantId);
-      console.log(`Restaurant ${restaurantId} added to list ${listId}`);
     } catch (error) {
       console.error("Error adding restaurant to favorites:", error);
     }
   },
-
-  setFbToken(token) {
-    this.fbToken = token;
-  },
-  setFbUserName(name) {
-    this.fbUserName = name;
-  },
-  setFbUserEmail(email) {
-    this.fbUserEmail = email;
-  },
-  setFbUserId(id) {
-    this.fbUserId = id;
-  },
-
-  clearFbUser() {
-    this.fbToken = null;
-    this.fbUserName = null;
-    this.fbUserEmail = null;
-    this.fbUserId = null;
-  },
-
   handleVisitSubmittedFunction: () => {},
   setCurrentUserFavorites(newFavorites) {
     this.currentUserFavorites = newFavorites;

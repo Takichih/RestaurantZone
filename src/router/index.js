@@ -8,8 +8,8 @@ import RestaurantView from "@/views/RestaurantView";
 import ProfileView from "@/views/ProfileView";
 import LoginView from "@/views/LoginView.vue";
 import UserView from "@/views/UserView";
-import UserDetailView from "@/views/UserDetailView";import RegisterView from "@/views/RegisterView.vue";
-
+import UserDetailView from "@/views/UserDetailView";
+import RegisterView from "@/views/RegisterView.vue";
 
 const routes = [
   {
@@ -33,7 +33,7 @@ const routes = [
     path: "/register",
     name: "Register",
     component: RegisterView,
-    meta: { guest: true }
+    meta: { guest: true },
   },
   {
     path: "/",
@@ -77,8 +77,6 @@ router.beforeEach((to, from, next) => {
   } else if (!isAuthenticated) {
     apiClient.defaults.baseURL = `${config.apiUrl}/unsecure`;
   }
-
-  console.log("Navigation vers :", to.path);
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (store.getters.isAuthenticated && token) {

@@ -35,11 +35,6 @@ export default {
       throw error;
     }
   },
-
-  getVisitDetails(userId, visitId) {
-    return apiClient.get(`/users/${userId}/restaurants/visits/${visitId}`);
-  },
-
   createVisit(userId, visitData) {
     try {
       return apiClient.post(`/users/${userId}/restaurants/visits`, visitData);

@@ -21,7 +21,6 @@ export default {
     } catch (e) {
       apiClient.defaults.baseURL = `${config.apiUrl}/unsecure`;
       user = false;
-      console.error(e);
     } finally {
       return user;
     }
@@ -38,18 +37,9 @@ export default {
       if (response.status !== 200) {
         throw new Error("Un compte existe déjà avec cette adresse e-mail.");
       }
-      return  response.data;
-    }catch (e) {
+      return response.data;
+    } catch (e) {
       throw new Error("Un compte existe déjà avec cette adresse e-mail.");
     }
   },
-}
-
-//TODO Logout
-
-//IsLoggedIn
-
-export const isUserLoggedIn = (id) => {
-  // return localStorage.getItem("authToken") !== null;
-  return true;
-}
+};
