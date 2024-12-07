@@ -38,18 +38,9 @@ export default {
       if (response.status !== 200) {
         throw new Error("Un compte existe déjà avec cette adresse e-mail.");
       }
-      return  response.data;
-    }catch (e) {
+      return response.data;
+    } catch (e) {
       throw new Error("Un compte existe déjà avec cette adresse e-mail.");
     }
   },
-}
-
-//TODO Logout
-
-//IsLoggedIn
-
-export const isUserLoggedIn = (id) => {
-  // return localStorage.getItem("authToken") !== null;
-  return true;
-}
+};

@@ -14,11 +14,6 @@ export const store = reactive({
   currentAddingVisitRestaurantId: "",
   currentAddingVisitRestaurantVisits: [],
 
-  fbToken: null,
-  fbUserName: null,
-  fbUserEmail: null,
-  fbUserId: null,
-
   favoriteLists: [],
   isFavoriteDialogOpen: false,
 
@@ -45,27 +40,6 @@ export const store = reactive({
       console.error("Error adding restaurant to favorites:", error);
     }
   },
-
-  setFbToken(token) {
-    this.fbToken = token;
-  },
-  setFbUserName(name) {
-    this.fbUserName = name;
-  },
-  setFbUserEmail(email) {
-    this.fbUserEmail = email;
-  },
-  setFbUserId(id) {
-    this.fbUserId = id;
-  },
-
-  clearFbUser() {
-    this.fbToken = null;
-    this.fbUserName = null;
-    this.fbUserEmail = null;
-    this.fbUserId = null;
-  },
-
   handleVisitSubmittedFunction: () => {},
   setCurrentUserFavorites(newFavorites) {
     this.currentUserFavorites = newFavorites;

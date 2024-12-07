@@ -2,7 +2,6 @@
 import { ref, onMounted, watchEffect, onUnmounted, nextTick } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import restaurantService from "@/api/restaurantService";
 import { useRouter } from "vue-router";
 
 const { filteredRestaurants } = defineProps(["filteredRestaurants"]);
