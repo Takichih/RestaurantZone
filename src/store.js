@@ -28,14 +28,10 @@ export const store = reactive({
         (restaurant) => restaurant.id === restaurantId,
       );
       if (isRestaurantInList) {
-        console.log(
-          `Restaurant ${restaurantId} already exists in list ${listId}`,
-        );
         return;
       }
 
       await favoriteService.addRestaurantToFavoriteList(listId, restaurantId);
-      console.log(`Restaurant ${restaurantId} added to list ${listId}`);
     } catch (error) {
       console.error("Error adding restaurant to favorites:", error);
     }

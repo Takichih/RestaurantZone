@@ -84,7 +84,7 @@ const postFavoriteList = async () => {
       newListName.value,
       currentUser.value.email,
     );
-    console.log(response);
+
     tempUserFavorites.push(response);
 
     store.setCurrentUserFavorites(tempUserFavorites);
@@ -144,7 +144,6 @@ const addSelectedRestaurantToList = async (favoriteId) => {
     });
     store.setCurrentUserFavorites(tempUserFavorites);
     selectedRestaurant.value = null;
-    console.log("Restaurant ajouté à la liste des favoris avec succès.");
   } catch (error) {
     console.error("Erreur lors de l'ajout du restaurant à la liste :", error);
   }

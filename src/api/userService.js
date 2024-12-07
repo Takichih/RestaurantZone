@@ -23,10 +23,8 @@ export default {
 
     try {
       const response = await apiClient.post("/follow", { id: userId });
-      console.log("From follow user : user added" + response.status);
 
       if (response.status !== 201) {
-        console.log("From follow user : " + response.status);
         throw new Error("User follow failed, please try again.");
       }
 
@@ -49,7 +47,6 @@ export default {
       }
 
       responseStatus = response.status;
-      console.log("From follow user : user deleted" + response.status);
     } catch (e) {
       console.error(e);
     } finally {

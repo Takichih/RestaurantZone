@@ -66,7 +66,6 @@ export async function useProfile(userStore) {
         }));
       allFavoriteListNames.value = filteredLists;
       const listNames = allFavoriteListNames.value.map((list) => list.name);
-      console.log(`list names in parent are :  ${listNames}`);
     } catch (error) {
       console.error("Erreur lors de la récupération des lests :", error);
     }
