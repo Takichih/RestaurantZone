@@ -3,7 +3,6 @@ import { ref, watch, onMounted, computed } from "vue";
 import { useRestaurants } from "@/composables/useRestaurants";
 import { useRoute } from "vue-router";
 
-// Components
 import RestaurantFilters from "@/components/HomePage/RestaurantFilters.vue";
 import RestaurantCard from "@/components/HomePage/RestaurantCard.vue";
 import ModeMap from "@/components/HomePage/ModeMap.vue";
@@ -12,7 +11,8 @@ const tab = ref("one");
 const route = useRoute();
 const search = ref(route.query.search || "");
 const loading = ref(true);
-const { restaurants, specialities, priceRanges } = await useRestaurants(loading);
+const { restaurants, specialities, priceRanges } =
+  await useRestaurants(loading);
 const selectedPrice = ref(null);
 const selectedSpeciality = ref(null);
 const filteredRestaurants = ref([]);
@@ -39,29 +39,30 @@ const updateFilteredRestaurants = async () => {
     const matchesSpeciality =
       selectedSpeciality.value && selectedSpeciality.value.length > 0
         ? selectedSpeciality.value.some(
-          (speciality) =>
-            restaurant.genres && restaurant.genres.includes(speciality),
-        )
+            (speciality) =>
+              restaurant.genres && restaurant.genres.includes(speciality),
+          )
         : true;
 
     return matchesSearch && matchesPrice && matchesSpeciality;
   });
 
-  // Réinitialiser à la première page lors d'une nouvelle recherche ou d'un changement de filtre
   currentPage.value = 1;
   updatePaginatedRestaurants();
-}
+};
 
 const updatePaginatedRestaurants = () => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
   paginatedRestaurants.value = filteredRestaurants.value.slice(start, end);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
-// Mettre à jour `filteredRestaurants` lorsque les critères de recherche ou de filtre changent
-watch([search, selectedPrice, selectedSpeciality, restaurants], updateFilteredRestaurants);
-// Observer les changements de `currentPage` pour mettre à jour `paginatedRestaurants`
+watch(
+  [search, selectedPrice, selectedSpeciality, restaurants],
+  updateFilteredRestaurants,
+);
+
 watch(currentPage, updatePaginatedRestaurants);
 
 updateFilteredRestaurants();
@@ -77,7 +78,6 @@ const viewDetails = (restaurant) => {
 onMounted(() => {
   search.value = route.query.search || "";
 });
-
 </script>
 
 <template>
@@ -94,12 +94,19 @@ onMounted(() => {
             </v-row>
 
             <!-- Filtres -->
-            <RestaurantFilters v-if="!loading" :priceRanges="priceRanges" :specialities="specialities" :search="search"
-              @update:search="search = $event" :selectedPrice="selectedPrice" :selectedSpeciality="selectedSpeciality"
-              @update:selectedPrice="selectedPrice = $event" @update:selectedSpeciality="selectedSpeciality = $event" />
+            <RestaurantFilters
+              v-if="!loading"
+              :priceRanges="priceRanges"
+              :specialities="specialities"
+              :search="search"
+              @update:search="search = $event"
+              :selectedPrice="selectedPrice"
+              :selectedSpeciality="selectedSpeciality"
+              @update:selectedPrice="selectedPrice = $event"
+              @update:selectedSpeciality="selectedSpeciality = $event"
+            />
           </v-card>
 
-          <!-- Liste de restaurants filtrée -->
           <v-card>
             <v-tabs v-model="tab" align-tabs="center" bg-color="primary">
               <v-tab :value="one">Liste de restaurants</v-tab>
@@ -111,21 +118,31 @@ onMounted(() => {
                 <v-tabs-window-item value="one">
                   <v-row>
                     <template v-if="paginatedRestaurants.length > 0">
-                      <RestaurantCard v-for="restaurant in paginatedRestaurants" :key="restaurant.place_id"
-                        :restaurant="restaurant" @toggle-favorite="toggleFavorite" @view-details="viewDetails" />
+                      <RestaurantCard
+                        v-for="restaurant in paginatedRestaurants"
+                        :key="restaurant.place_id"
+                        :restaurant="restaurant"
+                        @toggle-favorite="toggleFavorite"
+                        @view-details="viewDetails"
+                      />
                     </template>
                     <template v-else>
                       <v-col cols="12" class="text-center">
                         <v-alert type="info" color="red" outlined>
-                          Aucun restaurant trouvé correspondant à la recherche "{{
-                            search
-                          }}"
+                          Aucun restaurant trouvé correspondant à la recherche
+                          "{{ search }}"
                         </v-alert>
                       </v-col>
                     </template>
                   </v-row>
-                  <v-pagination v-if="totalPages > 1" v-model="currentPage" :length="totalPages" :total-visible="7"
-                    class="mt-4" @input="updatePaginatedRestaurants"></v-pagination>
+                  <v-pagination
+                    v-if="totalPages > 1"
+                    v-model="currentPage"
+                    :length="totalPages"
+                    :total-visible="7"
+                    class="mt-4"
+                    @input="updatePaginatedRestaurants"
+                  ></v-pagination>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="two">
                   <ModeMap :filtered-restaurants="filteredRestaurants" />
@@ -144,32 +161,3 @@ onMounted(() => {
   font-size: 1.75rem;
 }
 </style>
-
-<!--<script setup>
-
-</script>
-
-<template>
-  <v-card>
-    <v-tabs
-      v-model="tab"
-      align-tabs="center"
-      bg-color="primary"
-    >
-      <v-tab :value="one">Liste de restaurants</v-tab>
-      <v-tab :value="two">Mode Map</v-tab>
-    </v-tabs>
-
-    <v-card-text>
-      <v-tabs-window v-model="tab">
-        <v-tabs-window-item value="one">
-          <RestaurantList :initialSearch="search" />
-        </v-tabs-window-item>
-        <v-tabs-window-item value="two">
-          <ModeMap/>
-        </v-tabs-window-item>
-      </v-tabs-window>
-    </v-card-text>
-  </v-card>
-</template>
--->

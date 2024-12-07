@@ -1,4 +1,5 @@
 import { reactive } from "vue";
+import favoriteService from "@/api/favoriteService";
 
 export const store = reactive({
   currentUserFavorites: null,
@@ -7,38 +8,35 @@ export const store = reactive({
   visitModalContent: {
     comment: "",
     rating: 0,
-    selectedDate: null
+    selectedDate: null,
   },
   favoritesModalOpen: false,
   currentAddingVisitRestaurantId: "",
   currentAddingVisitRestaurantVisits: [],
 
-  fbToken: null,
-  fbUserName: null,
-  fbUserEmail: null,
-  fbUserId: null,
+  favoriteLists: [],
+  isFavoriteDialogOpen: false,
 
-  setFbToken(token) {
-    this.fbToken = token;
-  },
-  setFbUserName(name) {
-    this.fbUserName = name;
-  },
-  setFbUserEmail(email) {
-    this.fbUserEmail = email;
-  },
-  setFbUserId(id) {
-    this.fbUserId = id;
+  setFavoriteLists(lists) {
+    this.favoriteLists = lists;
   },
 
-  clearFbUser() {
-    this.fbToken = null;
-    this.fbUserName = null;
-    this.fbUserEmail = null;
-    this.fbUserId = null;
-  },
+  async handleAddToFavorites({ restaurantId, listId }) {
+    try {
+      const favoriteList = await favoriteService.getFavoriteList(listId);
+      const isRestaurantInList = favoriteList.restaurants.some(
+        (restaurant) => restaurant.id === restaurantId,
+      );
+      if (isRestaurantInList) {
+        return;
+      }
 
-  handleVisitSubmittedFunction: () => { },
+      await favoriteService.addRestaurantToFavoriteList(listId, restaurantId);
+    } catch (error) {
+      console.error("Error adding restaurant to favorites:", error);
+    }
+  },
+  handleVisitSubmittedFunction: () => {},
   setCurrentUserFavorites(newFavorites) {
     this.currentUserFavorites = newFavorites;
   },

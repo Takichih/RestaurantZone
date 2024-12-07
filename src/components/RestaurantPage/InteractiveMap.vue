@@ -29,20 +29,16 @@ watch([Longitude, Latitude], ([newLongitude, newLatitude]) => {
 });
 
 onMounted(() => {
-  // Load icons
   L.Icon.Default.mergeOptions({
     iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
     iconUrl: require("leaflet/dist/images/marker-icon.png"),
     shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
   });
 
-  // Set view to lng and lat of restaurant with specified zoom
   map = L.map("map").setView([restaurantLatitude, restaurantLongitude], 15);
 
-  // Add marker at restaurant location
   L.marker([restaurantLatitude, restaurantLongitude]).addTo(map);
 
-  // Add attribution to get backend map
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution:

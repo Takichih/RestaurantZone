@@ -9,8 +9,8 @@ export default {
       apiClient.defaults.baseURL = config.apiUrl;
       const response = await apiClient.post(`/login`, formData, {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       });
 
       if (response.status !== 200) {
@@ -21,18 +21,25 @@ export default {
     } catch (e) {
       apiClient.defaults.baseURL = `${config.apiUrl}/unsecure`;
       user = false;
-      console.error(e);
     } finally {
       return user;
     }
-  }
-}
+  },
 
-//TODO Logout
-
-//IsLoggedIn
-
-export const isUserLoggedIn = (id) => {
-  // return localStorage.getItem("authToken") !== null;
-  return true;
-}
+  async signup(formData) {
+    try {
+      apiClient.defaults.baseURL = config.apiUrl;
+      const response = await apiClient.post(`/signup`, formData, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      if (response.status !== 200) {
+        throw new Error("Un compte existe déjà avec cette adresse e-mail.");
+      }
+      return response.data;
+    } catch (e) {
+      throw new Error("Un compte existe déjà avec cette adresse e-mail.");
+    }
+  },
+};

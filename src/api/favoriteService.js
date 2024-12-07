@@ -103,17 +103,24 @@ export default {
     let updatedFavoriteList = [];
 
     try {
-      const response = await apiClient.post(`/favorites/${listId}/restaurants`, { id: restaurantId });
+      const response = await apiClient.post(
+        `/favorites/${listId}/restaurants`,
+        { id: restaurantId },
+      );
 
       if (response.status !== 200) {
-        throw new Error("Restaurant was not added to favorite list, please try again.");
+        throw new Error(
+          "Restaurant was not added to favorite list, please try again.",
+        );
       }
 
       updatedFavoriteList = response.data;
 
       updatedFavoriteList.restaurants = await Promise.all(
         updatedFavoriteList.restaurants.map(async (restaurant) => {
-          const detailsResponse = await restaurantService.getRestaurant(restaurant.id);
+          const detailsResponse = await restaurantService.getRestaurant(
+            restaurant.id,
+          );
           return detailsResponse;
         }),
       );
@@ -127,17 +134,23 @@ export default {
     let updatedFavoriteList;
 
     try {
-      const response = await apiClient.delete(`/favorites/${listId}/restaurants/${restaurantId}`);
+      const response = await apiClient.delete(
+        `/favorites/${listId}/restaurants/${restaurantId}`,
+      );
 
       if (response.status !== 200) {
-        throw new Error("Restaurant was not removed from favorite list, please try again.");
+        throw new Error(
+          "Restaurant was not removed from favorite list, please try again.",
+        );
       }
 
       updatedFavoriteList = response.data;
 
       updatedFavoriteList.restaurants = await Promise.all(
         updatedFavoriteList.restaurants.map(async (restaurant) => {
-          const detailsResponse = await restaurantService.getRestaurant(restaurant.id);
+          const detailsResponse = await restaurantService.getRestaurant(
+            restaurant.id,
+          );
           return detailsResponse;
         }),
       );

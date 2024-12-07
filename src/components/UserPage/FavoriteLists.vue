@@ -1,9 +1,9 @@
 <script setup>
-import {computed, ref} from "vue";
-import {useRouter} from "vue-router";
+import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 import favoriteService from "@/api/favoriteService";
-import {store} from "@/store";
-import {useStore} from "vuex";
+import { store } from "@/store";
+import { useStore } from "vuex";
 
 const userStore = useStore();
 const props = defineProps(["allRestaurantNames"]);
@@ -13,11 +13,10 @@ const newListName = ref("");
 const selectedRestaurant = ref(null);
 const currentUser = computed(() => userStore.getters.getCurrentUser);
 
-const nameRequiredRule = (v) =>
-  !!v || "Veuillez entrer un nom pour la liste";
+const nameRequiredRule = (v) => !!v || "Veuillez entrer un nom pour la liste";
 
 const viewRestaurantDetails = (restaurantId) => {
-  router.push(`/restaurant/${restaurantId}`)
+  router.push(`/restaurant/${restaurantId}`);
 };
 
 const startEdit = (list) => {
@@ -85,7 +84,7 @@ const postFavoriteList = async () => {
       newListName.value,
       currentUser.value.email,
     );
-    console.log(response);
+
     tempUserFavorites.push(response);
 
     store.setCurrentUserFavorites(tempUserFavorites);
@@ -102,7 +101,7 @@ const deleteFavoriteList = async (listId) => {
 
     let tempUserFavorites = store.currentUserFavorites.filter(
       (list) => list.id !== listId,
-    ); // Remove from local list
+    );
 
     store.setCurrentUserFavorites(tempUserFavorites);
   } catch (error) {
@@ -132,19 +131,19 @@ const addSelectedRestaurantToList = async (favoriteId) => {
   }
 
   try {
-    const updatedFavoriteList = await favoriteService.addRestaurantToFavoriteList(
-      favoriteId,
-      selectedRestaurant.value,
-    );
+    const updatedFavoriteList =
+      await favoriteService.addRestaurantToFavoriteList(
+        favoriteId,
+        selectedRestaurant.value,
+      );
     let tempUserFavorites = store.currentUserFavorites;
     tempUserFavorites.forEach((list, index) => {
       if (list.id === updatedFavoriteList.id) {
-        tempUserFavorites[index] = updatedFavoriteList
+        tempUserFavorites[index] = updatedFavoriteList;
       }
     });
     store.setCurrentUserFavorites(tempUserFavorites);
     selectedRestaurant.value = null;
-    console.log("Restaurant ajouté à la liste des favoris avec succès.");
   } catch (error) {
     console.error("Erreur lors de l'ajout du restaurant à la liste :", error);
   }
@@ -152,14 +151,15 @@ const addSelectedRestaurantToList = async (favoriteId) => {
 
 const removeRestaurantFromList = async (favoriteId, restaurantId) => {
   try {
-    const updatedFavoriteList = await favoriteService.removeRestaurantFromFavoriteList(
-      favoriteId,
-      restaurantId,
-    );
+    const updatedFavoriteList =
+      await favoriteService.removeRestaurantFromFavoriteList(
+        favoriteId,
+        restaurantId,
+      );
     let tempUserFavorites = store.currentUserFavorites;
     tempUserFavorites.forEach((list, index) => {
       if (list.id === updatedFavoriteList.id) {
-        tempUserFavorites[index] = updatedFavoriteList
+        tempUserFavorites[index] = updatedFavoriteList;
       }
     });
     store.setCurrentUserFavorites(tempUserFavorites);
@@ -178,8 +178,13 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
       <v-form @submit.prevent="postFavoriteList" ref="newListForm">
         <v-row>
           <v-col cols="4">
-            <v-text-field density="compact" v-model="newListName" label="Nom de la nouvelle liste de favoris *"
-                          maxlength="50" required></v-text-field>
+            <v-text-field
+              density="compact"
+              v-model="newListName"
+              label="Nom de la nouvelle liste de favoris *"
+              maxlength="50"
+              required
+            ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-btn color="primary" type="submit">Créer la liste</v-btn>
@@ -189,29 +194,66 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
     </v-card-item>
     <v-card-item>
       <v-expansion-panels>
-        <v-expansion-panel v-for="(favoriteList, index) in store.currentUserFavorites" :key="index">
+        <v-expansion-panel
+          v-for="(favoriteList, index) in store.currentUserFavorites"
+          :key="index"
+        >
           <v-expansion-panel-title>
-            <div class="d-flex align-center justify-space-between" style="width: 100%">
-              <span v-if="!favoriteList.isEditing" class="favorite-list-name">{{ favoriteList.name }}</span>
-              <v-text-field v-else v-model="favoriteList.newName" label="Renommer la liste" dense
-                            :rules="[nameRequiredRule]" maxlength="50" required hide-details
-                            style="max-width: 200px"></v-text-field>
+            <div
+              class="d-flex align-center justify-space-between"
+              style="width: 100%"
+            >
+              <span v-if="!favoriteList.isEditing" class="favorite-list-name">{{
+                favoriteList.name
+              }}</span>
+              <v-text-field
+                v-else
+                v-model="favoriteList.newName"
+                label="Renommer la liste"
+                dense
+                :rules="[nameRequiredRule]"
+                maxlength="50"
+                required
+                hide-details
+                style="max-width: 200px"
+                @click.stop
+              ></v-text-field>
 
               <div class="d-flex align-center">
                 <template v-if="favoriteList.isEditing">
-                  <v-btn class="mr-2" icon @click.stop="saveListName(favoriteList)">
-                    <v-icon :disabled="!favoriteList.newName.trim()">mdi-check</v-icon>
+                  <v-btn
+                    class="mr-2"
+                    icon
+                    @click.stop="saveListName(favoriteList)"
+                  >
+                    <v-icon :disabled="!favoriteList.newName.trim()"
+                      >mdi-check</v-icon
+                    >
                   </v-btn>
-                  <v-btn class="mr-4" icon @click.stop="cancelEdit(favoriteList)">
+                  <v-btn
+                    class="mr-4"
+                    icon
+                    @click.stop="cancelEdit(favoriteList)"
+                  >
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
                 </template>
 
                 <template v-else>
-                  <v-btn class="mr-2" icon @click.stop="startEdit(favoriteList)" color="white">
+                  <v-btn
+                    class="mr-2"
+                    icon
+                    @click.stop="startEdit(favoriteList)"
+                    color="white"
+                  >
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
-                  <v-btn class="mr-4" icon @click.stop="deleteFavoriteList(favoriteList.id)" color="black">
+                  <v-btn
+                    class="mr-4"
+                    icon
+                    @click.stop="deleteFavoriteList(favoriteList.id)"
+                    color="black"
+                  >
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </template>
@@ -221,30 +263,64 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
 
           <v-expansion-panel-text>
             <v-list>
-              <v-list-item v-for="restaurant in favoriteList.restaurants" :key="restaurant.id">
-                <div class="d-flex justify-space-between align-center listRestaurant">
+              <v-list-item
+                v-for="(restaurant, subIndex) in favoriteList.restaurants"
+                :key="subIndex"
+              >
+                <div
+                  class="d-flex justify-space-between align-center listRestaurant"
+                >
                   <div class="restaurant-info">
                     <div style="display: flex; align-items: center">
                       <strong> {{ restaurant.name }} </strong>
-                      <v-rating half-increments hover readonly :length="5" :size="32" :model-value="restaurant.rating"
-                                active-color="primary" color="grey-lighten-2"
-                                style="margin-left: 8px; vertical-align: middle"/>
+                      <v-rating
+                        half-increments
+                        readonly
+                        :length="5"
+                        :size="32"
+                        :model-value="restaurant.rating"
+                        active-color="primary"
+                        color="grey-lighten-2"
+                        style="margin-left: 8px; vertical-align: middle"
+                      />
                     </div>
                   </div>
                   <div class="d-flex">
-                    <v-btn class="mr-2" icon @click="viewRestaurantDetails(restaurant.id)" color="info">
-                      <v-icon @click="router.push(`/restaurant/${restaurant.id}`)">mdi-eye</v-icon>
+                    <v-btn
+                      class="mr-2"
+                      icon
+                      @click="viewRestaurantDetails(restaurant.id)"
+                      color="info"
+                    >
+                      <v-icon
+                        @click="router.push(`/restaurant/${restaurant.id}`)"
+                        >mdi-eye</v-icon
+                      >
                     </v-btn>
-                    <v-btn icon @click="removeRestaurantFromList(favoriteList.id, restaurant.id)" color="error">
+                    <v-btn
+                      icon
+                      @click="
+                        removeRestaurantFromList(favoriteList.id, restaurant.id)
+                      "
+                      color="error"
+                    >
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
                   </div>
                 </div>
               </v-list-item>
             </v-list>
-            <v-select v-model="selectedRestaurant" :items="props.allRestaurantNames" item-title="name" item-value="id"
-                      label="Select"></v-select>
-            <v-btn color="primary" @click="addSelectedRestaurantToList(favoriteList.id)">
+            <v-select
+              v-model="selectedRestaurant"
+              :items="props.allRestaurantNames"
+              item-title="name"
+              item-value="id"
+              label="Select"
+            ></v-select>
+            <v-btn
+              color="primary"
+              @click="addSelectedRestaurantToList(favoriteList.id)"
+            >
               <v-icon>mdi-plus</v-icon>
               Ajouter
             </v-btn>
@@ -268,5 +344,4 @@ const removeRestaurantFromList = async (favoriteId, restaurantId) => {
   margin-bottom: 20px;
   font-weight: bold;
 }
-
 </style>

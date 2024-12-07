@@ -1,12 +1,12 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthService } from '@/composables/useAuthService';
+import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthService } from "@/composables/useAuthService";
 
 import SearchBar from "@/components/NavBar/SearchBar.vue";
-import NavigationDrawer from '@/components/NavBar/NavigationDrawer.vue';
-import gravatarService from '@/api/gravatarService';
-import { useStore } from 'vuex';
+import NavigationDrawer from "@/components/NavBar/NavigationDrawer.vue";
+import gravatarService from "@/api/gravatarService";
+import { useStore } from "vuex";
 
 const store = useStore();
 const drawerToggle = ref(false);
@@ -21,7 +21,7 @@ const toggleDrawer = () => {
 
 const goToUserPage = () => {
   router.push({ name: "Profile" });
-}
+};
 
 const handleSearch = (searchTerm) => {
   router.push({ name: "Home", query: { search: searchTerm } });
@@ -37,14 +37,29 @@ const { logout } = useAuthService();
 <template>
   <span>
     <v-app-bar color="primary" temporary>
-      <v-app-bar-nav-icon class="d-md-none" @click.stop="toggleDrawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        class="d-md-none"
+        @click.stop="toggleDrawer"
+      ></v-app-bar-nav-icon>
 
       <v-toolbar-title>UFood</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
-      <v-btn v-if="$vuetify.display.mdAndUp" icon="mdi-home" variant="text" to="/" exact :active="false"></v-btn>
-      <v-btn v-if="isLoggedIn" icon="mdi-account-multiple" variant="text" to="/users"></v-btn>
+      <v-btn
+        v-if="$vuetify.display.mdAndUp"
+        icon="mdi-home"
+        variant="text"
+        to="/"
+        exact
+        :active="false"
+      ></v-btn>
+      <v-btn
+        v-if="isLoggedIn"
+        icon="mdi-account-multiple"
+        variant="text"
+        to="/users"
+      ></v-btn>
 
       <SearchBar v-model="searchQuery" @search="handleSearch" />
 
@@ -52,7 +67,10 @@ const { logout } = useAuthService();
         <template v-if="isLoggedIn">
           <v-btn class="v-btn--icon v-btn--text" @click="goToUserPage">
             <v-avatar>
-              <v-img :src="getGravatarUrl(currentUser.email)" alt="User Avatar" />
+              <v-img
+                :src="getGravatarUrl(currentUser.email)"
+                alt="User Avatar"
+              />
             </v-avatar>
           </v-btn>
           <v-btn icon="mdi-logout" variant="text" @click="logout"></v-btn>

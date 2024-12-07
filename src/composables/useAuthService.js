@@ -23,7 +23,7 @@ export function useAuthService() {
     } else {
       store.dispatch("setAccountExists", false);
     }
-  }
+  };
 
   const login = async (userEmail, userPassword) => {
     let formData = new URLSearchParams();
@@ -31,9 +31,8 @@ export function useAuthService() {
     formData.append("password", userPassword);
 
     const userConnected = await authentificationService.login(formData);
-
     setCurrentUser(userConnected);
-  }
+  };
 
   const refreshAccessToken = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -46,10 +45,22 @@ export function useAuthService() {
     localStorage.setItem("authToken", refreshedData.token);
   };
 
+  const signup = async (name, email, password) => {
+    try {
+      let formData = new URLSearchParams();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+
+      await authentificationService.signup(formData);
+    } catch (error) {
+      throw new Error("Un compte existe déjà avec cette adresse e-mail.");
+    }
+  };
 
   const logout = () => {
     setCurrentUser();
-  }
+  };
 
-  return { login, logout, refreshAccessToken }
+  return { login, signup, logout, refreshAccessToken };
 }
