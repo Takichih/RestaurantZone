@@ -8,7 +8,8 @@ import RestaurantView from "@/views/RestaurantView";
 import ProfileView from "@/views/ProfileView";
 import LoginView from "@/views/LoginView.vue";
 import UserView from "@/views/UserView";
-import UserDetailView from "@/views/UserDetailView";
+import UserDetailView from "@/views/UserDetailView";import RegisterView from "@/views/RegisterView.vue";
+
 
 const routes = [
   {
@@ -27,6 +28,12 @@ const routes = [
     name: "Login",
     component: LoginView,
     meta: { guest: true },
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: RegisterView,
+    meta: { guest: true }
   },
   {
     path: "/",

@@ -24,15 +24,17 @@ apiClient.interceptors.response.use(
     if (
       error.response &&
       (error.response.status === 401 || error.response.status === 403) &&
-      !error.request.responseURL.includes("login")
+      (!error.request.responseURL.includes("login") || !error.request.responseURL.includes("signup"))) {
+      if (!error.request.responseURL.includes("signup")
     ) {
-      try {
-        const { refreshAccessToken } = useAuthService();
-        await refreshAccessToken();
-        return apiClient.request(error.config);
-      } catch (refreshError) {
-        localStorage.removeItem("authToken");
-        window.location.href = "/login";
+        try {
+          const { refreshAccessToken } = useAuthService();
+          await refreshAccessToken();
+          return apiClient.request(error.config);
+        } catch (refreshError) {
+          localStorage.removeItem("authToken");
+          window.location.href = "/login";
+        }
       }
     }
     return Promise.reject(error);

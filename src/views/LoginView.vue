@@ -94,7 +94,7 @@ const verify = () => {
       </v-btn>
 
       <v-card-text class="text-center">
-        <v-btn class="text-blue text-decoration-none">
+        <v-btn class="text-blue text-decoration-none" to="/register">
           S'inscrire <v-icon icon="mdi-chevron-right"></v-icon>
         </v-btn>
       </v-card-text>
