@@ -8,6 +8,7 @@ export async function useRestaurant(restaurantId) {
 
   const getRestaurant = async () => {
     const data = await restaurantService.getRestaurant(restaurantId);
+
     restaurant.value = data;
 
     cleanUpTelForHref();
@@ -31,20 +32,25 @@ export async function useRestaurant(restaurantId) {
       });
   };
 
+
   const getRestaurantVisitsNumberOfPages = async () => {
     const data = await restaurantService.getRestaurantVisits(restaurantId, 1);
     numberOfPages.value = Math.ceil(data.total / 10) - 1;
   };
 
   const cleanUpTelForHref = () => {
-    let newTel = restaurant.value.tel;
-    newTel = newTel.replace(")", "");
-    newTel = newTel.replace("(", "");
-    newTel = newTel.replace("-", "");
-    newTel = newTel.replace(" ", "");
-    newTel = "+1" + newTel;
+    if (restaurant.value.tel) {
+      let newTel = restaurant.value.tel;
+      newTel = newTel.replace(")", "");
+      newTel = newTel.replace("(", "");
+      newTel = newTel.replace("-", "");
+      newTel = newTel.replace(" ", "");
+      newTel = "+1" + newTel;
 
-    restaurant.value.cleanedTel = newTel;
+      restaurant.value.cleanedTel = newTel;
+    } else {
+      console.error("Telephone number is undefined");
+    }
   };
 
   const cleanUpOpeningHours = () => {
