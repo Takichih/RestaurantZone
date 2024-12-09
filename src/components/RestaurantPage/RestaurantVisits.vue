@@ -1,11 +1,11 @@
 <script setup>
-import {ref, computed, onMounted} from "vue";
+import {ref, computed, onMounted, watch} from "vue";
 import * as momentUtils from "@/utils/momentUtils";
 import { useStore } from "vuex";
 import userService from "@/api/userService";
 
 const props = defineProps(["visits", "numberOfPages"]);
-const localVisits = ref([...props.visits]);
+let localVisits = ref([...props.visits]);
 const emit = defineEmits(["change-page"]);
 
 const currentPage = ref(props.numberOfPages);
@@ -21,6 +21,11 @@ const isLoggedIn = computed(() => vuexStore.getters.isAuthenticated);
 const fetchUserName = async (userId) => {
   try {
     const userDetails = await userService.getUser(userId);
+    if (userDetails.name === " ") {
+      return "Anonyme";
+    } else {
+      return userDetails.name;
+    }
     return userDetails.name || "Utilisateur inconnu";
   } catch (error) {
     console.error(error);
@@ -39,6 +44,10 @@ const loadUserNames = async () => {
   }
 };
 onMounted(async () => {
+  await loadUserNames();
+});
+watch (props, async () => {
+  localVisits.value = [...props.visits];
   await loadUserNames();
 });
 </script>

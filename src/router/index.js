@@ -11,11 +11,28 @@ import UserView from "@/views/UserView";
 import UserDetailView from "@/views/UserDetailView";
 import RegisterView from "@/views/RegisterView.vue";
 
+
+const checkRestaurantExists = async (to, from, next) => {
+  const restaurantId = to.params.restaurantId;
+  try {
+    const response = await apiClient.get(`/restaurants/${restaurantId}`);
+    if (response.status === 200) {
+      next();
+    } else {
+      next("/");
+    }
+  } catch (error) {
+    next("/");
+  }
+};
+
+
 const routes = [
   {
     path: "/restaurant/:restaurantId",
     name: "Restaurant",
     component: RestaurantView,
+    beforeEnter: checkRestaurantExists,
   },
   {
     path: "/profile",
