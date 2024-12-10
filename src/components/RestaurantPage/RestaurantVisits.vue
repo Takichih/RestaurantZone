@@ -3,10 +3,12 @@ import {ref, computed, onMounted, watch} from "vue";
 import * as momentUtils from "@/utils/momentUtils";
 import { useStore } from "vuex";
 import userService from "@/api/userService";
+import { useRouter } from "vue-router";
 
 const props = defineProps(["visits", "numberOfPages"]);
 let localVisits = ref([...props.visits]);
 const emit = defineEmits(["change-page"]);
+const router = useRouter();
 
 const currentPage = ref(props.numberOfPages);
 
@@ -43,13 +45,20 @@ const loadUserNames = async () => {
     console.error("Impossible de charger les noms d'utilisateur");
   }
 };
+
 onMounted(async () => {
   await loadUserNames();
 });
+
 watch (props, async () => {
   localVisits.value = [...props.visits];
   await loadUserNames();
 });
+
+const goToLogin = () => {
+  router.push("/login");
+};
+
 </script>
 
 <template>
@@ -110,6 +119,13 @@ watch (props, async () => {
       @update:modelValue="(e) => updateChangePage(e)"
     ></v-pagination>
   </div>
+  <div v-else>
+    <v-alert type="info" color="light-grey" outlined>
+      Vous devez être connecté pour voir les avis des UFooders
+      <v-btn class="loginButton" color="primary" @click="goToLogin">Se connecter</v-btn>
+    </v-alert>
+
+  </div>
 </template>
 
 <style scoped>
@@ -117,5 +133,8 @@ watch (props, async () => {
   background-color: #f0f0f5;
   border-radius: 8px;
   margin: 20px;
+}
+.loginButton {
+  margin-left: 20px;
 }
 </style>
