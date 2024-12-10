@@ -14,8 +14,10 @@ watch(searchQuery, (newValue) => {
   emit("update:modelValue", newValue);
 });
 
+
 const emitSearch = () => {
   emit("search", searchQuery.value);
+  searchQuery.value = "";
 };
 
 const route = useRoute();
