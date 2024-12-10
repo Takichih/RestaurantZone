@@ -8,7 +8,10 @@ export async function useProfile(userStore) {
   const userRecentVisits = ref([]);
   const allRestaurantNames = ref([]);
   const allFavoriteListNames = ref([]);
-  const currentUser = computed(() => userStore.getters.getCurrentUser);
+
+  let currentUser = computed(() => userStore.getters.getCurrentUser);
+  userStore.dispatch("updateConnectedUser", currentUser.value.id);
+  currentUser = computed(() => userStore.getters.getCurrentUser);
 
   const getUserRecentVisits = async () => {
     try {

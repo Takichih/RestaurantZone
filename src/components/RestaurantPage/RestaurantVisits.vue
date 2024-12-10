@@ -1,5 +1,5 @@
 <script setup>
-import {ref, computed, onMounted, watch} from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import * as momentUtils from "@/utils/momentUtils";
 import { useStore } from "vuex";
 import userService from "@/api/userService";
@@ -50,7 +50,7 @@ onMounted(async () => {
   await loadUserNames();
 });
 
-watch (props, async () => {
+watch(props, async () => {
   localVisits.value = [...props.visits];
   await loadUserNames();
 });
@@ -58,7 +58,6 @@ watch (props, async () => {
 const goToLogin = () => {
   router.push("/login");
 };
-
 </script>
 
 <template>
@@ -122,9 +121,10 @@ const goToLogin = () => {
   <div v-else>
     <v-alert type="info" color="light-grey" outlined>
       Vous devez être connecté pour voir les avis des UFooders
-      <v-btn class="loginButton" color="primary" @click="goToLogin">Se connecter</v-btn>
+      <v-btn class="loginButton" color="primary" @click="goToLogin"
+        >Se connecter</v-btn
+      >
     </v-alert>
-
   </div>
 </template>
 
