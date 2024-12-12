@@ -1,6 +1,6 @@
 <script setup>
-import { computed, ref } from "vue";
-import { useRouter } from "vue-router";
+import { computed, ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { useAuthService } from "@/composables/useAuthService";
 
 import SearchBar from "@/components/NavBar/SearchBar.vue";
@@ -12,6 +12,7 @@ const store = useStore();
 const drawerToggle = ref(false);
 const searchQuery = ref("");
 const router = useRouter();
+const route = useRoute();
 const isLoggedIn = computed(() => store.getters.isAuthenticated);
 const currentUser = computed(() => store.getters.getCurrentUser);
 
@@ -32,6 +33,12 @@ const getGravatarUrl = (email) => {
 };
 
 const { logout } = useAuthService();
+
+watch(route, (newRoute) => {
+  if (newRoute.name !== "Home") {
+    searchQuery.value = "";
+  }
+});
 </script>
 
 <template>
@@ -65,6 +72,7 @@ const { logout } = useAuthService();
 
       <template v-if="$vuetify.display.mdAndUp">
         <template v-if="isLoggedIn">
+          <span class="userNameNavbar">{{ currentUser.name }}</span>
           <v-btn class="v-btn--icon v-btn--text" @click="goToUserPage">
             <v-avatar>
               <v-img
@@ -84,3 +92,10 @@ const { logout } = useAuthService();
     <NavigationDrawer v-model="drawerToggle" @logout="logout" />
   </span>
 </template>
+
+<style scoped>
+.userNameNavbar {
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+</style>

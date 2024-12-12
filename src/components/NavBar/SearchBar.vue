@@ -16,6 +16,7 @@ watch(searchQuery, (newValue) => {
 
 const emitSearch = () => {
   emit("search", searchQuery.value);
+  searchQuery.value = "";
 };
 
 const route = useRoute();

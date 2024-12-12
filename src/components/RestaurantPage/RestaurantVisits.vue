@@ -1,12 +1,14 @@
 <script setup>
-import {ref, computed, onMounted} from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import * as momentUtils from "@/utils/momentUtils";
 import { useStore } from "vuex";
 import userService from "@/api/userService";
+import { useRouter } from "vue-router";
 
 const props = defineProps(["visits", "numberOfPages"]);
-const localVisits = ref([...props.visits]);
+let localVisits = ref([...props.visits]);
 const emit = defineEmits(["change-page"]);
+const router = useRouter();
 
 const currentPage = ref(props.numberOfPages);
 
@@ -21,6 +23,11 @@ const isLoggedIn = computed(() => vuexStore.getters.isAuthenticated);
 const fetchUserName = async (userId) => {
   try {
     const userDetails = await userService.getUser(userId);
+    if (userDetails.name === " ") {
+      return "Anonyme";
+    } else {
+      return userDetails.name;
+    }
     return userDetails.name || "Utilisateur inconnu";
   } catch (error) {
     console.error(error);
@@ -38,9 +45,19 @@ const loadUserNames = async () => {
     console.error("Impossible de charger les noms d'utilisateur");
   }
 };
+
 onMounted(async () => {
   await loadUserNames();
 });
+
+watch(props, async () => {
+  localVisits.value = [...props.visits];
+  await loadUserNames();
+});
+
+const goToLogin = () => {
+  router.push("/login");
+};
 </script>
 
 <template>
@@ -101,6 +118,14 @@ onMounted(async () => {
       @update:modelValue="(e) => updateChangePage(e)"
     ></v-pagination>
   </div>
+  <div v-else>
+    <v-alert type="info" color="light-grey" outlined>
+      Vous devez être connecté pour voir les avis des UFooders
+      <v-btn class="loginButton" color="primary" @click="goToLogin"
+        >Se connecter</v-btn
+      >
+    </v-alert>
+  </div>
 </template>
 
 <style scoped>
@@ -108,5 +133,8 @@ onMounted(async () => {
   background-color: #f0f0f5;
   border-radius: 8px;
   margin: 20px;
+}
+.loginButton {
+  margin-left: 20px;
 }
 </style>
