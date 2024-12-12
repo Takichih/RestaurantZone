@@ -15,7 +15,10 @@ export async function useProfile(userStore) {
 
   const getUserRecentVisits = async () => {
     try {
-      const visits = await visitService.getRecentVisits(currentUser.value.id);
+      const visits = await visitService.getRecentVisits(
+        currentUser.value.id,
+        0,
+      );
       userRecentVisits.value = visits;
     } catch (e) {
       console.error(e);
@@ -23,7 +26,10 @@ export async function useProfile(userStore) {
   };
 
   const getUserFavoriteLists = async () => {
-    const lists = await favoriteService.getUserFavorites(currentUser.value.id);
+    const lists = await favoriteService.getUserFavorites(
+      currentUser.value.id,
+      0,
+    );
 
     for (const list of lists) {
       list.restaurants = await Promise.all(
@@ -41,7 +47,7 @@ export async function useProfile(userStore) {
 
   const getAllRestaurantNames = async () => {
     try {
-      const response = await restaurantService.getRestaurants(150);
+      const response = await restaurantService.getRestaurants(0);
 
       const filteredRestaurants = response
         .filter((restaurant) => restaurant.name && restaurant.id)

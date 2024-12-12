@@ -36,13 +36,25 @@ function toggleVisitDetails() {
   }
 }
 
+const formatTime = (visitDataDate) => {
+  let hours = visitDataDate.getHours();
+  let minutes = visitDataDate.getMinutes();
+
+  if (hours < 10) hours = "0" + hours;
+  if (minutes < 10) minutes = "0" + minutes;
+
+  return hours + ":" + minutes;
+};
+
 function openReadOnlyVisitModal(visitData) {
+  visitData.time = formatTime(new Date(visitData.date));
   store.setVisitModalOpen(true);
   store.setReadOnlyVisitModal(true);
   store.setVisitModalContent({
     comment: visitData.comment,
     rating: visitData.rating,
     selectedDate: new Date(visitData.date),
+    selectedTime: visitData.time,
   });
 }
 </script>
