@@ -32,7 +32,6 @@ export async function useRestaurant(restaurantId) {
       });
   };
 
-
   const getRestaurantVisitsNumberOfPages = async () => {
     const data = await restaurantService.getRestaurantVisits(restaurantId, 1);
     numberOfPages.value = Math.ceil(data.total / 10) - 1;

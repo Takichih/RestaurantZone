@@ -9,6 +9,7 @@ export const store = reactive({
     comment: "",
     rating: 0,
     selectedDate: null,
+    selectedTime: null,
   },
   favoritesModalOpen: false,
   currentAddingVisitRestaurantId: "",

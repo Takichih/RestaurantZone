@@ -72,7 +72,7 @@ watch(route, (newRoute) => {
 
       <template v-if="$vuetify.display.mdAndUp">
         <template v-if="isLoggedIn">
-           <span class="userNameNavbar">{{ currentUser.name }}</span>
+          <span class="userNameNavbar">{{ currentUser.name }}</span>
           <v-btn class="v-btn--icon v-btn--text" @click="goToUserPage">
             <v-avatar>
               <v-img
