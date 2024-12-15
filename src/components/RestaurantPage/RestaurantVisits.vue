@@ -124,14 +124,6 @@ const goToLogin = () => {
       @update:modelValue="(e) => updateChangePage(e)"
     ></v-pagination>
   </div>
-  <div v-else>
-    <v-alert type="info" color="light-grey" outlined>
-      Vous devez être connecté pour voir les avis des UFooders
-      <v-btn class="loginButton" color="primary" @click="goToLogin"
-        >Se connecter</v-btn
-      >
-    </v-alert>
-  </div>
 </template>
 
 <style scoped>
