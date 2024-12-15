@@ -11,7 +11,6 @@ import UserView from "@/views/UserView";
 import UserDetailView from "@/views/UserDetailView";
 import RegisterView from "@/views/RegisterView.vue";
 
-
 const checkRestaurantExists = async (to, from, next) => {
   const restaurantId = to.params.restaurantId;
   try {
@@ -25,7 +24,6 @@ const checkRestaurantExists = async (to, from, next) => {
     next("/");
   }
 };
-
 
 const routes = [
   {

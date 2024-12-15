@@ -1,5 +1,15 @@
+import userService from "@/api/userService";
+
 export const setConnectedUser = ({ commit }, userInfo) => {
   commit("setConnectedUser", userInfo);
+};
+
+export const updateConnectedUser = async ({ commit }, currentUserId) => {
+  const updatedUserData = await userService.getUser(currentUserId);
+
+  if (updatedUserData != {}) {
+    commit("setConnectedUser", updatedUserData);
+  }
 };
 
 export const logout = ({ commit }) => {

@@ -8,6 +8,7 @@ import { useStore } from "vuex";
 const userStore = useStore();
 const visitForm = ref();
 const currentUser = computed(() => userStore.getters.getCurrentUser);
+const timePickerIsOpen = ref(false);
 
 const ratingRules = [
   (v) => !!v || "Une note doit être donnée.",
@@ -16,6 +17,18 @@ const ratingRules = [
     v >= 0 ||
     "La note ne peut pas être plus basse que 0 ou plus haute que 5.",
 ];
+
+const dateRules = [(v) => !!v || "Une date doit être spécifiée."];
+
+const timeRules = [(v) => !!v || "Une heure doit être spécifiée."];
+
+const formatDateTime = () => {
+  let selectedDate = store.visitModalContent.selectedDate;
+  let time = store.visitModalContent.selectedTime;
+
+  selectedDate.setHours(time.split(":")[0]);
+  selectedDate.setMinutes(time.split(":")[1]);
+};
 
 const postVisit = async () => {
   try {
@@ -26,6 +39,8 @@ const postVisit = async () => {
       });
 
     if (isFormValid) {
+      formatDateTime();
+
       const visitData = {
         restaurant_id: store.currentAddingVisitRestaurantId,
         comment: store.visitModalContent.comment,
@@ -97,7 +112,36 @@ const closeVisitModal = () => {
                 prepend-icon=""
                 prepend-inner-icon="$calendar"
                 label=" Date de la visite"
+                :rules="dateRules"
+                clearable
               ></v-date-input>
+            </v-col>
+            <v-col class="mt-4">
+              <v-text-field
+                :disabled="store.readOnlyVisitModal"
+                v-model="store.visitModalContent.selectedTime"
+                :active="timePickerIsOpen"
+                label="Heure de la visite"
+                prepend-icon=""
+                prepend-inner-icon="mdi-clock-time-four-outline"
+                readonly
+                clearable
+                :rules="timeRules"
+              >
+                <v-menu
+                  v-model="timePickerIsOpen"
+                  :close-on-content-click="false"
+                  activator="parent"
+                  transition="scale-transition"
+                >
+                  <v-time-picker
+                    v-if="timePickerIsOpen"
+                    format="24hr"
+                    v-model="store.visitModalContent.selectedTime"
+                    full-width
+                  ></v-time-picker>
+                </v-menu>
+              </v-text-field>
             </v-col>
           </v-row>
           <v-row dense>
@@ -106,6 +150,7 @@ const closeVisitModal = () => {
                 :disabled="store.readOnlyVisitModal"
                 v-model="store.visitModalContent.comment"
                 label="Commentaire"
+                clearable
               ></v-textarea>
             </v-col>
           </v-row>
