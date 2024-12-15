@@ -61,10 +61,16 @@ const goToLogin = () => {
 </script>
 
 <template>
-  <div v-if="isLoggedIn">
+  <div>
     <v-card v-if="localVisits && localVisits.length" class="text-subtitle-1">
       <v-card-title class="mt-4">Avis des visiteurs</v-card-title>
-      <v-divider></v-divider>
+                
+      <v-alert v-if="!isLoggedIn" type="info" color="light-grey" outlined class="ma-4">
+      Vous devez être connecté pour laisser un avis sur le restaurant !
+      <v-btn class="loginButton" color="primary" @click="goToLogin">Se connecter</v-btn>
+    </v-alert>
+
+    <v-divider></v-divider>
 
       <v-card-item
         v-for="visit in localVisits"
@@ -118,14 +124,6 @@ const goToLogin = () => {
       @update:modelValue="(e) => updateChangePage(e)"
     ></v-pagination>
   </div>
-  <div v-else>
-    <v-alert type="info" color="light-grey" outlined>
-      Vous devez être connecté pour voir les avis des UFooders
-      <v-btn class="loginButton" color="primary" @click="goToLogin"
-        >Se connecter</v-btn
-      >
-    </v-alert>
-  </div>
 </template>
 
 <style scoped>
@@ -137,4 +135,6 @@ const goToLogin = () => {
 .loginButton {
   margin-left: 20px;
 }
+
+
 </style>
